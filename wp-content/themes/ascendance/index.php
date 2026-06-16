@@ -99,7 +99,7 @@ get_header();
 			<?php else : ?>
 
 				<div style="text-align: center; padding: 4rem 0;">
-					<i class="fa-regular fa-folder-open" style="font-size: 3rem; color: var(--accent-purple); margin-bottom: 1rem;"></i>
+					<i class="fa-regular fa-folder-open" style="font-size: 3rem; color: var(--color-red); margin-bottom: 1rem;"></i>
 					<h2><?php esc_html_e( 'No Posts Found', 'ascendance' ); ?></h2>
 					<p style="color: var(--text-secondary); max-width: 500px; margin: 1rem auto 2rem auto;">
 						<?php esc_html_e( 'It seems there are no articles published in this category or format yet. Check back soon!', 'ascendance' ); ?>

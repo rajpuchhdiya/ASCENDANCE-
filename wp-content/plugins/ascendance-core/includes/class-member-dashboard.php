@@ -166,7 +166,7 @@ class Member_Dashboard {
                     $impact = get_field( 'impact_assessment', get_the_ID() );
                     $impact_colors = array( 'low' => '#00FF66', 'medium' => '#FFCC00', 'high' => '#FF6600', 'critical' => 'var(--color-red)' );
                     $color = isset( $impact_colors[ $impact ] ) ? $impact_colors[ $impact ] : '#FFCC00';
-                    $extra_meta = '<span style="color:' . esc_attr( $color ) . '; font-family: var(--font-mono); font-size:11px; text-transform:uppercase; border:1px solid ' . esc_attr( $color ) . '; padding:2px 6px; border-radius:3px; margin-left:10px;">Impact: ' . esc_html( $impact ) . '</span>';
+                    $extra_meta = '<span style="color:' . esc_attr( $color ) . '; font-family: var(--font-mono); font-size:11px; text-transform:uppercase; border:1px solid ' . esc_attr( $color ) . '; padding:2px 6px; border-radius:var(--radius-sm); margin-left:10px;">Impact: ' . esc_html( $impact ) . '</span>';
                 }
                 
                 ?>
@@ -177,12 +177,12 @@ class Member_Dashboard {
                             <span><?php echo get_the_date(); ?></span>
                             <?php echo $extra_meta; ?>
                         </div>
-                        <span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-color);"><?php echo esc_html( $tier_label ); ?> Tier</span>
+                        <span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"><?php echo esc_html( $tier_label ); ?> Tier</span>
                     </div>
                     <h4 style="margin-bottom: 0; font-size: var(--font-size-sm);"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
                     
                     <?php if ( 'brief' === $post_type && get_field( 'analytical_claim' ) ) : ?>
-                        <div style="font-family: var(--font-mono); font-size: 12px; color: #00FF66; background: #030810; padding: 8px 12px; border-radius: 4px; border: 1px solid rgba(0,255,102,0.1); margin-top:4px;">
+                        <div style="font-family: var(--font-mono); font-size: 12px; color: #00FF66; background: #030810; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(0,255,102,0.1); margin-top:4px;">
                             <strong style="color:var(--color-red);">CLAIM // </strong> <?php echo esc_html( get_field( 'analytical_claim' ) ); ?>
                         </div>
                     <?php endif; ?>

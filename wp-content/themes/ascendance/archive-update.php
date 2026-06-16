@@ -45,7 +45,7 @@ get_header();
 						<article id="post-<?php the_ID(); ?>" class="card" style="margin-bottom: var(--space-30); padding: var(--space-30); position: relative;">
 							
 							<!-- Timeline indicator node -->
-							<div style="position: absolute; left: -41px; top: 30px; width: 18px; height: 18px; border-radius: 50%; background-color: var(--color-deep-navy); border: 3px solid <?php echo esc_attr( $color ); ?>; box-shadow: 0 0 10px <?php echo esc_attr( $color ); ?>;"></div>
+							<div style="position: absolute; left: -41px; top: 30px; width: 18px; height: 18px; border-radius: var(--radius-sm); background-color: var(--color-deep-navy); border: 3px solid <?php echo esc_attr( $color ); ?>; box-shadow: 0 0 10px <?php echo esc_attr( $color ); ?>;"></div>
 
 							<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: var(--space-10);">
 								<div class="card-meta" style="margin-bottom: 0;">

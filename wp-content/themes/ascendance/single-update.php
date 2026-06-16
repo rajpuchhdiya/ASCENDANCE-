@@ -34,7 +34,7 @@ get_header();
 			<header style="max-width: 800px; margin: 0 auto var(--space-40) auto; text-align: center;">
 				<div style="display: flex; justify-content: center; gap: 10px; margin-bottom: var(--space-10); flex-wrap: wrap;">
 					<span class="paywall-badge" style="background-color: var(--color-deep-navy); color: var(--color-white); border: 1px solid var(--border-color);"><?php esc_html_e( 'Real-time Update', 'ascendance' ); ?></span>
-					<span style="background-color: <?php echo esc_attr( $style['bg'] ); ?>; border: 1px solid <?php echo esc_attr( $style['border'] ); ?>; color: <?php echo esc_attr( $style['text'] ); ?>; font-family: var(--font-heading); font-size: 11px; font-weight: bold; text-transform: uppercase; padding: 2px 8px; border-radius: 4px;"><?php printf( esc_html__( 'Impact: %s', 'ascendance' ), esc_html( $impact ) ); ?></span>
+					<span style="background-color: <?php echo esc_attr( $style['bg'] ); ?>; border: 1px solid <?php echo esc_attr( $style['border'] ); ?>; color: <?php echo esc_attr( $style['text'] ); ?>; font-family: var(--font-heading); font-size: 11px; font-weight: bold; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm);"><?php printf( esc_html__( 'Impact: %s', 'ascendance' ), esc_html( $impact ) ); ?></span>
 				</div>
 
 				<h1 style="margin-bottom: var(--space-20); color: var(--color-deep-navy); font-family: var(--font-heading);"><?php the_title(); ?></h1>

@@ -36,7 +36,7 @@ get_header();
 						<article id="post-<?php the_ID(); ?>" class="card" style="display: flex; flex-direction: column; height: 100%;">
 							<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-10);">
 								<span class="card-tag" style="font-size: 11px;"><?php the_terms( $post_id, 'industry', '', ', ', '' ); ?></span>
-								<span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-color);"><?php echo esc_html( ucfirst( $tier ) ); ?> Tier</span>
+								<span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"><?php echo esc_html( ucfirst( $tier ) ); ?> Tier</span>
 							</div>
 
 							<h3 style="font-size: var(--font-size-sm); margin-bottom: var(--space-20); flex-grow: 0; line-height: 1.3;"><a href="<?php the_permalink(); ?>" style="color: var(--color-white);"><?php the_title(); ?></a></h3>

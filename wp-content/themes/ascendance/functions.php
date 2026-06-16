@@ -81,12 +81,38 @@ endif;
 add_action( 'after_setup_theme', 'ascendance_setup' );
 
 /**
+ * Theme font loading with preconnect hints for performance (Section 3.6)
+ */
+function ascendance_enqueue_fonts() {
+	// Preconnect hints
+	add_action( 'wp_head', function() {
+		echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+		echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+		echo '<link rel="preconnect" href="https://fonts.cdnfonts.com">' . "\n";
+	}, 1 );
+
+	// Google Fonts: Noto Serif (variable) + JetBrains Mono + Barlow fallback
+	wp_enqueue_style(
+		'ascendance-google-fonts',
+		'https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500;700&family=Barlow:wght@400;500;600;700&display=swap',
+		array(),
+		null
+	);
+
+	// Cooper Hewitt from cdnfonts
+	wp_enqueue_style(
+		'ascendance-cooper-hewitt',
+		'https://fonts.cdnfonts.com/css/cooper-hewitt',
+		array(),
+		null
+	);
+}
+add_action( 'wp_enqueue_scripts', 'ascendance_enqueue_fonts' );
+
+/**
  * Enqueue scripts and styles.
  */
 function ascendance_scripts() {
-	// Enqueue Google Fonts: Noto Serif (body) and JetBrains Mono (monospaced)
-	wp_enqueue_style( 'ascendance-fonts', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap', array(), null );
-
 	// Enqueue FontAwesome for icons
 	wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0' );
 
@@ -95,12 +121,12 @@ function ascendance_scripts() {
 
 	if ( in_array( $env, array( 'staging', 'production' ), true ) ) {
 		// Enqueue compiled production stylesheet
-		wp_enqueue_style( 'ascendance-style', get_template_directory_uri() . '/assets/dist/css/theme.css', array( 'ascendance-fonts', 'font-awesome' ), '2.0.0' );
+		wp_enqueue_style( 'ascendance-style', get_template_directory_uri() . '/assets/dist/css/theme.css', array( 'ascendance-google-fonts', 'ascendance-cooper-hewitt', 'font-awesome' ), '2.0.0' );
 		// Enqueue compiled production JS
 		wp_enqueue_script( 'ascendance-js', get_template_directory_uri() . '/assets/dist/js/main.js', array(), '2.0.0', true );
 	} else {
 		// Enqueue unminified development stylesheet
-		wp_enqueue_style( 'ascendance-style', get_stylesheet_uri(), array( 'ascendance-fonts', 'font-awesome' ), '2.0.0' );
+		wp_enqueue_style( 'ascendance-style', get_stylesheet_uri(), array( 'ascendance-google-fonts', 'ascendance-cooper-hewitt', 'font-awesome' ), '2.0.0' );
 		// Enqueue development JS
 		wp_enqueue_script( 'ascendance-js', get_template_directory_uri() . '/assets/js/main.js', array(), '2.0.0', true );
 	}

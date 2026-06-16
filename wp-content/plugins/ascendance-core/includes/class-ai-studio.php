@@ -571,7 +571,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
                 .studio-card {
                     background: #0F1E35;
                     border: 1px solid rgba(247, 244, 239, 0.1);
-                    border-radius: 8px;
+                    border-radius: var(--radius-sm);
                     padding: 24px;
                     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                     color: #F7F4EF;
@@ -594,7 +594,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
                     width: 100%;
                     background: #0A1628;
                     border: 1px solid rgba(247, 244, 239, 0.1);
-                    border-radius: 4px;
+                    border-radius: var(--radius-sm);
                     color: #FFFFFF;
                     padding: 10px;
                     margin-bottom: 20px;
@@ -620,7 +620,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
                     background: #BC1B1D;
                     color: #FFFFFF;
                     border: none;
-                    border-radius: 4px;
+                    border-radius: var(--radius-sm);
                     padding: 12px 24px;
                     font-weight: bold;
                     cursor: pointer;
@@ -637,7 +637,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
                 .usage-bar-outer {
                     width: 100%;
                     background: #0A1628;
-                    border-radius: 4px;
+                    border-radius: var(--radius-sm);
                     height: 12px;
                     margin-top: 8px;
                     overflow: hidden;
@@ -655,7 +655,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
                     color: #00FF66;
                     font-family: "JetBrains Mono", monospace;
                     padding: 20px;
-                    border-radius: 4px;
+                    border-radius: var(--radius-sm);
                     min-height: 400px;
                     max-height: 600px;
                     overflow-y: auto;

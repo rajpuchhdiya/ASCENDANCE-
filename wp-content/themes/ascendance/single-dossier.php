@@ -33,7 +33,7 @@ get_header();
 						if ( ! empty( $industries ) && ! is_wp_error( $industries ) ) :
 							foreach ( $industries as $industry ) :
 								?>
-								<span style="border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 11px; padding: 2px 8px; border-radius: 4px;"><?php echo esc_html( $industry->name ); ?></span>
+								<span style="border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 11px; padding: 2px 8px; border-radius: var(--radius-sm);"><?php echo esc_html( $industry->name ); ?></span>
 								<?php
 							endforeach;
 						endif;
@@ -93,7 +93,7 @@ get_header();
 						<h3 style="font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: 1px; color: var(--color-white); border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; margin-bottom: var(--space-20); margin-top: var(--space-30);"><i class="fa-solid fa-network-wired" style="color: var(--color-red); margin-right: 8px;"></i><?php esc_html_e( 'Actors Tracked', 'ascendance' ); ?></h3>
 						<div style="display: flex; flex-direction: column; gap: 12px;">
 							<?php foreach ( $stakeholders as $sh ) : ?>
-								<div style="background-color: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 6px;">
+								<div style="background-color: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: var(--radius-sm);">
 									<span style="font-weight: bold; color: var(--color-white); font-size: 13px; display: block;"><?php echo esc_html( $sh['name'] ); ?></span>
 									<span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;"><?php echo esc_html( $sh['role'] ); ?></span>
 								</div>
@@ -125,7 +125,7 @@ get_header();
 							<h3 style="font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: 1px; color: var(--color-white); margin-bottom: var(--space-20);"><i class="fa-solid fa-link" style="color: var(--color-red); margin-right: 8px;"></i><?php esc_html_e( 'Cross-Referenced Briefings', 'ascendance' ); ?></h3>
 							<div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
 								<?php foreach ( $related as $brief ) : ?>
-									<a href="<?php echo esc_url( get_permalink( $brief->ID ) ); ?>" class="card" style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 6px;">
+									<a href="<?php echo esc_url( get_permalink( $brief->ID ) ); ?>" class="card" style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: var(--radius-sm);">
 										<span style="font-weight: bold; color: var(--color-white); font-size: var(--font-size-sm);"><?php echo esc_html( $brief->post_title ); ?></span>
 										<i class="fa-solid fa-chevron-right" style="color: var(--color-red); font-size: 11px;"></i>
 									</a>

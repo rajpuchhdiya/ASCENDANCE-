@@ -128,7 +128,7 @@ if ( ! function_exists( 'ascendance_comment_callback' ) ) :
 				</footer>
 
 				<?php if ( '0' == $comment->comment_approved ) : ?>
-					<p class="comment-awaiting-moderation" style="font-style: italic; color: var(--accent-purple); font-size: 0.85rem; margin-bottom: 0.5rem;">
+					<p class="comment-awaiting-moderation" style="font-style: italic; color: var(--color-red); font-size: 0.85rem; margin-bottom: 0.5rem;">
 						<?php esc_html_e( 'Your comment is awaiting moderation.', 'ascendance' ); ?>
 					</p>
 				<?php endif; ?>

@@ -66,10 +66,10 @@ get_header();
 						<footer class="entry-footer" style="margin-top: 3rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
 							<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
 								<span class="cat-links">
-									<i class="fa-solid fa-folder-open" style="color: var(--accent-purple); margin-right: 8px;"></i>
+									<i class="fa-solid fa-folder-open" style="color: var(--color-red); margin-right: 8px;"></i>
 									<?php the_category( ', ' ); ?>
 								</span>
-								<?php the_tags( '<span class="tags-links"><i class="fa-solid fa-tags" style="color: var(--accent-purple); margin-right: 8px;"></i>', ', ', '</span>' ); ?>
+								<?php the_tags( '<span class="tags-links"><i class="fa-solid fa-tags" style="color: var(--color-red); margin-right: 8px;"></i>', ', ', '</span>' ); ?>
 							</div>
 						</footer>
 
@@ -82,7 +82,7 @@ get_header();
 									?>
 									<span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.3rem;"><?php esc_html_e( 'Previous Post', 'ascendance' ); ?></span>
 									<a href="<?php echo esc_url( get_permalink( $prev_post->ID ) ); ?>" style="font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); line-height: 1.3;">
-										<i class="fa-solid fa-arrow-left" style="margin-right: 6px; font-size: 0.8rem; color: var(--accent-purple);"></i>
+										<i class="fa-solid fa-arrow-left" style="margin-right: 6px; font-size: 0.8rem; color: var(--color-red);"></i>
 										<?php echo esc_html( $prev_post->post_title ); ?>
 									</a>
 								<?php endif; ?>
@@ -96,7 +96,7 @@ get_header();
 									<span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.3rem;"><?php esc_html_e( 'Next Post', 'ascendance' ); ?></span>
 									<a href="<?php echo esc_url( get_permalink( $next_post->ID ) ); ?>" style="font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); line-height: 1.3;">
 										<?php echo esc_html( $next_post->post_title ); ?>
-										<i class="fa-solid fa-arrow-right" style="margin-left: 6px; font-size: 0.8rem; color: var(--accent-purple);"></i>
+										<i class="fa-solid fa-arrow-right" style="margin-left: 6px; font-size: 0.8rem; color: var(--color-red);"></i>
 									</a>
 								<?php endif; ?>
 							</div>

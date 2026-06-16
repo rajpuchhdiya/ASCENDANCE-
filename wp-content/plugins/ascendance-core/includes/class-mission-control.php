@@ -338,7 +338,7 @@ class Mission_Control {
                 .terminal-card {
                     background: #0A1628;
                     border: 1px solid rgba(247, 244, 239, 0.1);
-                    border-radius: 6px;
+                    border-radius: 2px;
                     padding: 20px;
                     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
                     color: #F7F4EF;
@@ -425,14 +425,14 @@ class Mission_Control {
                     color: rgba(247, 244, 239, 0.7);
                     background: #030810;
                     padding: 12px 20px;
-                    border-radius: 4px;
+                    border-radius: 2px;
                     border: 1px solid rgba(247, 244, 239, 0.1);
                 }
                 .dot-indicator {
                     display: inline-block;
                     width: 8px;
                     height: 8px;
-                    border-radius: 50%;
+                    border-radius: 2px;
                     background: #27AE60;
                     margin-right: 6px;
                     vertical-align: middle;

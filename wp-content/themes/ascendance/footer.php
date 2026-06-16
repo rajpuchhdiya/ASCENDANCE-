@@ -43,9 +43,9 @@
 				<div class="footer-col">
 					<h4><?php esc_html_e( 'Contact', 'ascendance' ); ?></h4>
 					<ul class="footer-links">
-						<li><a href="mailto:raj@example.com"><i class="fa-regular fa-envelope" style="margin-right: 8px; color: var(--accent-purple);"></i> raj@example.com</a></li>
-						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: var(--accent-purple);"></i> Mumbai, India</span></li>
-						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-code" style="margin-right: 8px; color: var(--accent-purple);"></i> Author: Raj</span></li>
+						<li><a href="mailto:raj@example.com"><i class="fa-regular fa-envelope" style="margin-right: 8px; color: var(--color-red);"></i> raj@example.com</a></li>
+						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: var(--color-red);"></i> Mumbai, India</span></li>
+						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-code" style="margin-right: 8px; color: var(--color-red);"></i> Author: Raj</span></li>
 					</ul>
 				</div>
 			</div>
