@@ -1,0 +1,104 @@
+{
+    "version": 2,
+    "settings": {
+        "color": {
+            "custom": false,
+            "customGradient": false,
+            "palette": [
+                {
+                    "name": "Navy",
+                    "slug": "navy",
+                    "color": "#0F1E35"
+                },
+                {
+                    "name": "Deep Navy",
+                    "slug": "deep-navy",
+                    "color": "#0A1628"
+                },
+                {
+                    "name": "Cream",
+                    "slug": "cream",
+                    "color": "#F7F4EF"
+                },
+                {
+                    "name": "White",
+                    "slug": "white",
+                    "color": "#FFFFFF"
+                },
+                {
+                    "name": "Red",
+                    "slug": "red",
+                    "color": "#BC1B1D"
+                }
+            ]
+        },
+        "typography": {
+            "customFontSize": true,
+            "fontFamilies": [
+                {
+                    "fontFamily": "'Noto Serif', Georgia, serif",
+                    "slug": "noto-serif",
+                    "name": "Noto Serif"
+                },
+                {
+                    "fontFamily": "'Cooper Hewitt', -apple-system, sans-serif",
+                    "slug": "cooper-hewitt",
+                    "name": "Cooper Hewitt"
+                },
+                {
+                    "fontFamily": "'JetBrains Mono', monospace",
+                    "slug": "jetbrains-mono",
+                    "name": "JetBrains Mono"
+                }
+            ]
+        },
+        "spacing": {
+            "spacingSizes": [
+                {
+                    "name": "XX-Small",
+                    "slug": "10",
+                    "size": "0.5rem"
+                },
+                {
+                    "name": "X-Small",
+                    "slug": "20",
+                    "size": "1rem"
+                },
+                {
+                    "name": "Small",
+                    "slug": "30",
+                    "size": "1.5rem"
+                },
+                {
+                    "name": "Medium",
+                    "slug": "40",
+                    "size": "2rem"
+                },
+                {
+                    "name": "Large",
+                    "slug": "50",
+                    "size": "3rem"
+                },
+                {
+                    "name": "X-Large",
+                    "slug": "60",
+                    "size": "4rem"
+                },
+                {
+                    "name": "XX-Large",
+                    "slug": "70",
+                    "size": "6rem"
+                },
+                {
+                    "name": "XXX-Large",
+                    "slug": "80",
+                    "size": "8rem"
+                }
+            ]
+        },
+        "layout": {
+            "contentSize": "800px",
+            "wideSize": "1200px"
+        }
+    }
+}

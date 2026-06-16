@@ -1,0 +1,1378 @@
+TECHNICAL BUILD DOCUMENT
+Ascendance Intelligence Platform
+Phase 1 — WordPress Subscription Platform
+Developer Handoff & Implementation Specification
+Project
+Ascendance Strategies — Subscription Intelligence Platform
+Phase
+Phase 1 of 2 — Option A (Budget-aligned WordPress build)
+Audience
+Lead developer + supporting team
+Reference
+Ascendance Tech Stack Brief v1 + Approved Proposal v1
+Document version
+1.0 — issued May 2026
+Build duration
+4–5 weeks
+
+How to use this document
+Read sections 1–4 fully before writing any code — they define scope, stack, and the brand-token system everything else depends on. Use sections 5–14 as a build checklist; each one is a deliverable. Sections 15–18 are quality gates before launch. Section 19 is the Phase 2 roadmap — read it now so you do not accidentally close doors we want to keep open.
+Every configuration value, file path, and code snippet in this document is the actual value to use, not an example. When in doubt, copy verbatim and ask before deviating.
+
+Table of Contents
+1.
+Project Overview & Scope
+Page 3
+2.
+Technical Stack & Environment
+Page 5
+3.
+Brand Design System (token-based)
+Page 7
+4.
+Site Architecture & URL Structure
+Page 11
+5.
+Custom Theme Development
+Page 13
+6.
+Custom Post Types, Taxonomies & ACF Fields
+Page 16
+7.
+Membership & Subscription Setup (Paid Memberships Pro)
+Page 19
+8.
+Paywall & Tier-Gating Logic
+Page 22
+9.
+SEO Implementation (Rank Math + Schema)
+Page 24
+10.
+AEO Implementation (Answer Engine Optimization)
+Page 27
+11.
+GEO Implementation (llms.txt + AI Crawler Rules)
+Page 29
+12.
+Newsletter & Email Integration
+Page 32
+13.
+Search Configuration
+Page 33
+14.
+Analytics, Tracking & Conversion Events
+Page 34
+15.
+Sample Categories, Posts & Editorial Style Guide
+Page 35
+16.
+Performance, Caching & Image Optimization
+Page 38
+17.
+Security, GDPR & Compliance
+Page 39
+18.
+Testing Checklist & QA Protocol
+Page 41
+19.
+Deployment, Launch & Handover
+Page 43
+20.
+Training Videos & Documentation Deliverables
+Page 44
+21.
+Phase 2 Roadmap (post-launch)
+Page 45
+
+1. Project Overview & Scope
+1.1 What we are building
+Ascendance Strategies is a Paris-based advisory firm focused on the US-DRC Strategic Partnership (mining, energy, governance, security). They publish editorial intelligence on this market and want to convert their existing public website into a tiered subscription platform.
+Phase 1 takes their existing WordPress site at ascendance-strategies.com and rebuilds it as a subscription-gated intelligence publication. Public visitors can read free articles and previews; paying subscribers in three tiers get access to the full archive and specific topic categories.
+1.2 The three-user model
+User type
+What they can do
+Public visitor
+Reads free public articles in full.
+Reads first 200–300 words (preview) of paywalled articles, then hits a 'Subscribe to continue' block.
+Sees all article titles, deks, eyebrows, and category badges — discoverability stays high.
+Can submit the newsletter signup form (free weekly digest of public articles).
+Subscriber
+Authenticated via WordPress login (email + password; Phase 2 adds magic link).
+Tier-based content access (Essential / Professional / Enterprise).
+Receives weekly digest plus per-category notifications for new articles in their tier.
+Account page: manage billing, change tier, cancel, update payment method (Stripe Customer Portal).
+Personal dashboard: latest articles in their tier, recently published, saved articles (Phase 2).
+Editorial / admin
+Logs in to WordPress admin (wp-admin) with Editor or Administrator role.
+Drafts content using the standard WordPress block editor. AI generation is NOT in scope for Phase 1 — added in Phase 2 / Option B upgrade.
+Tags articles with categories, sets tier visibility, schedules publication.
+Reviews and approves subscriber registrations if manual approval is required (configurable).
+1.3 What is in scope for Phase 1 (this build)
+Complete website rebuild on a new custom WordPress theme, brand-token-based.
+Three-tier subscription system with Stripe billing, EU VAT handling, customer portal.
+Paywall and tier-gating on intelligence content with public preview snippets.
+Custom post types: Intelligence Brief, Update, Dossier.
+Sample category taxonomy aligned with US-DRC focus (see Section 15).
+Public surfaces: Home, About, Services, Industries, Intelligence (article archive), FAQ, Events, Contact, Newsletter, Privacy, Terms.
+Subscriber surfaces: Login, Register, Pricing, Account, Dashboard, Tier-upgrade flow.
+Full SEO foundation (Rank Math Pro, schema, sitemaps, structured data).
+AEO baseline (Q&A formatting, FAQ schema, E-E-A-T markup).
+GEO baseline (llms.txt, AI crawler robots.txt, citable content patterns).
+Newsletter integration (Loops, Mailchimp, or Brevo — to be confirmed with client at kickoff).
+Search (WordPress core + SearchWP).
+Analytics (GA4 + Search Console + conversion events).
+Migration of existing content with URL preservation (301 redirects where structure changes).
+Hosting on existing OVH infrastructure with staging + production environments.
+Training videos (see Section 20) and handover documentation.
+30 days post-launch bug-fix support.
+1.4 What is NOT in scope for Phase 1
+Explicitly deferred to Phase 2 / future engagement
+AI-assisted article generation (Claude / GPT / Gemini API integration in the admin).
+Sayari-style entity profile pages with cross-referenced relationships.
+Custom client portal (secure document area for advisory clients).
+Watchlists, ratings, interactive data tools.
+Three distinct visual registers — Phase 1 uses the Editorial register only.
+Algolia / Typesense — WordPress + SearchWP only for Phase 1.
+Cross-domain SSO with a separate Next.js platform.
+Native mobile app (mobile-responsive web only).
+Multi-language site beyond existing English + French.
+If during the build the client requests anything in the list above, raise a change order — do not silently absorb it.
+
+2. Technical Stack & Environment
+2.1 Core stack
+Layer
+Choice
+Why / Notes
+CMS
+WordPress 6.6+
+Existing site already on WordPress. Use the latest stable release at start of build.
+PHP
+PHP 8.2 or 8.3
+Required for modern plugin compatibility and performance. Confirm OVH supports your chosen version.
+Database
+MySQL 8.0+ or MariaDB 10.6+
+Standard managed offering on OVH.
+Web server
+Apache or NGINX
+Either works; confirm with OVH which the chosen plan uses. Caching headers and rewrite rules must be set accordingly.
+Theme
+Custom (built fresh)
+Block-based, lightweight. No Elementor on the new build. Existing Elementor content migrated to standard blocks.
+Frontend tooling
+Vite + TypeScript (optional)
+For bundling theme JS/CSS. Plain hand-written assets are also acceptable for a build this size.
+Version control
+Git (GitHub or GitLab)
+Private repo. Theme and any custom plugin code in source control from day one. Database NOT in version control.
+Deployment
+Git-based deploy to OVH
+Deploy theme/plugins via SSH + Git pull, or via SFTP from a CI step. Avoid editing files directly on production.
+2.2 Required WordPress plugins
+All plugins listed are commercial unless noted as free. Client purchases the licenses directly — do not pass through your account.
+Membership & commerce
+Plugin
+Edition
+Purpose
+Paid Memberships Pro
+Plus / Builder bundle
+Core membership engine, three tiers, Stripe billing, member account pages, content gating.
+PMPro — Stripe Tax Add-on
+Included in Plus
+EU VAT calculation via Stripe Tax. Required for compliance.
+PMPro — Email Confirmation Add-on
+Included in Plus
+Double opt-in for subscriber email verification.
+PMPro — Member Directory & Profile Pages
+Optional
+Disable for Phase 1 — subscribers do not need public profiles.
+Why Paid Memberships Pro and not MemberPress: PMPro has a free core, the most flexible content-restriction rules, mature Stripe Tax handling, and no per-transaction platform fees at any tier. MemberPress is slightly more polished on the front end but charges a 4.9% transaction fee on its entry plan and costs more at the tier we need (Growth at ~USD 700/yr regular pricing). For a niche subscription with low subscriber count and high price per subscriber, PMPro is the better fit.
+SEO, AEO & GEO
+Plugin
+Edition
+Purpose
+Rank Math SEO
+Pro
+Schema, XML sitemap, focus keywords, internal linking suggestions, Google Search Console integration.
+Schema Pro (alternative)
+Optional
+Only if Rank Math schema falls short for any custom post type. Rank Math Pro covers everything we need by default.
+WP Sitemap Generator (custom)
+Custom code
+Generate /llms.txt and /llms-full.txt dynamically. Implementation in Section 11.
+Performance, caching & security
+Plugin
+Edition
+Purpose
+WP Rocket
+Standard
+Page caching, browser caching, lazy loading, minification.
+ShortPixel (or Imagify)
+Pay-as-you-go
+Image compression, WebP/AVIF conversion on upload.
+Wordfence
+Free or Premium
+Firewall, malware scan, brute-force protection. Free tier is enough for Phase 1.
+WP Mail SMTP
+Free
+Reliable transactional email via SendGrid / Postmark / OVH SMTP.
+UpdraftPlus
+Free or Premium
+Automated backups to external storage (S3 / Google Drive / OVH Object Storage).
+Content, search & UX
+Plugin
+Edition
+Purpose
+Advanced Custom Fields (ACF)
+Pro
+Custom fields for Briefs / Updates / Dossiers (see Section 6).
+SearchWP
+Standard
+Better archive search than core WordPress: weighted by title/body/tags, fast.
+Complianz
+Premium
+GDPR cookie banner, consent management, EU-compliant.
+Polylang or WPML
+Pro
+French / English bilingual content. Polylang preferred for simpler sites.
+Plugin discipline
+Every additional plugin is a performance cost, a security surface, and an update obligation. Resist the urge to add more 'just in case'.
+If the client requests a feature that needs a new plugin, raise it explicitly — do not silently add it.
+2.3 Environments
+Three environments, all on OVH:
+Local. Each developer's machine, using Local by Flywheel, LocalWP, or DDEV. Mirror PHP/MySQL versions to production.
+Staging. On the OVH plan or a subdomain like staging.ascendance-strategies.com. Password-protected at the server level (HTTP Basic Auth) so search engines do not index it. Stripe in test mode. All emails routed to a single test inbox.
+Production. ascendance-strategies.com. Stripe live mode, transactional emails live, search engines allowed.
+2.4 Credentials & secrets
+Store nothing sensitive in source code or the wp_options table in plain text. Use:
+WordPress wp-config.php constants for the most critical secrets (DB credentials, Stripe API keys, SMTP credentials).
+Environment variables via a .env file (loaded with vlucas/phpdotenv) for non-WordPress-core secrets.
+A shared password manager (1Password / Bitwarden) for the team. Never send keys over email or Slack.
+Example wp-config.php addition:
+/* Stripe — set per environment, never commit values */define('ASCENDANCE_STRIPE_PUBLIC_KEY', getenv('STRIPE_PUBLIC_KEY'));define('ASCENDANCE_STRIPE_SECRET_KEY', getenv('STRIPE_SECRET_KEY'));define('ASCENDANCE_STRIPE_WEBHOOK_SECRET', getenv('STRIPE_WEBHOOK_SECRET'));/* Environment marker — used by theme to show staging banner */define('WP_ENVIRONMENT_TYPE', getenv('WP_ENV') ?: 'production');/* Disable file editing from wp-admin in production */if (WP_ENVIRONMENT_TYPE === 'production') {    define('DISALLOW_FILE_EDIT', true);    define('DISALLOW_FILE_MODS', true);}
+
+3. Brand Design System (token-based)
+This is a hard requirement, not a preference
+Every color and font must be a CSS custom property defined in one theme file. No hex codes scattered across components. No font-family strings inline. The brand is mid-change (gold → red) and will change again. Re-theming = editing one file, never find-and-replace across many.
+3.1 Color tokens
+Define in one file: assets/css/_tokens.css (or theme.json for block theme equivalents). Reference everywhere as var(--token-name).
+Token name
+Hex
+Sample
+Role
+--color-navy
+#0F1E35
+
+Primary surface, headings, dark cards
+--color-navy-deep
+#0A1628
+
+Mastheads, darkest surfaces
+--color-navy-mid
+#182D4A
+
+Section alternation, darker cards
+--color-cream
+#F7F4EF
+
+Editorial page background
+--color-white
+#FFFFFF
+
+Content cards
+--color-red
+#BC1B1D
+
+PRIMARY ACCENT — eyebrows, CTAs, the left border, brand name, sign-off, critical/alert
+--color-red-light
+#E04B4B
+
+Red on dark navy backgrounds, animated values
+--color-divider-light
+#E8E4DC
+
+Borders on cream and white
+--color-divider-dark
+#2A3A55
+
+Borders on navy
+--color-text-primary
+#1A1A2E
+
+Body text on light backgrounds
+--color-text-muted
+#6B6B7A
+
+Labels, captions, metadata
+--color-dek
+#56514B
+
+Muted warm stone — italic subtitles, deks
+--color-success
+#27AE60
+
+Status: delivered, on-track, active subscription
+--color-warning
+#E67E22
+
+Status: warning, payment due
+--color-info
+#2980B9
+
+Status: informational
+Banned colors
+No gold (the previous brand accent — we are mid-migration away).
+No gradients anywhere.
+No purple anywhere.
+No pure black #000000 — always use --color-text-primary (#1A1A2E).
+3.2 Typography tokens
+Token
+Font
+Role
+--font-serif
+Noto Serif
+Headlines, body, deks, pull quotes, drop caps. Variable font preferred for weight flexibility.
+--font-sans
+Cooper Hewitt (with Barlow then Roboto fallback)
+Eyebrows, labels, navigation, UI. Load Cooper Hewitt from cdnfonts.com; Barlow / Roboto from Google Fonts.
+--font-mono
+JetBrains Mono
+Data values, timestamps, table content, technical labels. From Google Fonts.
+Banned fonts
+Not Georgia (Georgia is only an acceptable docx fallback for Noto Serif — never use in CSS).
+Not DM Sans, not Inter, not Helvetica, not Arial — use the three above only.
+3.3 Spacing, sizing, and radius tokens
+Use a consistent scale. Define once, reference everywhere.
+:root {  /* spacing — 4px base scale */  --space-1: 0.25rem;   /* 4px  */  --space-2: 0.5rem;    /* 8px  */  --space-3: 0.75rem;   /* 12px */  --space-4: 1rem;      /* 16px */  --space-6: 1.5rem;    /* 24px */  --space-8: 2rem;      /* 32px */  --space-12: 3rem;     /* 48px */  --space-16: 4rem;     /* 64px */  --space-24: 6rem;     /* 96px */  /* type scale */  --text-xs: 0.75rem;  --text-sm: 0.875rem;  --text-base: 1rem;  --text-lg: 1.125rem;  --text-xl: 1.25rem;  --text-2xl: 1.5rem;  --text-3xl: 2rem;  --text-4xl: 2.5rem;  --text-5xl: 3rem;  /* radius — note ceiling */  --radius-sm: 2px;  --radius-md: 2px;   /* yes, the same — 2px is the maximum */  /* never use border-radius > 2px. No pills, no fully rounded buttons. */  /* line widths */  --border-thin: 1px;  --border-thick: 3px;  /* the signature red left border */  /* timing */  --transition-fast: 120ms;  --transition-base: 200ms;}
+3.4 The signature element — 3px red left border
+This is the single most recognizable Ascendance design element. Apply to:
+All card-style components (article cards, dossier cards, dashboard cards).
+Pull quotes inside articles.
+Featured callouts.
+The subscribe-to-continue paywall block.
+It is structural, not decorative. Always 3px, always solid, always --color-red. Border-radius on the card is 2px maximum.
+.ascendance-card {  background: var(--color-white);  border-left: var(--border-thick) solid var(--color-red);  border-radius: var(--radius-sm);  padding: var(--space-6);  /* subtle right/top/bottom border for definition */  border-top: 1px solid var(--color-divider-light);  border-right: 1px solid var(--color-divider-light);  border-bottom: 1px solid var(--color-divider-light);}
+3.5 Tone & registers
+The brand commits to three visual registers: Editorial, Data Terminal, and Dossier. Phase 1 builds Editorial only. The token system must accommodate the other two so they can be added in Phase 2 by adding new tokens, not rewriting components.
+Editorial (Phase 1)
+Background: --color-cream. Serif-led typography. Articles, homepage, public reading surfaces. The default for Phase 1.
+Data Terminal (Phase 2)
+Background: --color-navy-deep. Mono-heavy, dense data presentation. Trackers, ratings, dashboards. Deferred but build tokens so component CSS handles dark backgrounds without rewrites.
+Dossier (Phase 2)
+Background: --color-white. Long-form living documents with embedded data blocks. Subscriber-only.
+To support this, write component CSS using semantic tokens like --surface-bg, --surface-text, --surface-border. Map those to the concrete color tokens per register. Switching register = swapping the mapping, not rewriting components.
+/* Semantic surface tokens — one register active at a time *//* default: editorial register */:root {  --surface-bg: var(--color-cream);  --surface-card: var(--color-white);  --surface-text: var(--color-text-primary);  --surface-text-muted: var(--color-text-muted);  --surface-border: var(--color-divider-light);  --surface-accent: var(--color-red);}/* Phase 2 — data terminal register */[data-register="terminal"] {  --surface-bg: var(--color-navy-deep);  --surface-card: var(--color-navy-mid);  --surface-text: var(--color-cream);  --surface-text-muted: #B0B0BD;  --surface-border: var(--color-divider-dark);  --surface-accent: var(--color-red-light);}
+3.6 Loading fonts correctly
+Load fonts in functions.php with preconnect hints and font-display: swap. Do not load via @import in CSS (blocks rendering).
+// functions.php — theme font loadingfunction ascendance_enqueue_fonts() {    // Preconnect for performance    add_action('wp_head', function() {        echo '<link rel="preconnect" href="https://fonts.googleapis.com">';        echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';        echo '<link rel="preconnect" href="https://fonts.cdnfonts.com">';    }, 1);    // Google Fonts: Noto Serif (variable) + JetBrains Mono + Barlow fallback    wp_enqueue_style(        'ascendance-google-fonts',        'https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500;700&family=Barlow:wght@400;500;600;700&display=swap',        [],        null    );    // Cooper Hewitt from cdnfonts    wp_enqueue_style(        'ascendance-cooper-hewitt',        'https://fonts.cdnfonts.com/css/cooper-hewitt',        [],        null    );}add_action('wp_enqueue_scripts', 'ascendance_enqueue_fonts');
+
+4. Site Architecture & URL Structure
+4.1 Sitemap
+All Phase 1 surfaces with their slugs. Preserve existing URLs wherever possible; redirect with 301 if a slug must change.
+Public surfaces
+Page
+Slug
+Notes
+Home
+/
+Hero, latest briefs (3), pillars, testimonials, subscribe CTA.
+About
+/about/
+Methodology, team, history, partnerships.
+Services
+/services/
+Advisory offerings, sub-pages for each service line.
+Industries
+/industries/
+Mining, Energy, Infrastructure, Governance, Security.
+Intelligence (archive)
+/intelligence/
+Article archive index. Filterable by category and tier-visibility.
+Single Brief
+/intelligence/{slug}/
+Custom post type single. Paywall logic applies.
+Category archive
+/category/{slug}/
+All articles in a category — e.g. /category/mining/.
+FAQ
+/faq/
+Q&A about Ascendance, subscriptions, the platform. FAQPage schema.
+Events
+/events/
+Past + upcoming events. Optional custom post type.
+Contact
+/contact/
+Form + office address. Use Fluent Forms or WPForms.
+Newsletter signup
+/newsletter/
+Standalone signup page with sample issue preview.
+Privacy Policy
+/privacy/
+GDPR-compliant, drafted by client; we publish.
+Terms of Service
+/terms/
+Drafted by client; we publish.
+Cookie Policy
+/cookies/
+Auto-generated by Complianz, manually reviewed.
+Subscription surfaces
+Page
+Slug
+Notes
+Pricing / Subscribe
+/subscribe/
+Three tiers side-by-side comparison. CTA buttons go to PMPro checkout.
+Checkout
+/membership-checkout/
+PMPro default page, restyled to match brand.
+Login
+/login/
+Custom login page, not wp-login.php. Hide wp-login.php via plugin or rewrite rule.
+Register
+/register/
+PMPro registration page, brand-styled.
+Account
+/account/
+Subscriber dashboard: billing, tier, cancel, profile, email preferences.
+Dashboard
+/dashboard/
+Personalized landing after login. Latest briefs in their tier, category subscriptions, link to Account.
+Confirmation
+/membership-confirmation/
+Post-checkout thank-you page.
+Password reset
+/lostpassword/
+Brand-styled, not the default wp-login.php variant.
+4.2 URL conventions
+Lowercase, hyphen-separated. No underscores, no capitals.
+No trailing slug noise (avoid /intelligence/article-2026-05-22-mining-sector-update/; use /intelligence/mining-sector-update/).
+Category in URL only on category archive, not on the single post slug. (/intelligence/{slug}/, not /intelligence/{category}/{slug}/.) This keeps URLs short and lets us re-categorise without breaking links.
+No dates in URLs. Briefs are evergreen reference material; a 2024 brief stays useful in 2027.
+French translations live at /fr/{slug}/ with hreflang annotation.
+4.3 Header navigation
+Primary nav (left-aligned after logo): Intelligence, Services, Industries, About, FAQ. Right-aligned: language switch (EN / FR), Search icon, Login link, Subscribe button (red, prominent).
+Logged-in subscribers see: Intelligence, Services, Industries, About, FAQ. Right side: language switch, Search, Account icon (with dropdown to Dashboard, Account, Logout).
+4.4 Footer
+Four columns:
+Column 1: Logo, one-line tagline, sign-off line (red, brand voice).
+Column 2: Intelligence (Briefs, Updates, Dossiers, Archive), Industries (links to industry pages).
+Column 3: About (Methodology, Team, Contact, Press), Subscribe (Pricing, Newsletter).
+Column 4: Legal (Privacy, Terms, Cookies), Social (LinkedIn, X). Copyright line at the bottom.
+4.5 Redirects (existing → new)
+Audit the existing ascendance-strategies.com sitemap before launch. For every URL that changes:
+Add a 301 redirect from old → new in WP Rocket or via Rank Math's Redirections module.
+Test every redirect with curl -I before launch.
+Submit the new sitemap to Google Search Console on launch day.
+URL preservation matters
+Existing SEO equity lives at existing URLs. Every URL we change without a 301 redirect costs ranking. Test redirects on staging before launch — do not 'fix it after we go live'.
+
+5. Custom Post Types & Taxonomies
+All long-form intelligence content lives in three custom post types. Standard WordPress Posts are reserved for the public-facing editorial section (news, opinion, lighter content). This separation matters because it lets us apply different templates, different paywall rules, different schema markup, and different archive logic per content type.
+5.1 The three intelligence post types
+CPT slug
+Label
+Purpose
+brief
+Intelligence Brief
+The flagship format. 1,500–3,000 word analytical pieces on a named topic. Each has a clear analytical claim, evidence, and citations. Most are subscriber-gated; some teaser briefs are public to drive subscriptions and AI citations.
+update
+Update
+Short-form (300–800 words) developments on an existing topic. Time-sensitive. Always dated. Always references the parent Brief(s) they update.
+dossier
+Dossier
+Long living documents (3,000+ words) on a major topic. Versioned. Updated rather than replaced. Highest tier only. Includes embedded data blocks.
+
+5.2 Registration (PHP)
+Register all three CPTs from the custom theme's functions.php (or better, from a small mu-plugin so they survive a theme change). The example below registers brief; mirror the pattern for update and dossier.
+<?php// /wp-content/mu-plugins/ascendance-cpts.phpadd_action( 'init', 'ascendance_register_brief_cpt' );function ascendance_register_brief_cpt() {    register_post_type( 'brief', array(        'labels' => array(            'name'               => 'Intelligence Briefs',            'singular_name'      => 'Brief',            'add_new_item'       => 'Add New Brief',            'edit_item'          => 'Edit Brief',            'menu_name'          => 'Briefs',        ),        'public'              => true,        'has_archive'         => 'intelligence',        'rewrite'             => array( 'slug' => 'intelligence', 'with_front' => false ),        'supports'            => array( 'title', 'editor', 'excerpt', 'thumbnail', 'author', 'revisions', 'custom-fields' ),        'show_in_rest'        => true,        'menu_icon'           => 'dashicons-analytics',        'menu_position'       => 5,        'taxonomies'          => array( 'topic', 'region', 'tier' ),    ) );}
+Why mu-plugins, not the theme
+CPTs registered in the theme disappear if the theme is switched. Disappearing CPTs do not mean the posts vanish — they become orphans, invisible in the admin until the CPT is re-registered. Always register CPTs in a must-use plugin (/wp-content/mu-plugins/).
+5.3 Taxonomies
+Four custom taxonomies handle our content organization. Do not use WordPress's default 'category' or 'post_tag' on the intelligence CPTs — they are reserved for the editorial Posts.
+Taxonomy
+Hierarchical?
+Purpose & examples
+topic
+Yes
+The primary editorial classification. Hierarchical so we can nest (e.g. Critical Minerals > Cobalt). Examples: US-DRC Partnership, Critical Minerals, Sakania-Lobito Corridor, Strategic Asset Reserve, Energy & Infrastructure, Governance.
+region
+Yes
+Geographic classification. Examples: Democratic Republic of Congo, Angola, Zambia, United States, European Union, Central Africa.
+tier
+No
+Access tier mapping. Three terms: public, essential, professional. Used by PMPro to gate. Set per-post via a meta box, not a sidebar selector (less error-prone for editors).
+tag
+No
+Free-form entity tags. Cobalt, Copper, Lobito, China, Sanctions, etc. Used in 'Related briefs' blocks and for the eventual entity-profile pages in Phase 2.
+5.4 ACF Pro field groups
+Each CPT gets an ACF Pro field group with these fields. Do not store this in the database via wp_options — keep field definitions exportable as PHP via ACF's Local JSON or PHP export, so they live in version control.
+Field group: Intelligence Brief
+Subhead / dek (text, single line) — the italic subtitle below the headline.
+Analytical claim (textarea, 1–2 sentences) — the brief's thesis in one sentence. Required.
+Public excerpt (textarea, 50–80 words) — visible to non-subscribers when the brief is gated. This is the AI-citation surface. Required.
+Key takeaways (repeater, 3–5 items, each one bullet line) — appears as a callout block at the top.
+Sources (repeater, each with: source name, URL, date) — the brief's evidence base. Renders as a 'Sources' section at the bottom.
+Related briefs (post object, multiple, query CPT=brief) — three to five linked briefs.
+Brief version (number, default 1) — incremented when the brief is substantively revised. Updates do not increment.
+Field group: Update
+Update for (post object, single, query CPT=brief or dossier) — the parent brief this updates. Required.
+Update date (date picker) — when the development happened, not when published. Required.
+One-line summary (text, single line, max 160 chars) — also used as the meta description.
+Field group: Dossier
+All Brief fields, plus:
+Last revised (date picker, auto-updated on save).
+Revision log (repeater: date + summary of change).
+Data blocks (repeater: block title + structured data table) — for embedded data sections.
+Companion downloads (file repeater) — PDFs of the dossier at major revision points.
+ACF JSON sync
+Enable ACF Pro Local JSON by creating /wp-content/themes/ascendance/acf-json/. Every field group save writes a JSON file there; on a fresh environment, ACF reads from JSON on activation. This is how field groups travel through git from local → staging → production.
+
+6. Content Architecture — Categories, Topics, Tags
+Concrete starter taxonomy for Phase 1. The editorial team should expand this; do not seed exhaustively, seed enough to test paywall and archive logic.
+6.1 Topics (hierarchical)
+Two-level taxonomy. Top-level topics map to the main industries; sub-topics to specific frameworks or named initiatives.
+Critical Minerals├── Cobalt├── Copper├── Lithium└── Rare EarthsEnergy & Infrastructure├── Sakania-Lobito Corridor├── Power Generation└── Logistics & TransportUS-DRC Strategic Partnership├── Memorandum & Agreements├── Stakeholders└── Implementation UpdatesGovernance & Diplomacy├── DRC Domestic Policy├── US Policy└── Multilateral EngagementStrategic Asset Reserve (framework)├── Methodology└── ApplicationDefense & Security└── (sub-topics as needed)Geopolitics├── China Engagement├── EU Engagement└── Regional Competition
+6.2 Regions
+Flat list, no hierarchy needed at this scale. Each post tagged with 1–3 regions.
+Democratic Republic of Congo (primary)
+Angola
+Zambia
+Central African Republic
+Rwanda
+United States
+European Union
+China
+Central Africa (regional)
+Sub-Saharan Africa (regional)
+6.3 Tiers
+public
+Free. Visible to anyone. Used for teasers, explainers, FAQs, methodology pieces — content designed to be cited by AI search and indexed broadly.
+essential
+Essential tier subscriber-only. The default for most Briefs and Updates. Public excerpt visible; full content gated.
+professional
+Professional tier subscribers only. Reserved for Dossiers and the most sensitive Briefs. Even the excerpt may be brief.
+6.4 Tag strategy
+Tags are entity-like: people, companies, specific projects, named instruments. The editor adds them as they appear. By month 6, this list becomes the seed for entity-profile pages in Phase 2.
+Starter tags (illustrative, not exhaustive): Lobito Atlantic Railway, Africa Finance Corporation, KoBold Metals, Gécamines, Sicomines, US Development Finance Corporation, EU Critical Raw Materials Act, China-Africa Cooperation Forum, Sakania, Kolwezi, Tenke Fungurume.
+Rule of thumb
+Topics describe what the brief is ABOUT. Regions describe WHERE. Tags name specific ENTITIES mentioned. If you cannot decide whether something is a topic or a tag, ask: would we eventually want an entity-profile page for it? If yes → tag. If it is a broader theme → topic.
+
+7. Sample Posts — Seed Content
+Below are four sample post structures the developer should seed during build, so the editorial team has working examples on day one. Treat the structure as the spec; the editorial team will rewrite the words once the platform is live.
+7.1 Sample 1 — Public explainer Brief (FAQ-style, AEO-optimised)
+CPT
+brief
+Title
+What is the US-DRC Strategic Partnership?
+URL slug
+/intelligence/us-drc-strategic-partnership/
+Tier
+public
+Topic
+US-DRC Strategic Partnership
+Regions
+Democratic Republic of Congo, United States
+Schema
+Article + FAQPage
+
+Content structure
+Open with a 50-word definitional paragraph. This is the AI-citation paragraph — what LLMs will lift verbatim. Then explicit H2/H3 questions and answers.
+<!-- Block 1: Lead paragraph (50 words, definitional, citable) -->The US-DRC Strategic Partnership is a bilateral framework between theUnited States and the Democratic Republic of Congo, announced in 2022and formalised through subsequent agreements, focused on criticalminerals supply chains, infrastructure (notably the Sakania-LobitoCorridor), and governance cooperation.<!-- Block 2: H2 question -->## What does the partnership cover?[2-3 paragraph answer]<!-- Block 3: H2 question -->## Who are the key stakeholders?[Answer with named entities — these become tags]<!-- Block 4: H2 question -->## How is it different from the Belt and Road model?[Comparative answer — AI search loves comparisons]<!-- Block 5: H2 question -->## What has happened so far?[Brief timeline, link to Updates]<!-- Block 6: Related briefs (ACF block) --><!-- Block 7: Sources (ACF block) -->
+FAQ schema on this post
+Rank Math Pro auto-detects H2 questions and offers to mark them as FAQPage schema. Enable it and verify the markup in Google's Rich Results Test before launch.
+7.2 Sample 2 — Subscriber-gated Brief
+Title
+The Sakania-Lobito Corridor: Strategic Implications of the May 2026 Concession Award
+Slug
+/intelligence/sakania-lobito-corridor-may-2026-concession/
+Tier
+essential
+Analytical claim
+The May 2026 concession award shifts operational risk away from the consortium and onto the host states, with implications for project finance terms over the next 18 months.
+
+Paywall rendering
+On this post type with tier=essential, non-subscribers see:
+Headline, dek, byline, date, topic, regions — all visible.
+The analytical claim — visible (this is the 'public excerpt' field; the citation surface).
+First paragraph of body — visible.
+After paragraph 1, a paywall block: 'Continue reading — Subscribe to access the full Brief.' Two CTAs: Subscribe (red, primary) and Log in (text link).
+Below the paywall: 'What you'll get with Essential' — short benefit list, then 'Related briefs you may have read' (only previously-public titles, never gated ones).
+Do NOT use display:none for hidden content
+Many tutorials suggest 'render the full content but hide it with CSS'. This is wrong on two counts: (1) Google reads display:none content but discounts it heavily — losing SEO value; (2) anyone with DevTools can read the full article — losing revenue. The PMPro pattern is server-side truncation: the gated content is never sent to the browser unless the user has access.
+7.3 Sample 3 — Update (short-form, time-sensitive)
+CPT
+update
+Title
+Lobito Atlantic Railway: Concession Award to AFC-Led Consortium
+Update for
+Brief: 'The Sakania-Lobito Corridor explained'
+Tier
+essential
+Length
+400–600 words
+
+Update structure
+Headline starts with the named entity: 'Lobito Atlantic Railway: …' — not 'Big news today: …'
+Dateline paragraph: who, what, when, where (NewsArticle schema benefits).
+'What this changes' paragraph — the analytical layer.
+Link back to the parent Brief with explicit anchor text: 'See our earlier brief on the Sakania-Lobito Corridor for the full background.'
+7.4 Sample 4 — Dossier (long-form, versioned)
+Dossiers are the highest-tier deliverable. They are structured documents, not narrative articles. Treat them like industry reports.
+Dossier structure (block template)
+# [Dossier Title][Subhead / dek][Document metadata block: Last revised, Version, Authors, Status]## Executive Summary[300-word summary, citable, public excerpt for the gated version]## 1. Context## 2. Stakeholders[Each stakeholder as a sub-block with: name, role, position]## 3. Key Data[Embedded data block — ACF repeater renders as a table]## 4. Scenarios[3 scenarios with probability and implications]## 5. Outlook & Implications## 6. Sources & Methodology[Revision log block — appears in footer]
+Dossier publication discipline
+Dossiers are updated, not replaced. When a major shift happens, the editor opens the dossier, adds a revision-log entry, edits the affected sections in place, and re-publishes. The URL never changes. The 'version' field increments. Subscribers get a notification: 'X dossier has been revised — see the v4 changes.' This is what differentiates a dossier from a brief.
+
+8. Subscription & Paywall — Paid Memberships Pro
+Phase 1 uses Paid Memberships Pro (PMPro) as the membership engine. It is mature, free at the core, with paid add-ons for the features we need. The PMPro / Stripe integration is well-established and handles EU VAT via Stripe Tax.
+8.1 PMPro install & required add-ons
+Plugin
+Required?
+Purpose
+Paid Memberships Pro (core)
+Yes
+The base plugin. Free.
+PMPro Member Directory & Profile Pages
+No (Phase 2)
+Defer.
+PMPro Register Helper / Custom Fields
+Yes
+Adds custom fields to the registration form (organisation, role, country, how they heard about us).
+PMPro Category Restrictions (Add On)
+Yes
+Lets us gate by topic taxonomy too, not just by post.
+PMPro Add Member Admin
+Yes
+Admin can grant comp subscriptions (press, partners, free trials).
+PMPro Email Confirmation
+Yes
+Double opt-in on registration. Required for GDPR good practice.
+PMPro Cancel on Next Payment Date
+Yes
+Default cancel behaviour should be 'access until end of period', not 'cancel immediately'.
+PMPro Stripe gateway
+Yes
+Bundled with core. Configure in Memberships → Payment Settings.
+8.2 The three subscription levels — exact configuration
+
+Essential
+Professional
+Enterprise
+Annual price
+Client to set
+Client to set
+Custom (contact us)
+Access to public content
+✓
+✓
+✓
+Essential Briefs
+✓
+✓
+✓
+Updates
+✓
+✓
+✓
+Dossiers
+—
+✓
+✓
+Weekly digest email
+✓
+✓
+✓
+Category preference center
+✓
+✓
+✓
+Multi-seat
+1 seat
+1 seat
+3–10 seats
+Phase 1 implementation?
+Yes
+Yes
+Lead-form only (manual onboarding)
+Enterprise tier — Phase 1 reality
+Multi-seat enterprise tier in PMPro requires additional add-ons and significant configuration. For Phase 1, ship Enterprise as a 'Contact Sales' lead capture only. Manual onboarding via the admin (PMPro Add Member Admin) until we have enough enterprise interest to justify proper multi-seat plumbing.
+8.3 Stripe configuration
+Create a Stripe account if the client doesn't already have one. EU country (France) on the business profile.
+Enable Stripe Tax in dashboard (Settings → Tax). Required for EU VAT compliance.
+In Stripe, create three products: 'Ascendance Essential — Annual', 'Ascendance Professional — Annual', 'Ascendance Enterprise — Custom'. Set prices in EUR.
+In WordPress: Memberships → Payment Settings → Stripe. Paste the publishable key (live), secret key (live), webhook secret. Use Stripe Test keys on staging.
+Test webhooks: use Stripe CLI 'stripe listen --forward-to https://staging.ascendance.../wp-json/pmpro/v1/webhook' to verify webhook reception.
+Configure Stripe Customer Portal so subscribers can manage their billing from a Stripe-hosted page (cheaper than building custom). Link from /account/.
+8.4 Paywall pattern — template code
+In single-brief.php (or block template), use pmpro_has_membership_access() to check tier, and conditionally render the gate.
+<?php// /wp-content/themes/ascendance/single-brief.phpget_header();the_post();$tier_term = wp_get_post_terms( get_the_ID(), 'tier', array( 'fields' => 'slugs' ) );$tier = $tier_term[0] ?? 'public';// Header block: title, dek, byline, date — always visibleget_template_part( 'template-parts/brief-header' );if ( $tier === 'public' || pmpro_has_membership_access() ) {    // Full content    the_content();    get_template_part( 'template-parts/brief-footer' );} else {    // Public excerpt + paywall    $excerpt = get_field( 'public_excerpt' );    echo '<div class="brief-excerpt">' . wp_kses_post( $excerpt ) . '</div>';    get_template_part( 'template-parts/paywall-gate', null, array( 'tier' => $tier ) );}get_footer();
+The paywall-gate template-part renders the upsell. Keep it short, branded, and with a single primary CTA.
+8.5 Account & dashboard pages
+PMPro ships with default Account, Billing, and Cancel pages. They are functional but not branded. Override by copying PMPro's page templates into the theme and restyling.
+/account/ — overview: current tier, renewal date, billing portal link, edit profile, email preferences, log out.
+/account/membership/ — change level, billing history, invoices, cancel.
+/account/preferences/ — category subscription checkboxes (which topics they want notifications for). Stored as user meta. Used by the digest email.
+/dashboard/ — the post-login landing page (separate from /account/). Latest Briefs in their tier, Updates feed, link to Account.
+Hide wp-login.php
+Move login to /login/ and disable direct access to /wp-login.php. Use WPS Hide Login (plugin) or a rewrite rule. This is both a UX win (branded login) and a security win (no automated brute-force attempts against the default URL).
+
+9. SEO Implementation — Rank Math Pro
+Rank Math Pro is the SEO foundation for Phase 1. It's chosen over Yoast for three reasons: better schema support out of the box, the Redirections module is included (we need it for migration), and the Pro pricing scales better. The setup wizard handles basics; what follows are the non-default configurations that matter.
+9.1 Setup wizard — non-default choices
+Site type: Blog / News / Magazine. (Not 'Business' — that turns off some Article schema features.)
+Sitemap: enable. Include CPTs: brief, update, dossier, post, page. Include taxonomies: topic, region, tag. Exclude: tier (private taxonomy).
+Connect to Google Search Console during the wizard (use the existing GSC property).
+Skip 'Auto-update' on production — apply updates manually after testing on staging.
+9.2 Schema markup per content type
+Content type
+Schema type(s)
+Notes
+Brief (analytical)
+Article + AnalysisNewsArticle
+Use AnalysisNewsArticle (a NewsArticle subtype) — explicitly signals analytical content, helpful for AI citation.
+Update
+NewsArticle
+Time-sensitive, dated, factual updates.
+Dossier
+Report + Article
+Report schema for the structured-document nature; Article for fallback.
+Public explainer (FAQ)
+FAQPage + Article
+Mark up Q&A blocks. Drives AEO citations.
+About / team page
+Organization + Person
+E-E-A-T signal. Detailed Person schema for each analyst.
+Homepage
+WebSite + Organization
+Includes SearchAction for sitelinks search box.
+9.3 Sample JSON-LD — AnalysisNewsArticle for a Brief
+Rank Math generates most of this automatically. Verify in Rich Results Test. Manual review of one of each post type before launch is mandatory.
+{  "@context": "https://schema.org",  "@type": "AnalysisNewsArticle",  "headline": "The Sakania-Lobito Corridor: Strategic Implications of the May 2026 Concession Award",  "alternativeHeadline": "Operational risk shifts to host states; project finance implications follow.",  "datePublished": "2026-05-22T08:00:00+02:00",  "dateModified": "2026-05-22T08:00:00+02:00",  "author": {    "@type": "Person",    "name": "[Analyst Name]",    "url": "https://ascendance-strategies.com/team/[analyst-slug]/",    "jobTitle": "Senior Analyst",    "worksFor": { "@type": "Organization", "name": "Ascendance Strategies" },    "knowsAbout": ["US-DRC relations", "Critical minerals", "Sakania-Lobito Corridor"],    "sameAs": [      "https://www.linkedin.com/in/[handle]/",      "https://x.com/[handle]"    ]  },  "publisher": {    "@type": "Organization",    "name": "Ascendance Strategies",    "logo": {      "@type": "ImageObject",      "url": "https://ascendance-strategies.com/wp-content/uploads/logo.png"    }  },  "image": "https://ascendance-strategies.com/wp-content/uploads/2026/05/sakania-lobito.jpg",  "articleSection": "Critical Minerals",  "keywords": "Sakania-Lobito Corridor, Lobito Atlantic Railway, AFC, DRC, Angola",  "isAccessibleForFree": "False",  "hasPart": {    "@type": "WebPageElement",    "isAccessibleForFree": "False",    "cssSelector": ".paywall-gated-content"  }}
+The isAccessibleForFree + hasPart pattern
+This is the schema pattern Google requires so paywalled content does not get treated as cloaking. We're telling Google: there is gated content here, the part visible to non-subscribers is the part marked accessible, the rest is intentionally behind a wall. Without this, paywalled posts can be devalued or de-indexed.
+9.4 Sitemaps
+Rank Math generates separate sitemaps per post type. Configuration:
+/sitemap_index.xml — the master sitemap.
+/brief-sitemap.xml — all public Briefs. (Gated Briefs are included; sitemap inclusion is independent of paywall.)
+/update-sitemap.xml — all Updates.
+/dossier-sitemap.xml — all Dossiers.
+/topic-sitemap.xml — topic taxonomy archives (these are valuable; topic archives often outrank individual articles).
+Submit sitemap_index.xml to Google Search Console AND Bing Webmaster Tools.
+9.5 hreflang for French content
+Existing Ascendance content is in English with French translations. Polylang handles the language relationships; Rank Math reads from Polylang and outputs hreflang tags automatically. Verify in source view of every translated page that both x-default and the alternate language tag are present.
+9.6 Internal linking rules
+Every Brief links to 3–5 related Briefs in a 'Related' block at the bottom (the ACF post object field handles this).
+Every Update links to the parent Brief in the body, with explicit anchor text using the parent's title.
+Dossiers link to all Briefs that informed them, and vice versa.
+Topic archive pages link to the top 5 Briefs in that topic in their introductory paragraph.
+The footer has a 'Most-read' block populated from analytics (top 5 articles by reads in last 30 days). Rebuilt weekly.
+9.7 Image SEO
+Every uploaded image gets: descriptive filename (sakania-lobito-corridor-map.jpg, not IMG_0234.jpg), alt text, caption where relevant.
+ShortPixel converts to WebP + AVIF automatically. Original JPG/PNG is kept as fallback.
+Featured images: 1600×900 minimum, served responsively via srcset.
+Lazy-load below the fold (WordPress core does this by default; verify it isn't disabled by a theme override).
+
+10. AEO — Answer Engine Optimization
+AEO is the discipline of being cited by AI-powered answer engines: ChatGPT, Claude, Perplexity, Google AI Overviews, You.com. It is related to SEO but the optimization targets are different. SEO targets clicks. AEO targets citations — the AI quotes you in its answer, ideally with attribution and a link.
+For a niche subscription publisher, AEO is especially valuable: every AI citation that names Ascendance creates brand recognition with the exact audience that would subscribe. The free public Briefs are the citation surface; the gated Briefs are the conversion surface.
+10.1 The five AEO rules for every public-tier piece
+Rule 1 — The first paragraph is the citation paragraph
+Open with a 40–80 word paragraph that fully answers the article's title as a question, in a single self-contained block. This is what the AI will lift verbatim. Do not bury the answer; do not start with a scene-setter or anecdote.
+Wrong: 'In May 2026, a quiet meeting in Lubumbashi reshaped the geometry of critical mineral supply chains in central Africa…' (Reader is engaged; AI cannot summarise.)
+Right: 'The US-DRC Strategic Partnership is a bilateral framework between the United States and the Democratic Republic of Congo, focused on critical minerals supply chains, infrastructure, and governance cooperation. Announced in 2022, it is now the principal counterweight to Chinese economic engagement in central Africa.' (Self-contained, factual, citable.)
+Rule 2 — Use explicit question headings
+Structure articles with H2 headings phrased as questions a reader (or an AI) might actually ask. 'What does the partnership cover?' beats 'Scope of the agreement'. The H2-as-question pattern is what triggers FAQPage schema and is heavily favoured by AI answer engines.
+Rule 3 — One claim per paragraph, evidence-led
+Each paragraph: state a claim, then evidence, then implication. Avoid running multiple claims into a single paragraph — AI tools chunk text and lift paragraphs, so two claims in one paragraph either both get lifted (loss of clarity) or both get skipped (loss of citation).
+Rule 4 — Name things first, define them inline
+Use distinctive vocabulary that you (Ascendance) coined, and define it inline. 'The Strategic Asset Reserve framework — our methodology for assessing sovereign critical-mineral stockpiles — applies four tests: …'. If the AI is going to cite the concept, it will cite your name for it. This is the strongest GEO lever: become the source of the vocabulary.
+Rule 5 — End with a TL;DR or 'Key takeaways' block
+Above the fold: the citable lead paragraph. Below the article: a 3–5 bullet 'Key takeaways' block. AI engines lift from both. The ACF 'Key takeaways' field renders this block consistently across all Briefs.
+10.2 FAQPage schema — example
+For any post with H2 questions, mark up FAQPage schema. Rank Math Pro does this through its FAQ block; the dev should ensure the block is enabled and editors are trained to use it.
+{  "@context": "https://schema.org",  "@type": "FAQPage",  "mainEntity": [    {      "@type": "Question",      "name": "What is the US-DRC Strategic Partnership?",      "acceptedAnswer": {        "@type": "Answer",        "text": "The US-DRC Strategic Partnership is a bilateral framework between the United States and the Democratic Republic of Congo, focused on critical minerals supply chains, infrastructure, and governance cooperation."      }    },    {      "@type": "Question",      "name": "How is it different from the Belt and Road model?",      "acceptedAnswer": {        "@type": "Answer",        "text": "The Partnership emphasises private-sector co-investment, environmental and labour standards aligned with US export-finance requirements, and infrastructure (notably the Sakania-Lobito Corridor) routed to the Atlantic rather than to Chinese-financed eastern ports."      }    }  ]}
+10.3 Author bios — E-E-A-T signals
+Experience, Expertise, Authoritativeness, Trustworthiness — the framework Google (and increasingly AI engines) use to assess content reliability. For a specialist intelligence publisher this is decisive: AI engines weight named-expert citations heavily.
+Required author bio fields
+Full name.
+Headshot (1:1, minimum 400×400, professional).
+Job title at Ascendance.
+100-word bio covering: previous roles, credentials, subject-matter expertise.
+LinkedIn URL (verified, public profile).
+X / Twitter URL if active.
+Scholar / academic profile if relevant.
+List of topic taxonomies they cover (their 'knowsAbout' in schema).
+Person schema on each author page
+{  "@context": "https://schema.org",  "@type": "Person",  "name": "[Analyst Name]",  "image": "https://ascendance-strategies.com/wp-content/uploads/team/[slug].jpg",  "jobTitle": "Senior Analyst, US-DRC Strategic Partnership",  "worksFor": {    "@type": "Organization",    "name": "Ascendance Strategies",    "url": "https://ascendance-strategies.com"  },  "alumniOf": [    { "@type": "EducationalOrganization", "name": "[University]" }  ],  "knowsAbout": [    "US-DRC relations",    "Critical minerals supply chains",    "Sakania-Lobito Corridor",    "DRC governance"  ],  "sameAs": [    "https://www.linkedin.com/in/[handle]/",    "https://x.com/[handle]",    "https://scholar.google.com/citations?user=[id]"  ]}
+Why this matters more for AI than for Google
+Google has crawled the web for 25 years and has many other signals. AI search is newer and leans harder on explicit, structured authority markers. A well-marked-up author profile makes Ascendance's analysts citable as named experts in AI answers. Without it, AI engines may cite the article but attribute it generically to 'a Paris-based advisory firm'.
+10.4 Citation-friendly phrasing
+Use short, declarative sentences. 'X is Y.' AI engines prefer these to compound sentences.
+Use precise dates, not relative time. 'In May 2026' beats 'recently'.
+Name actors explicitly every time, do not rely on pronouns. 'The AFC-led consortium' beats 'they' in any context an AI might lift.
+Avoid headline-style ambiguity in body text. The article body should be unambiguous prose; clever headlines are fine.
+Quote your own framework names. 'Under our Strategic Asset Reserve framework, …' — every time you mention the framework, you reinforce attribution.
+
+11. GEO — Generative Engine Optimization
+GEO sits next to AEO but covers a slightly different problem. AEO asks: when an AI search engine answers a question, does it cite us? GEO asks: when a generative model writes about our topic, does our content shape its answer? GEO is about being the source the model learned from, and being the source it reaches for at inference time.
+Honest framing: GEO in mid-2026 is a hedge. The mechanics aren't fully settled, the AI providers don't yet agree on standards, and measurable ROI is rare. But the cost to implement is low, and being early is cheap insurance. We will ship the full GEO stack in Phase 1.
+11.1 llms.txt — the proposed standard
+llms.txt is a plain-text Markdown file at the site root that gives AI tools a curated map of the site. As of mid-2026, llms.txt is still a proposal, not a ratified web standard. Major LLM crawlers do not yet routinely fetch it. But IDE agents, dev tools, and some niche AI search products do, and the cost to ship one is half a day.
+Ship it. Treat it as zero-yield insurance.
+Where to put it
+At the site root: https://ascendance-strategies.com/llms.txt
+Filename is plural ('llms', not 'llm'). UTF-8 encoded. No BOM. Markdown formatted.
+Template for Ascendance
+# Ascendance Strategies> Ascendance Strategies is a Paris-based strategic intelligence advisory firm focused on the US-DRC Strategic Partnership, critical minerals supply chains, the Sakania-Lobito Corridor, and the Strategic Asset Reserve framework. We publish subscription-based intelligence briefs, updates, and dossiers for institutional subscribers.## Briefings (public)- [What is the US-DRC Strategic Partnership?](https://ascendance-strategies.com/intelligence/us-drc-strategic-partnership/): Introductory brief on the framework, stakeholders, and how it differs from the Belt and Road model.- [The Sakania-Lobito Corridor explained](https://ascendance-strategies.com/intelligence/sakania-lobito-corridor/): Backgrounder on the rail and infrastructure corridor central to the US-DRC partnership.- [The Strategic Asset Reserve framework](https://ascendance-strategies.com/intelligence/strategic-asset-reserve-framework/): Ascendance's analytical framework for sovereign critical-mineral reserve policy.- [Critical minerals 101: cobalt, copper, lithium](https://ascendance-strategies.com/intelligence/critical-minerals-101/): Plain-English primer.## About- [About Ascendance Strategies](https://ascendance-strategies.com/about/): Firm overview, leadership, methodology.- [Methodology](https://ascendance-strategies.com/methodology/): How our analysis is structured, sourced, and reviewed.- [Team](https://ascendance-strategies.com/team/): Analyst profiles and areas of expertise.## Optional- [Subscription tiers](https://ascendance-strategies.com/subscribe/): Essential, Professional, and Enterprise access levels.- [Contact](https://ascendance-strategies.com/contact/): Editorial enquiries and press.
+Maintenance
+llms.txt should be updated every time a major public Brief publishes. Rank Math Pro and Yoast both have llms.txt generators now (mid-2026) — enable the Rank Math one and configure it to include only public-tier Briefs and the About / Methodology / Team pages. Never include gated content URLs.
+11.2 robots.txt — the actually-effective lever
+robots.txt is where the real control lives. AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot) respect User-Agent-specific rules. The strategy for Ascendance is asymmetric:
+Public content: ALLOW major AI crawlers. We want our public briefs cited by AI engines because every citation builds brand authority among potential subscribers.
+Gated content: DISALLOW. AI crawlers must never index full subscriber content. They can cite the public excerpt and the headline; the rest is paid.
+Common Crawl (CCBot): DISALLOW entirely. CCBot is the corpus most LLMs train on. Allowing CCBot means our content gets baked into model weights for free, with no citation. That is the worst possible trade.
+Recommended robots.txt
+# /robots.txt# Standard crawlersUser-agent: *Allow: /Disallow: /wp-admin/Disallow: /wp-includes/Disallow: /account/Disallow: /membership-checkout/Disallow: /membership-confirmation/# AI crawlers — public content allowed, gated content blockedUser-agent: GPTBotAllow: /Disallow: /wp-admin/Disallow: /account/Disallow: /dashboard/User-agent: ClaudeBotAllow: /Disallow: /wp-admin/Disallow: /account/Disallow: /dashboard/User-agent: PerplexityBotAllow: /Disallow: /wp-admin/Disallow: /account/Disallow: /dashboard/User-agent: Google-ExtendedAllow: /Disallow: /account/Disallow: /dashboard/User-agent: anthropic-aiAllow: /Disallow: /account/Disallow: /dashboard/# Block training-corpus crawlers entirelyUser-agent: CCBotDisallow: /User-agent: BytespiderDisallow: /User-agent: DiffbotDisallow: /# SitemapSitemap: https://ascendance-strategies.com/sitemap_index.xml
+The paywall is the real defence
+robots.txt is a request, not an enforcement. A misbehaving crawler can ignore it. The actual defence against gated content being scraped is the server-side paywall: gated content is never sent to a browser (or a bot) without an authenticated session. robots.txt is what we tell well-behaved crawlers to do; PMPro is what prevents misbehaving ones from succeeding.
+11.3 Semantic HTML — make it parseable
+AI engines parse HTML structure to understand content. Sloppy markup (div soup, inconsistent heading levels, missing landmarks) makes content harder to chunk and cite. The custom theme must use:
+Proper HTML5 landmarks: <header>, <nav>, <main>, <article>, <aside>, <footer>. Each used once per page in the conventional way.
+One H1 per page, matching the post title. H2s for major sections. H3s for sub-sections. Never skip a level.
+Article body wrapped in <article>. Sidebar in <aside>. Related articles block in <aside>.
+<figure> and <figcaption> for images with captions.
+<blockquote cite="…"> for source quotes.
+<time datetime="2026-05-22"> for dates.
+Author byline wrapped in <address> with rel="author" link.
+11.4 Citable content patterns
+Building on the AEO rules in Section 10, these additional patterns help LLMs lift content cleanly:
+Definitional sentences in the opening — 'X is Y' format.
+Numbered lists for multi-step explanations. Bulleted lists for parallel-structure enumerations. Both are easy for LLMs to lift.
+Comparison tables — 'How X differs from Y' tables get cited disproportionately.
+Explicit framework attribution — 'In Ascendance's Strategic Asset Reserve framework, the four tests are: …' (every mention reinforces attribution).
+Distinct quotable lines — at least one sentence per Brief that is concise, claim-shaped, and includes the firm's analytical voice. These get pulled as pull-quotes by AI engines.
+11.5 Topic clustering
+Cluster all content within a topic into a tight internal-link graph. Strongest GEO signal in 2026 is being the most-linked source within a topic cluster.
+Each top-level topic has a 'pillar page' — a long evergreen explainer (Brief, public tier). Example: '/intelligence/us-drc-strategic-partnership/'.
+Every Brief in that topic links back to the pillar page from its first paragraph.
+The pillar page links out to every Brief and Update under it. Updated regularly.
+Internal anchor text uses the pillar's exact title where natural — 'As we explained in our brief on the US-DRC Strategic Partnership…'
+Cross-topic links are less common but valuable. A Brief on cobalt should link to both the Critical Minerals pillar and the US-DRC pillar.
+
+12. Newsletter & Notifications
+Phase 1 ships a weekly digest email and per-category notification emails. Email service: Brevo (formerly Sendinblue). Reasons for Brevo over alternatives:
+French company (founded in Paris). Data residency in the EU. Aligns with Ascendance's non-US-pipeline positioning.
+Free tier covers up to 300 emails/day — sufficient for Phase 1 subscriber volume.
+Native WordPress plugin with PMPro integration via a simple mapping (membership level → contact list).
+Transactional API for receipts, notifications, password resets — separate from marketing API.
+Templates editable in their UI, then triggered from WordPress hooks.
+12.1 Brevo setup
+Sign up at brevo.com using the Ascendance domain. Verify the domain (DNS records: SPF, DKIM, DMARC).
+Create three contact lists: Essential Subscribers, Professional Subscribers, Newsletter (free).
+Install Brevo (Sendinblue) plugin for WordPress.
+Generate an API key (v3, transactional). Paste into the plugin and PMPro Brevo bridge.
+Configure list mapping: PMPro level 'Essential' → Brevo list 'Essential Subscribers'. Same for Professional.
+Set the default 'From' as editorial@ascendance-strategies.com (use an actual monitored mailbox; bounces go here).
+12.2 Weekly digest
+Every Friday at 09:00 CET, send a digest of the week's new content. Two variants:
+Free newsletter list (non-subscribers): public Briefs only, with subscription CTA.
+Subscriber list (Essential + Professional): all new Briefs, Updates, Dossiers in their tier. No CTA.
+Digest template structure
+Subject: This week from Ascendance — [Topical headline][Brand header — red rule, masthead serif type][Editor's note: 80-word framing of the week — what shifted, whatwe are watching.]— New Briefs this week —[Brief 1: Title (link). Dek. 30-word teaser.][Brief 2: Title (link). Dek. 30-word teaser.]— Updates —[List of update titles with one-line summaries, linked.]— [For free list only:] Subscribe to read the full briefs[Brand footer — sign-off, links, unsubscribe.]
+12.3 Per-category notifications
+In /account/preferences/, subscribers check which topics they want immediate notifications for. When a Brief or Update publishes in a checked topic, that subscriber gets a same-day notification email.
+Implementation:
+On publish_post hook (CPT-aware), check the post's topic taxonomy terms.
+Query users whose user_meta contains a matching topic preference AND whose tier grants access to the post.
+Send via Brevo transactional API in batches (no more than 50 per call).
+Throttle: max one notification email per subscriber per day. If multiple posts publish in their topics, batch into a single digest email.
+Per-category paid subscriptions (Phase 2)
+The brief mentions a future model where subscribers can pay for additional categories beyond their tier (e.g. an Essential subscriber pays extra to unlock the 'Energy' topic from Professional). This is a per-topic paid add-on. PMPro can do this via the Variable Pricing add-on but it adds complexity. Defer to Phase 2; Phase 1 ships only the three flat tiers.
+12.4 Transactional emails (PMPro)
+PMPro sends these by default; we override the templates to match brand and route through Brevo's transactional API for deliverability and tracking.
+Welcome / confirmation email (on signup).
+Receipt / invoice email (on payment).
+Card-expiry warning (7 days before card expires).
+Failed-payment email (with retry link).
+Cancellation confirmation (with end-of-access date).
+Password reset.
+Renewal reminder (14 days before annual renewal).
+
+13. Search Implementation
+WordPress core search is poor: keyword-only, no relevance scoring, no per-field weighting, no permission awareness. SearchWP fixes all of this with one plugin. It is the most cost-effective search upgrade for Phase 1.
+13.1 SearchWP configuration
+Engine setup
+Create one engine, 'Site', covering Briefs, Updates, Dossiers, Posts, and Pages. For each post type, weight fields:
+Field
+Brief
+Update
+Dossier
+Notes
+Title
+10
+8
+10
+Highest weight — most signal.
+Subhead/dek (ACF)
+7
+—
+7
+Strong relevance signal.
+Body content
+3
+3
+3
+Default body weight.
+Topic / Region / Tag
+5
+5
+5
+Taxonomy match is intent-strong.
+Author name
+4
+4
+4
+'Articles by X' search pattern.
+13.2 Search results UX
+Search bar in the header (icon expands to input field on focus, no separate page redirect).
+Live results dropdown showing top 5 matches with title, dek, topic, date.
+Full results page at /search/?s=query — filterable by content type (Brief / Update / Dossier / Post) and topic.
+Each result shows: title, dek (or snippet around the matched term), topic + region badges, date, lock icon if gated and the user lacks access.
+Empty state: 'No results. Try a broader query, or browse by topic.' — with topic chips below.
+13.3 Permission-aware search
+SearchWP indexes everything; results display respects PMPro tier. Gated results still appear in the list (with the lock icon and 'Subscribe to read' label) — this is a conversion surface, not a hidden one. Clicking a gated result lands on the paywall page with the same upsell as direct article access.
+13.4 Search analytics
+SearchWP Pro has a Statistics module. Enable it. Review weekly:
+Top searches — what subscribers are looking for. Use this to inform editorial planning.
+Searches with zero results — content gaps. These are commission ideas for the editorial team.
+Searches followed by no click — relevance problems. Investigate.
+
+14. Performance & Core Web Vitals
+Target: Lighthouse 90+ on Home, 85+ on Brief detail pages, on both mobile and desktop. Core Web Vitals all 'Good' (green) in field data within 30 days of launch.
+Metric
+Target
+What helps
+LCP (Largest Contentful Paint)
+< 2.5s
+Preload featured image, self-host fonts, page caching, slow server response is the usual culprit.
+INP (Interaction to Next Paint)
+< 200ms
+Minimal JS. Defer non-critical scripts. No heavy event handlers on body.
+CLS (Cumulative Layout Shift)
+< 0.1
+Explicit dimensions on images, reserved space for ads / embeds, font-display: swap with a sized fallback.
+TTFB (Time to First Byte)
+< 600ms
+Hosting quality matters most here. WP Rocket page cache. Object cache (Redis) if available.
+14.1 WP Rocket configuration
+WP Rocket is the recommended caching plugin. Paid but worth it — well-tuned out of the box, integrates with PMPro to skip caching for logged-in users.
+Page caching: ON. Mobile cache: ON (separate file).
+Cache for logged-in users: OFF (PMPro requires this — the same URL renders differently for subscribers vs anonymous users).
+File optimization: minify CSS and JS, combine CSS (combine JS is risky, test first), delay JS execution.
+Media: lazy load images, lazy load iframes, replace YouTube iframes with preview image.
+Preload: enable. Sitemap-based preload using Rank Math's sitemap.
+Database cleanup: enable monthly cleanup of revisions older than 30 days, transients, trashed posts.
+CDN: not required for Phase 1 traffic; revisit if global subscriber base grows.
+14.2 Image optimization — ShortPixel
+Install ShortPixel Image Optimizer. Choose 'Glossy' compression (visible quality, ~80% of size).
+Enable WebP and AVIF conversion. Serve next-gen via <picture> element.
+Bulk-optimize existing library before launch.
+Set the API key in plugin settings. Each new upload is optimized automatically.
+Verify by viewing an image URL: the optimized variant should serve from /wp-content/uploads/.../image.jpg.webp.
+14.3 Font loading
+Three font families: Noto Serif (Google Fonts), Cooper Hewitt (cdnfonts.com), JetBrains Mono (Google Fonts). Loading strategy:
+Self-host all three locally in /wp-content/themes/ascendance/fonts/. Do NOT load from Google's CDN on every page — both for performance (one less DNS lookup) and GDPR (Google Fonts hot-linking has been ruled a GDPR violation in some EU jurisdictions).
+Use WOFF2 only. Subset to Latin + Latin-Ext (sufficient for English + French).
+font-display: swap on @font-face. Fallback stack defined so layout doesn't shift when the web font loads.
+Preload only the primary weight of Noto Serif used in the lead paragraph. Other weights load on demand.
+/* /wp-content/themes/ascendance/assets/css/fonts.css */@font-face {  font-family: 'Noto Serif';  src: url('../fonts/noto-serif-variable.woff2') format('woff2-variations');  font-weight: 100 900;  font-display: swap;}@font-face {  font-family: 'Cooper Hewitt';  src: url('../fonts/cooper-hewitt-medium.woff2') format('woff2');  font-weight: 500;  font-display: swap;}@font-face {  font-family: 'JetBrains Mono';  src: url('../fonts/jetbrains-mono-variable.woff2') format('woff2-variations');  font-weight: 100 800;  font-display: swap;}:root {  --font-serif: 'Noto Serif', Georgia, serif;  --font-sans: 'Cooper Hewitt', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;}
+14.4 Things to NOT use
+Elementor on platform pages. Heavy CSS, bloated DOM. Reserved for marketing one-offs if at all.
+Multiple caching plugins. Pick one (WP Rocket). Conflicting caches cause data integrity bugs.
+Heavy slider plugins. If a slider is needed, use a 30-line vanilla JS swiper, not a plugin.
+Disqus or third-party comments. Cookies + external JS = performance + GDPR cost. Native comments only, and only if needed.
+
+15. Security & Hardening
+Security work is plumbing — invisible when done right, catastrophic when skipped. The list below is non-negotiable for Phase 1 launch.
+15.1 WordPress core hardening
+WordPress core: latest stable. Auto-update minor versions; manual review for major releases.
+PHP 8.2 or higher. PHP 8.1 reached end of life; PHP 8.0 is unsupported. Confirm with OVH.
+Disable file editing in wp-admin: add `define( 'DISALLOW_FILE_EDIT', true );` to wp-config.php.
+Disable XML-RPC unless explicitly needed: filter with `add_filter('xmlrpc_enabled', '__return_false');`.
+Move wp-config.php one directory above the web root (OVH structure permitting), or restrict its permissions to 600.
+Database table prefix: change from default `wp_` to something like `asc_` during install.
+Force HTTPS: redirect all HTTP to HTTPS at the OVH / Nginx level. HSTS header with 1-year max-age.
+Remove WordPress version from generator meta tag and from CSS/JS file query strings.
+15.2 Wordfence configuration
+Wordfence Free is sufficient for Phase 1; Premium upgrade later if attack volume warrants.
+Firewall: enable. Run in 'Learning Mode' for one week post-launch, then switch to 'Enabled'.
+Brute force protection: ON. Lockout after 5 failed logins. Lockout duration: 4 hours. Block forever if 20+ failures.
+Two-factor authentication: enforce for all admin and editor roles. Required.
+Strong password enforcement: ON for admin, editor, author.
+Email alerts: to a monitored mailbox. Critical issues only (not every benign scan).
+Live traffic / scans: enable initially, disable after launch — these are heavy and you don't need them daily once the site is stable.
+15.3 Login security
+Move login to /login/ via WPS Hide Login. wp-login.php returns 404.
+CAPTCHA on login and registration. Use hCaptcha (more EU-friendly than reCAPTCHA).
+Force 2FA for all admin / editor accounts via Wordfence or WP 2FA plugin.
+Password complexity: 12 characters minimum, mixed case + number + symbol.
+Auto-logout after 24 hours of inactivity for admin / editor sessions.
+Limit login attempts per IP (Wordfence handles this).
+15.4 API key & secrets management
+API keys (Stripe, Brevo, Anthropic in Phase 2) must never live in the database or in plain-text config files inside the web root.
+Define keys in wp-config.php as constants: `define('STRIPE_SECRET_KEY', '...');`.
+Better: load from environment variables. Use a .env file outside the web root, read via a small bootstrap in wp-config.php (e.g. vlucas/phpdotenv).
+Never commit wp-config.php or .env to git. Add to .gitignore on day one.
+Rotate keys quarterly. Document the rotation procedure for the client.
+Use Stripe restricted keys where possible (PMPro mostly needs the full secret, but custom integrations should use restricted).
+15.5 Backup strategy
+UpdraftPlus (free tier sufficient for Phase 1) handles automated backups.
+Database: backed up daily. Retain 14 days.
+Files (uploads, themes, plugins): backed up weekly. Retain 4 weeks.
+Backup destination: NOT the web server. Use OVH Object Storage, AWS S3 (eu-west-3 Paris), or Backblaze B2 (EU).
+Encrypt backups at rest. UpdraftPlus has an encryption option — use it.
+Test restore monthly. A backup you have never restored is not a backup.
+15.6 PMPro and Stripe-specific security
+PMPro webhook endpoint: protected by Stripe signature verification (PMPro handles this if configured correctly).
+Test the webhook endpoint with Stripe CLI before launch; verify rejected payloads with invalid signatures.
+Never log full webhook payloads to disk or to admin logs (they contain customer PII).
+Stripe Test mode on staging, Live mode on production. Use clearly different keys; many bugs come from mixed-mode environments.
+PMPro 'Member Actions' email alerts: enable for cancellations and refunds (the client wants to know quickly).
+Penetration test before launch?
+A formal pentest is overkill for Phase 1 budget. But running the site through three free scanners is mandatory: WPScan (CLI), Wordfence's Diagnostics, and Mozilla Observatory (for headers). Address every High and Medium finding before go-live.
+
+16. Analytics & Tracking
+GA4 is locked from the proposal. The aim is not vanity dashboards — it's understanding what content converts, what content gets read, and where the funnel leaks.
+16.1 GA4 setup
+Create or claim the GA4 property at analytics.google.com. Set country = France, time zone = Europe/Paris, currency = EUR.
+Install the measurement tag using GTM (Google Tag Manager) — not direct gtag.js. GTM lets us add new tracking without touching theme code.
+Add the GTM container ID to the theme header (or via Insert Headers and Footers plugin if dev access isn't possible).
+Verify pageviews are flowing using the GA4 DebugView and real-time reports.
+Link GA4 to Search Console (so search query data flows into GA4).
+Set up the IP anonymization recommended for EU compliance (this is now default in GA4 but verify).
+16.2 Conversion events
+These are the events worth measuring. Configure each as a GA4 conversion.
+Event name
+Triggered when
+paywall_view
+A non-subscriber lands on a gated Brief and sees the paywall block.
+subscribe_click
+Subscribe button click anywhere on the site. Capture the source location (paywall, header, footer, landing page).
+checkout_start
+Subscriber arrives at /membership-checkout/ for a specific level.
+checkout_complete
+Payment succeeds (Stripe webhook → GA4 via the dataLayer). Capture level and price.
+newsletter_signup
+Free newsletter form submission (Brevo).
+brief_read
+Subscriber reaches end of a Brief (scroll depth ≥ 90%). Engagement signal.
+search_used
+Any search query submitted. Capture the query.
+16.3 Search Console
+Verify domain ownership via DNS TXT record (preferred over HTML file).
+Submit sitemap_index.xml the day of launch.
+Set up email alerts for: critical errors, security issues, manual actions, indexing problems.
+Monthly review of: top queries, click-through rate, average position, coverage report (any pages excluded should be intentional).
+16.4 Privacy-friendly alternative for sensitive analytics
+Consider supplementing GA4 with a privacy-first alternative for EU-residency-sensitive subscribers. Two options:
+Plausible Analytics (self-hostable, fully GDPR-compliant, no cookies, no consent required).
+Matomo (self-hosted, EU-hosted, more detailed than Plausible).
+Phase 1 ships GA4 as the primary. If subscribers raise concerns or French institutional clients require it, add Plausible alongside in Phase 2.
+
+17. GDPR & Compliance
+The site is hosted in France, serves an EU audience, and processes payments and personal data. GDPR compliance is non-optional. The good news: we can ship a compliant site with a single plugin and disciplined data handling.
+17.1 Complianz CMP
+Complianz (Cookie Consent Management Platform) is the chosen tool. It handles cookie consent, cookie scanner, consent records, and a cookie policy generator. Free tier covers Phase 1.
+Install Complianz GDPR plugin.
+Run the configuration wizard. Set: country = France, applicable law = GDPR + ePrivacy.
+Cookie scanner: run weekly. Catches new cookies added by plugins.
+Banner position: bottom, with three buttons: Accept all / Reject all / Customize. Reject must be as prominent as Accept (CNIL requirement in France).
+Categorize cookies: Functional (always on, no consent needed), Statistics (GA4, requires consent), Marketing (none in Phase 1 — none of the third-party trackers).
+Block tracking scripts until consent. Complianz integrates with GA4 to fire only after consent.
+17.2 Privacy policy & cookie policy
+Complianz generates both. The dev should review and the client should review with legal counsel. Critical sections to verify:
+Data controller identity (Ascendance Strategies, full Paris address, contact email).
+Data Protection Officer contact (if appointed). Not strictly required at this scale but recommended.
+Legal basis for each data processing activity.
+Data retention periods — subscriber data: kept while subscription active, plus 3 years after cancellation for accounting/tax requirements.
+Third-party processors: Stripe (payments, US), Brevo (email, FR), Google Analytics (US — declare Standard Contractual Clauses), OVH (hosting, FR).
+Subject rights: access, rectification, erasure, portability, objection. Email contact for each.
+Cookie list with purpose, provider, duration — auto-populated by Complianz from the scan.
+17.3 Subject Access Request workflow
+GDPR gives every subscriber the right to request a copy of their personal data, and the right to have it erased. WordPress core has built-in tools for both. Configure:
+Tools → Export Personal Data — generates a ZIP of everything WordPress (and PMPro, via its data exporter hook) knows about the user.
+Tools → Erase Personal Data — anonymizes user record while preserving order history for tax purposes.
+PMPro registers its data exporters and erasers automatically.
+Document the SAR workflow for the editor: who handles requests, response SLA (30 days under GDPR), template responses.
+17.4 Data minimization at registration
+Collect only what is needed. The registration form should ask for:
+Email (required — for login and communication).
+First name + last name (required — for invoices and emails).
+Organisation (optional — useful for editorial / segmentation).
+Country (required — for tax calculation).
+Role / title (optional — useful for editorial).
+Marketing consent checkbox (unchecked by default; explicit opt-in).
+Do NOT collect: phone number (unless Enterprise), date of birth, gender, full address (Stripe collects this for tax separately).
+
+18. Migration & Launch Plan
+18.1 Content migration
+The existing ascendance-strategies.com site has content built in Elementor (per the proposal). Migration strategy:
+Audit the existing site: export a CSV of every published URL using a tool like Screaming Frog. This is the source of truth for the redirect plan.
+Map each existing URL to its destination in the new structure: same URL, changed URL with redirect, or removed entirely.
+For Intelligence Briefs and Updates already published: migrate content to the new CPTs. Strip Elementor markup, convert to block editor format. Preserve images and dates.
+For marketing pages (Home, About, Services): rebuild in the new theme. Do not migrate the Elementor markup — start clean.
+For the team / leadership pages: rebuild with proper Person schema markup (E-E-A-T).
+18.2 Redirect map
+Every URL that changes needs a 301 redirect. Manage in Rank Math → Redirections.
+# Example redirect entries/contact-us/                             → /contact//blog/                                   → /intelligence//blog/some-old-brief-title/              → /intelligence/some-old-brief-title//services-and-industries/                → /services/# Wildcard pattern for any old /blog/* posts not individually mapped^/blog/(.*)$                              → /intelligence/$1     [regex]
+18.3 Pre-launch checklist
+Functional
+All three subscription tiers available at /subscribe/. Stripe test transactions succeed in test mode.
+Full registration → checkout → confirmation flow works for each tier.
+Failed payment retry works.
+Cancel-and-renew works.
+Account page displays correct tier, renewal date, billing portal link.
+Paywall blocks gated content for non-subscribers; reveals for subscribers.
+Search returns relevant results with correct lock states.
+Newsletter signup adds the user to Brevo's free list.
+Weekly digest test send succeeds to a test account on each list.
+Category notification fires when a Brief is published in a checked topic.
+Login at /login/ works; wp-login.php returns 404.
+Password reset flow works.
+All forms send to the right inboxes.
+Content
+All existing Intelligence Briefs migrated and accessible at their new URLs.
+3+ public-tier Briefs published as AI-citation surface (the FAQ-style explainers).
+3+ Essential-tier Briefs and Updates as gated examples.
+1+ Dossier seeded for Professional tier.
+Author bios complete for every analyst — headshot, 100-word bio, LinkedIn link, Person schema verified.
+FAQ page populated with at least 10 Q&A entries.
+About, Methodology, Contact, Services, Industries pages content reviewed and signed off.
+SEO / AEO / GEO
+Rank Math Pro configured per Section 9.
+XML sitemap submitted to GSC and Bing.
+Every Brief and Page has a focus keyword and meta description.
+FAQPage schema verified on at least 3 explainer pages (Rich Results Test passes).
+AnalysisNewsArticle schema verified on at least 3 Briefs.
+Person schema verified on every author page.
+isAccessibleForFree + hasPart pattern on every gated post — verified in source.
+hreflang tags present on every translated page.
+llms.txt live at site root, accessible at /llms.txt.
+robots.txt live with AI crawler rules.
+Canonical URLs pointing to the correct page (no self-referential issues).
+Performance
+Lighthouse 85+ on Home, Brief detail, Subscribe pages — mobile and desktop.
+Core Web Vitals all green in PageSpeed Insights field data (or lab data if field data not yet available).
+All images optimised, WebP served.
+Fonts self-hosted, preloaded.
+WP Rocket cache warm.
+Security
+HTTPS forced site-wide, HSTS header live.
+Wordfence active and tuned.
+2FA enforced for all admin and editor accounts.
+wp-login.php blocked; /login/ active.
+All API keys in wp-config.php constants or .env outside web root.
+Backup tested by performing one restore to staging.
+Mozilla Observatory score B or better.
+WPScan run, no high/critical findings.
+Compliance
+Cookie banner displaying, blocking GA4 until consent.
+Privacy policy and cookie policy published and linked from footer.
+Terms of service reviewed (legal counsel).
+Subject access request workflow documented for editor.
+18.4 Launch day sequence
+Morning (08:00): take staging full backup. Switch staging → production environment via OVH control panel (DNS A record or hosting toggle).
+Switch Stripe from Test mode to Live mode in PMPro settings.
+Switch Brevo API key from sandbox to live (if used a sandbox during build).
+Submit sitemap to Google Search Console.
+Smoke test: complete one live subscription using a real card (refund immediately). Verify webhook fired, Brevo list updated, Stripe customer created.
+Walk through 10 sample URLs from the old site, confirm they redirect or open correctly.
+Send launch announcement email via Brevo to the existing newsletter list.
+Monitor for 4 hours actively, then daily for the first week.
+
+19. Testing & QA
+19.1 Browser / device matrix
+Test on these combinations before launch. Don't manually test all — pick the highest-traffic three and verify thoroughly, the rest spot-check.
+Platform
+Browser
+Coverage
+Desktop macOS
+Safari (latest)
+Full QA
+Desktop Windows
+Chrome (latest)
+Full QA
+Desktop Windows
+Firefox (latest)
+Spot-check
+Desktop Windows
+Edge (latest)
+Spot-check
+Mobile iOS
+Safari (iPhone 13+)
+Full QA
+Mobile Android
+Chrome (Pixel / Samsung)
+Spot-check
+Tablet iOS
+Safari (iPad)
+Spot-check
+19.2 Critical user flows to test
+Anonymous visitor
+Land on home → click a featured Brief (public) → read fully.
+Land on home → click a featured Brief (gated) → see paywall → click Subscribe → land on /subscribe/.
+Use the header search → results show with lock icons → click a gated result → see paywall.
+Submit newsletter signup → confirmation email arrives within 60 seconds.
+Submit contact form → editor receives email.
+New subscriber
+Pick Essential tier on /subscribe/ → complete checkout with test card → land on confirmation.
+Receive welcome email within 60 seconds.
+Log in → land on /dashboard/.
+Open the same Brief that previously showed the paywall → now reads fully.
+Visit /account/preferences/ → tick three topics → save.
+Editor publishes a Brief in one of the ticked topics → notification email arrives.
+Returning subscriber
+Log in → tier and renewal date visible on Account page.
+Open Stripe Customer Portal → can update card.
+Cancel subscription → see end-of-access date → access continues until that date.
+Re-subscribe before end of access → cancellation reverses.
+Editor / admin
+Log in to wp-admin → see Briefs, Updates, Dossiers in left nav.
+Create a new Brief → assign tier=public → publish → verify it appears publicly.
+Create a new Brief → assign tier=essential → publish → verify the paywall on logged-out view.
+Edit an existing post → preview → publish → cache refreshes.
+Send a manual newsletter via Brevo → arrives to test inbox.
+19.3 Edge cases worth flagging
+Card declined on checkout → user sees a clear error, can retry without losing form data.
+Webhook delayed by Stripe → user paid but tier not yet applied. Race condition: PMPro retries the webhook, or admin manually applies the tier.
+Subscriber emails change → does Stripe customer email update? (PMPro syncs but verify.)
+Browser back button after checkout → does not allow double-charge.
+Two devices logged in as same user simultaneously → both work; no aggressive single-session enforcement.
+Long Brief (5,000+ words) → reads cleanly on mobile, no horizontal scroll, no layout shift.
+Page with many images → lazy load works, no CLS issues.
+
+20. Handover & Training
+20.1 Documentation deliverables
+On launch day, the client receives:
+This technical document (the one you are reading) — the source of truth for what was built.
+Editorial Manual — a separate 15–20 page PDF for the non-technical editorial team. Covers: how to publish, how to choose a tier, how to use SEO/schema fields, brand voice rules. Written in plain English.
+Plugins inventory — every plugin installed, its license/key, its renewal date, and a one-line note on what it does.
+Credentials inventory — every API key, hosting login, plugin license, with a recommendation on where to store them (1Password recommended).
+Backup / restore runbook — exactly what to do if something breaks.
+Editorial workflow runbook — the publish checklist for the editor.
+20.2 Training videos to record
+The dev records Loom-style screen recordings (5–10 minutes each) covering the editorial workflow. These travel with the site forever and onboard future editors in hours, not days.
+#
+Video
+Covers
+1
+Creating a new Intelligence Brief
+Opening the Brief CPT, setting title and dek, writing the analytical claim, public excerpt, body, key takeaways, sources, related briefs.
+2
+Setting tier access (free vs Essential vs Professional)
+Using the tier taxonomy meta box, what each tier means, what gets shown vs gated.
+3
+Using SEO and schema fields (Rank Math)
+Focus keyword, meta description, schema toggles, FAQ block, Rich Results Test verification.
+4
+Publishing an Update tied to a parent Brief
+Quick Update workflow, linking to parent Brief, triggering subscriber notification.
+5
+Managing categories, topics, regions, tags
+When to add a new topic vs use an existing one. Tag discipline.
+6
+Subscriber management in PMPro
+Viewing subscriber list, granting a comp subscription, refunding, cancelling.
+7
+Sending a newsletter campaign in Brevo
+Composing, scheduling, segmenting (which list), reviewing analytics post-send.
+8
+Reading the basics: GA4 dashboard tour
+Where to find subscriber funnel metrics, which reports to check weekly.
+9
+Handling a failed payment / dispute
+What the editor sees, what to do, when to escalate to dev.
+10
+Handling a subject access / erasure request
+GDPR rights, the WordPress Tools exporter / eraser, response template.
+20.3 External resources for the editorial team
+Curated links to share at handover. The editor should bookmark these:
+Rank Math YouTube channel — official tutorials on schema, sitemaps, redirections.
+WordPress.org Block Editor handbook — the canonical reference for the editor experience.
+PMPro documentation — paidmembershipspro.com/documentation/.
+Brevo Academy — campaign best practices, deliverability advice.
+Google Rich Results Test — bookmark for every Brief publish.
+Google PageSpeed Insights — bookmark for monthly health checks.
+20.4 Post-launch support (Option A)
+30 days of bug-fix support included. Definition of 'bug': functionality that does not work as specified in this document.
+Out of scope for bug-fix support: new features, design changes, editorial corrections to content, plugin/theme updates that arrive after launch.
+Channel: email, single point of contact at the dev side, response within 2 working days.
+Optional monthly retainer (quoted separately) covers ongoing maintenance, updates, small enhancements.
+
+21. Phase 2 Roadmap — What Comes After Subscription Traction
+Phase 1 (Option A) is intentionally a focused subscription launch. Phase 2 begins once the subscription model is validated — concretely, we suggest 25+ paying subscribers across Essential and Professional tiers as the trigger. That number is arbitrary but useful: enough revenue that further investment pays back, enough usage data to know what subscribers actually want next.
+Below is the recommended Phase 2 sequence. None of this is committed; it's a roadmap for the conversation post-launch.
+21.1 Phase 2.1 — AI-assisted editorial workflow
+The highest-leverage addition. Same scope as 'Option B' from the proposal: a custom plugin that lets the editorial team draft long-form content using Claude / GPT / Gemini, then humanise and publish. Reduces time per Brief from ~6 hours to ~2 hours, unlocking higher publishing cadence.
+Custom WordPress admin interface ('Ascendance AI Studio') for AI-assisted drafting.
+API integration with Anthropic Claude (primary), OpenAI GPT, Google Gemini (switchable).
+System prompts tuned to Ascendance editorial voice; version-controlled.
+Token usage tracking, per-article and per-month cost reports.
+AI image prompt suggestions (not generation; that's deferred further).
+21.2 Phase 2.2 — Custom subscriber dashboard
+Phase 1 has a basic dashboard. Phase 2.2 turns it into a real product surface.
+Personalised 'For you' feed based on category preferences and reading history.
+Saved articles / read-later list.
+Reading history with continue-where-you-left-off.
+Subscriber-only notes block (private notes on Briefs, accessible only to the subscriber).
+Download PDF of any Brief or Dossier.
+21.3 Phase 2.3 — Entity profiles (Sayari-style, scoped)
+The brief describes Sayari-style entity profiles — named companies and people with structured profiles, relationships, linked records. This is the highest-effort item in the original tech brief; we do a scoped version in Phase 2.3.
+New CPT: entity (person, organisation, project, instrument).
+Each entity has a structured profile: identity, role, related entities, briefs mentioning, dossier appearances.
+Linked records: when a tag matches an entity slug, the article auto-links.
+Entity index page, filterable by type.
+Not a graph database — relationships stored as post meta with post-object references. Sufficient at Ascendance's scale.
+21.4 Phase 2.4 — Per-category paid add-ons
+Premium subscribers pay extra to unlock additional categories beyond their tier. Implemented via PMPro Variable Pricing or custom payment intent flow with Stripe.
+Add-on storefront on /account/add-ons/.
+Each add-on: monthly or annual price, single category access (e.g. unlock 'Energy' as an Essential subscriber).
+Add-ons stack: a subscriber can hold base tier + 3 category add-ons.
+Billing handled by Stripe Subscriptions with multiple items.
+21.5 Phase 2.5 — Client portal (gated documents area)
+The brief mentions an advisory-client portal — secure document and report access. Phase 2.5 builds the basic version.
+New CPT: client_doc (private, never publicly listed).
+Per-document access control — only specific user(s) can see each document.
+Watermark on download (PDF processing via TCPDF or similar).
+Access log per document (who viewed when).
+Magic-link delivery (no need for client to log in).
+21.6 Phase 3 — When to migrate off WordPress
+WordPress will serve Ascendance well for the first 12–18 months. Migration to the full Next.js + Airtable + Clerk architecture in the original brief (Option C) makes sense when one of these triggers fires:
+Subscriber count exceeds 500 — performance and tier-gating complexity outgrow WordPress.
+Interactive data tools needed (live ratings, real-time dashboards, charting).
+Genuine cross-subdomain SSO required (subscriber product on a separate platform.* subdomain).
+Native mobile app required.
+Schema scale (>20 interconnected data tables) hits Airtable / Custom Fields limits.
+At that point, the custom plugin built in Phase 2.1 onwards is the migration foundation: the data structures translate directly into Airtable tables or Postgres schemas. Phase 1 + Phase 2 is not throwaway work — it is the foundation.
+21.7 Success metrics to watch
+These determine when to trigger each Phase 2 sub-phase.
+Metric
+Phase 2 trigger
+Why
+Paying subscribers
+25+
+Revenue threshold to justify next investment.
+Brief publishing rate
+> 2 per week sustained
+Editorial bottleneck → trigger Phase 2.1 (AI workflow).
+Subscriber retention
+> 80% at 12 months
+Indicates product-market fit. Worth investing in dashboard.
+AI search citations
+Track in GSC + manual checks
+Validates the AEO / GEO investment. Worth doubling down.
+Search-driven signups
+> 40% of registrations
+Organic acquisition working. Validates the content strategy.
+
+— End of Phase 1 Technical Build Document —
+Questions, ambiguities, anything that doesn't make sense — flag them before code is written. A 30-minute clarification call before kickoff is worth a week of rework after.

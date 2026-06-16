@@ -1,0 +1,16 @@
+{
+  "name": "ascendance-theme",
+  "version": "2.0.0",
+  "description": "Asset compiler structure for the Ascendance theme.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "vite": "^5.2.11"
+  }
+}
