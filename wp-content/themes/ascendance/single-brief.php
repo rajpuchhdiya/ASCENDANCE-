@@ -28,11 +28,11 @@ get_header();
 				<div style="display: flex; justify-content: center; gap: 10px; margin-bottom: var(--space-10); flex-wrap: wrap;">
 					<span class="paywall-badge"><?php echo esc_html( ucfirst( $tier ) ); ?> <?php esc_html_e( 'Briefing', 'ascendance' ); ?></span>
 					<?php
-					$industries = get_the_terms( $post_id, 'industry' );
-					if ( ! empty( $industries ) && ! is_wp_error( $industries ) ) :
-						foreach ( $industries as $industry ) :
+					$topics = get_the_terms( $post_id, 'topic' );
+					if ( ! empty( $topics ) && ! is_wp_error( $topics ) ) :
+						foreach ( $topics as $topic ) :
 							?>
-							<span style="border: 1px solid var(--color-red); color: var(--color-red); font-family: var(--font-heading); font-size: 11px; font-weight: bold; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm);"><?php echo esc_html( $industry->name ); ?></span>
+							<span style="border: 1px solid var(--color-red); color: var(--color-red); font-family: var(--font-heading); font-size: 11px; font-weight: bold; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm);"><?php echo esc_html( $topic->name ); ?></span>
 							<?php
 						endforeach;
 					endif;

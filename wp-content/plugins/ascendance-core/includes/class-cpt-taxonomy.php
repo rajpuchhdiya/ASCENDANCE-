@@ -49,29 +49,29 @@ class CPT_Taxonomy {
      */
     private function register_taxonomies() {
         
-        // 1. Industry Taxonomy (brief, dossier)
-        $labels_industry = array(
-            'name'              => _x( 'Industries', 'taxonomy general name', 'ascendance-core' ),
-            'singular_name'     => _x( 'Industry', 'taxonomy singular name', 'ascendance-core' ),
-            'search_items'      => __( 'Search Industries', 'ascendance-core' ),
-            'all_items'         => __( 'All Industries', 'ascendance-core' ),
-            'parent_item'       => __( 'Parent Industry', 'ascendance-core' ),
-            'parent_item_colon' => __( 'Parent Industry:', 'ascendance-core' ),
-            'edit_item'         => __( 'Edit Industry', 'ascendance-core' ),
-            'update_item'       => __( 'Update Industry', 'ascendance-core' ),
-            'add_new_item'      => __( 'Add New Industry', 'ascendance-core' ),
-            'new_item_name'     => __( 'New Industry Name', 'ascendance-core' ),
-            'menu_name'         => __( 'Industries', 'ascendance-core' ),
+        // 1. Topic Taxonomy (brief, dossier)
+        $labels_topic = array(
+            'name'              => _x( 'Topics', 'taxonomy general name', 'ascendance-core' ),
+            'singular_name'     => _x( 'Topic', 'taxonomy singular name', 'ascendance-core' ),
+            'search_items'      => __( 'Search Topics', 'ascendance-core' ),
+            'all_items'         => __( 'All Topics', 'ascendance-core' ),
+            'parent_item'       => __( 'Parent Topic', 'ascendance-core' ),
+            'parent_item_colon' => __( 'Parent Topic:', 'ascendance-core' ),
+            'edit_item'         => __( 'Edit Topic', 'ascendance-core' ),
+            'update_item'       => __( 'Update Topic', 'ascendance-core' ),
+            'add_new_item'      => __( 'Add New Topic', 'ascendance-core' ),
+            'new_item_name'     => __( 'New Topic Name', 'ascendance-core' ),
+            'menu_name'         => __( 'Topics', 'ascendance-core' ),
         );
 
-        register_taxonomy( 'industry', array( 'brief', 'dossier' ), array(
+        register_taxonomy( 'topic', array( 'brief', 'dossier' ), array(
             'hierarchical'      => true,
-            'labels'            => $labels_industry,
+            'labels'            => $labels_topic,
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
             'show_in_rest'      => true, // Required for Gutenberg
-            'rewrite'           => array( 'slug' => 'industry' ),
+            'rewrite'           => array( 'slug' => 'topic' ),
         ) );
 
         // 2. Region Taxonomy (brief, dossier, update)
@@ -90,7 +90,7 @@ class CPT_Taxonomy {
         );
 
         register_taxonomy( 'region', array( 'brief', 'dossier', 'update' ), array(
-            'hierarchical'      => true,
+            'hierarchical'      => false, // Non-hierarchical per spec
             'labels'            => $labels_region,
             'show_ui'           => true,
             'show_admin_column' => true,
@@ -99,20 +99,20 @@ class CPT_Taxonomy {
             'rewrite'           => array( 'slug' => 'region' ),
         ) );
 
-        // 3. Subscription Tier Taxonomy (brief, update, dossier)
+        // 3. Tier Taxonomy (brief, update, dossier)
         $labels_tier = array(
-            'name'              => _x( 'Subscription Tiers', 'taxonomy general name', 'ascendance-core' ),
-            'singular_name'     => _x( 'Subscription Tier', 'taxonomy singular name', 'ascendance-core' ),
+            'name'              => _x( 'Tiers', 'taxonomy general name', 'ascendance-core' ),
+            'singular_name'     => _x( 'Tier', 'taxonomy singular name', 'ascendance-core' ),
             'search_items'      => __( 'Search Tiers', 'ascendance-core' ),
             'all_items'         => __( 'All Tiers', 'ascendance-core' ),
             'edit_item'         => __( 'Edit Tier', 'ascendance-core' ),
             'update_item'       => __( 'Update Tier', 'ascendance-core' ),
             'add_new_item'      => __( 'Add New Tier', 'ascendance-core' ),
             'new_item_name'     => __( 'New Tier Name', 'ascendance-core' ),
-            'menu_name'         => __( 'Subscription Tiers', 'ascendance-core' ),
+            'menu_name'         => __( 'Tiers', 'ascendance-core' ),
         );
 
-        register_taxonomy( 'subscription_tier', array( 'brief', 'update', 'dossier' ), array(
+        register_taxonomy( 'tier', array( 'brief', 'update', 'dossier' ), array(
             'hierarchical'      => false,
             'labels'            => $labels_tier,
             'show_ui'           => true,
@@ -120,6 +120,29 @@ class CPT_Taxonomy {
             'query_var'         => true,
             'show_in_rest'      => true,
             'rewrite'           => array( 'slug' => 'tier' ),
+        ) );
+
+        // 4. Intelligence Tag Taxonomy (brief, update, dossier)
+        $labels_tag = array(
+            'name'              => _x( 'Intelligence Tags', 'taxonomy general name', 'ascendance-core' ),
+            'singular_name'     => _x( 'Intelligence Tag', 'taxonomy singular name', 'ascendance-core' ),
+            'search_items'      => __( 'Search Tags', 'ascendance-core' ),
+            'all_items'         => __( 'All Tags', 'ascendance-core' ),
+            'edit_item'         => __( 'Edit Tag', 'ascendance-core' ),
+            'update_item'       => __( 'Update Tag', 'ascendance-core' ),
+            'add_new_item'      => __( 'Add New Tag', 'ascendance-core' ),
+            'new_item_name'     => __( 'New Tag Name', 'ascendance-core' ),
+            'menu_name'         => __( 'Intelligence Tags', 'ascendance-core' ),
+        );
+
+        register_taxonomy( 'intelligence_tag', array( 'brief', 'update', 'dossier' ), array(
+            'hierarchical'      => false,
+            'labels'            => $labels_tag,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'show_in_rest'      => true,
+            'rewrite'           => array( 'slug' => 'intelligence-tag' ),
         ) );
     }
 
@@ -161,7 +184,7 @@ class CPT_Taxonomy {
             'menu_icon'          => 'dashicons-media-document',
             'show_in_rest'       => true, // Required for Gutenberg editor & REST API
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
-            'taxonomies'         => array( 'industry', 'region', 'subscription_tier' ),
+            'taxonomies'         => array( 'topic', 'region', 'tier', 'intelligence_tag' ),
         ) );
 
         // 2. Intelligence Update (update)
@@ -192,7 +215,7 @@ class CPT_Taxonomy {
             'menu_icon'          => 'dashicons-update',
             'show_in_rest'       => true,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
-            'taxonomies'         => array( 'region', 'subscription_tier' ),
+            'taxonomies'         => array( 'region', 'tier', 'intelligence_tag' ),
         ) );
 
         // 3. Intelligence Dossier (dossier)
@@ -223,7 +246,7 @@ class CPT_Taxonomy {
             'menu_icon'          => 'dashicons-portfolio',
             'show_in_rest'       => true,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
-            'taxonomies'         => array( 'industry', 'region', 'subscription_tier' ),
+            'taxonomies'         => array( 'topic', 'region', 'tier', 'intelligence_tag' ),
         ) );
     }
 }

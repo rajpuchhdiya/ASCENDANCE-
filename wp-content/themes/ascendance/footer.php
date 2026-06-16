@@ -1,33 +1,34 @@
 <?php
 /**
- * The template for displaying the footer
- *
- * Contains the closing of the #content div and all content after.
- *
- * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ * Footer for the Ascendance Intelligence Platform
  *
  * @package Ascendance
  */
-
 ?>
 	</div><!-- #content -->
 
 	<footer id="colophon" class="site-footer">
 		<div class="container">
 			<div class="footer-grid">
+
+				<!-- Brand column -->
 				<div class="footer-brand">
-					<h3><?php bloginfo( 'name' ); ?></h3>
-					<p><?php esc_html_e( 'Ascend to the next tier of digital experiences with clean aesthetics, interactive designs, and performance-first development.', 'ascendance' ); ?></p>
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="footer-logo-mark">
+						<?php bloginfo( 'name' ); ?>
+					</a>
+					<p class="footer-brand-tagline">
+						<?php esc_html_e( 'Premium geopolitical and strategic intelligence for decision-makers navigating a complex world.', 'ascendance' ); ?>
+					</p>
 					<div class="footer-socials">
-						<a href="#" class="social-link" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
-						<a href="#" class="social-link" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-						<a href="#" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-						<a href="#" class="social-link" aria-label="Dribbble"><i class="fa-brands fa-dribbble"></i></a>
+						<a href="#" class="social-link" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+						<a href="#" class="social-link" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+						<a href="#" class="social-link" aria-label="Substack"><i class="fa-solid fa-rss"></i></a>
 					</div>
 				</div>
 
+				<!-- Platform links -->
 				<div class="footer-col">
-					<h4><?php esc_html_e( 'Quick Links', 'ascendance' ); ?></h4>
+					<h4><?php esc_html_e( 'Platform', 'ascendance' ); ?></h4>
 					<?php
 					wp_nav_menu(
 						array(
@@ -40,41 +41,82 @@
 					?>
 				</div>
 
+				<!-- Intelligence links -->
+				<div class="footer-col">
+					<h4><?php esc_html_e( 'Intelligence', 'ascendance' ); ?></h4>
+					<?php
+					wp_nav_menu(
+						array(
+							'theme_location' => 'menu-footer-intel',
+							'menu_class'     => 'footer-links',
+							'container'      => false,
+							'fallback_cb'    => 'ascendance_default_intel_footer_menu',
+						)
+					);
+					?>
+				</div>
+
+				<!-- Contact column -->
 				<div class="footer-col">
 					<h4><?php esc_html_e( 'Contact', 'ascendance' ); ?></h4>
 					<ul class="footer-links">
-						<li><a href="mailto:raj@example.com"><i class="fa-regular fa-envelope" style="margin-right: 8px; color: var(--color-red);"></i> raj@example.com</a></li>
-						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: var(--color-red);"></i> Mumbai, India</span></li>
-						<li><span style="color: var(--text-secondary); font-size: 0.95rem;"><i class="fa-solid fa-code" style="margin-right: 8px; color: var(--color-red);"></i> Author: Raj</span></li>
+						<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><i class="fa-regular fa-envelope" style="margin-right:6px;color:var(--color-red);"></i><?php esc_html_e( 'Send a Message', 'ascendance' ); ?></a></li>
+						<li><a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>"><i class="fa-regular fa-newspaper" style="margin-right:6px;color:var(--color-red);"></i><?php esc_html_e( 'Subscribe', 'ascendance' ); ?></a></li>
+						<li><a href="<?php echo esc_url( home_url( '/about/' ) ); ?>#media"><i class="fa-solid fa-id-badge" style="margin-right:6px;color:var(--color-red);"></i><?php esc_html_e( 'Media Kit', 'ascendance' ); ?></a></li>
 					</ul>
 				</div>
-			</div>
+
+			</div><!-- .footer-grid -->
 
 			<div class="footer-bottom">
-				<p>&copy; <?php echo date( 'Y' ); ?> <strong><?php bloginfo( 'name' ); ?></strong>. All rights reserved. Created with passion by <strong>Raj</strong>.</p>
+				<p>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <strong><?php bloginfo( 'name' ); ?></strong>. <?php esc_html_e( 'All rights reserved.', 'ascendance' ); ?></p>
 				<ul class="footer-bottom-links">
-					<li><a href="#"><?php esc_html_e( 'Privacy Policy', 'ascendance' ); ?></a></li>
-					<li><a href="#"><?php esc_html_e( 'Terms of Service', 'ascendance' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>"><?php esc_html_e( 'Privacy Policy', 'ascendance' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>"><?php esc_html_e( 'Terms of Service', 'ascendance' ); ?></a></li>
 				</ul>
 			</div>
-		</div>
+
+		</div><!-- .container -->
 	</footer>
+
 </div><!-- #page -->
 
 <?php
 if ( ! function_exists( 'ascendance_default_footer_menu' ) ) {
 	function ascendance_default_footer_menu() {
+		$links = array(
+			home_url( '/' )              => 'Home',
+			home_url( '/about/' )        => 'About',
+			home_url( '/services/' )     => 'Services',
+			home_url( '/industries/' )   => 'Industries',
+			home_url( '/faq/' )          => 'FAQ',
+		);
 		echo '<ul class="footer-links">';
-		echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'ascendance' ) . '</a></li>';
-		echo '<li><a href="#features">' . esc_html__( 'Features', 'ascendance' ) . '</a></li>';
-		echo '<li><a href="#about">' . esc_html__( 'About', 'ascendance' ) . '</a></li>';
-		echo '<li><a href="#blog">' . esc_html__( 'Blog', 'ascendance' ) . '</a></li>';
+		foreach ( $links as $url => $label ) {
+			echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';
+		}
+		echo '</ul>';
+	}
+}
+
+if ( ! function_exists( 'ascendance_default_intel_footer_menu' ) ) {
+	function ascendance_default_intel_footer_menu() {
+		$links = array(
+			home_url( '/intelligence/' ) => 'Intelligence Hub',
+			home_url( '/briefs/' )       => 'Intelligence Briefs',
+			home_url( '/updates/' )      => 'Dynamic Updates',
+			home_url( '/dossiers/' )     => 'Dossiers',
+			home_url( '/newsletter/' )   => 'Newsletter',
+		);
+		echo '<ul class="footer-links">';
+		foreach ( $links as $url => $label ) {
+			echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';
+		}
 		echo '</ul>';
 	}
 }
 ?>
 
 <?php wp_footer(); ?>
-
 </body>
 </html>

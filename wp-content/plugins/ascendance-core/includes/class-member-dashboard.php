@@ -199,16 +199,19 @@ class Member_Dashboard {
      * Render dynamic personalized recommendations based on preferred Industry and Region
      */
     private function render_recommended_feed( $user_id ) {
-        $preferred_industries = get_user_meta( $user_id, 'preferred_industries', true );
+        $preferred_topics = get_user_meta( $user_id, 'preferred_topics', true );
+        if ( empty( $preferred_topics ) ) {
+            $preferred_topics = get_user_meta( $user_id, 'preferred_industries', true );
+        }
         $preferred_regions = get_user_meta( $user_id, 'preferred_regions', true );
 
         $tax_query = array( 'relation' => 'OR' );
 
-        if ( ! empty( $preferred_industries ) ) {
+        if ( ! empty( $preferred_topics ) ) {
             $tax_query[] = array(
-                'taxonomy' => 'industry',
+                'taxonomy' => 'topic',
                 'field'    => 'term_id',
-                'terms'    => $preferred_industries,
+                'terms'    => $preferred_topics,
             );
         }
 
@@ -314,31 +317,34 @@ class Member_Dashboard {
      * User profile preference settings (Admin Display)
      */
     public function render_user_preferences( $user ) {
-        $preferred_industries = get_user_meta( $user->ID, 'preferred_industries', true );
+        $preferred_topics = get_user_meta( $user->ID, 'preferred_topics', true );
+        if ( empty( $preferred_topics ) ) {
+            $preferred_topics = get_user_meta( $user->ID, 'preferred_industries', true );
+        }
         $preferred_regions = get_user_meta( $user->ID, 'preferred_regions', true );
 
-        $industries = get_terms( array( 'taxonomy' => 'industry', 'hide_empty' => false ) );
+        $topics = get_terms( array( 'taxonomy' => 'topic', 'hide_empty' => false ) );
         $regions = get_terms( array( 'taxonomy' => 'region', 'hide_empty' => false ) );
 
-        if ( ! is_array( $preferred_industries ) ) $preferred_industries = array();
+        if ( ! is_array( $preferred_topics ) ) $preferred_topics = array();
         if ( ! is_array( $preferred_regions ) ) $preferred_regions = array();
         ?>
         <h3 style="color:var(--color-white); margin-top:20px;"><?php esc_html_e( 'Ascendance Intelligence Feed Customization', 'ascendance-core' ); ?></h3>
         <table class="form-table">
             <tr>
-                <th><label><?php esc_html_e( 'Subscribed Industries', 'ascendance-core' ); ?></label></th>
+                <th><label><?php esc_html_e( 'Subscribed Topics', 'ascendance-core' ); ?></label></th>
                 <td>
-                    <?php if ( ! empty( $industries ) && ! is_wp_error( $industries ) ) : ?>
+                    <?php if ( ! empty( $topics ) && ! is_wp_error( $topics ) ) : ?>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:600px;">
-                            <?php foreach ( $industries as $industry ) : ?>
+                            <?php foreach ( $topics as $topic ) : ?>
                                 <label style="display:inline-flex; align-items:center; font-weight:normal;">
-                                    <input type="checkbox" name="preferred_industries[]" value="<?php echo esc_attr( $industry->term_id ); ?>" <?php checked( in_array( $industry->term_id, $preferred_industries ) ); ?> style="margin-right:8px;" />
-                                    <?php echo esc_html( $industry->name ); ?>
+                                    <input type="checkbox" name="preferred_topics[]" value="<?php echo esc_attr( $topic->term_id ); ?>" <?php checked( in_array( $topic->term_id, $preferred_topics ) ); ?> style="margin-right:8px;" />
+                                    <?php echo esc_html( $topic->name ); ?>
                                 </label>
                             <?php endforeach; ?>
                         </div>
                     <?php else : ?>
-                        <p style="color:var(--text-muted);"><?php esc_html_e( 'No industry taxonomy categories registered yet.', 'ascendance-core' ); ?></p>
+                        <p style="color:var(--text-muted);"><?php esc_html_e( 'No topic categories registered yet.', 'ascendance-core' ); ?></p>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -371,10 +377,10 @@ class Member_Dashboard {
             return;
         }
 
-        $industries = isset( $_POST['preferred_industries'] ) ? array_map( 'intval', $_POST['preferred_industries'] ) : array();
+        $topics = isset( $_POST['preferred_topics'] ) ? array_map( 'intval', $_POST['preferred_topics'] ) : array();
         $regions = isset( $_POST['preferred_regions'] ) ? array_map( 'intval', $_POST['preferred_regions'] ) : array();
 
-        update_user_meta( $user_id, 'preferred_industries', $industries );
+        update_user_meta( $user_id, 'preferred_topics', $topics );
         update_user_meta( $user_id, 'preferred_regions', $regions );
     }
 }

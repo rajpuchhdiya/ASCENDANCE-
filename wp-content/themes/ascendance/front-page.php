@@ -1,8 +1,8 @@
 <?php
 /**
- * The template for displaying the custom home/front page
+ * Front Page — Ascendance Intelligence Platform
  *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * Hero → Live Brief Feed → Platform Pillars → Membership Tiers → Stats → Newsletter CTA
  *
  * @package Ascendance
  */
@@ -12,208 +12,212 @@ get_header();
 
 <main id="primary" class="site-main">
 
-	<!-- Hero Section -->
-	<section class="hero-section">
+	<!-- ═══ HERO ══════════════════════════════════════════════ -->
+	<section class="hero-section" id="hero">
 		<div class="container">
-			<span class="hero-tagline reveal active"><?php esc_html_e( 'Introducing Ascendance', 'ascendance' ); ?></span>
-			<h1 class="hero-title reveal active">
-				Ascend to the Next Tier<br>of <span>Digital Design</span>
+			<span class="hero-eyebrow"><?php esc_html_e( 'Intelligence Platform', 'ascendance' ); ?></span>
+
+			<h1 class="hero-title">
+				<?php esc_html_e( 'Strategic Intelligence for', 'ascendance' ); ?><br>
+				<span class="accent"><?php esc_html_e( 'Decision Makers', 'ascendance' ); ?></span>
 			</h1>
-			<p class="hero-desc reveal active">
-				<?php esc_html_e( 'A premium WordPress experience crafted for creators, agencies, and builders who refuse to compromise on aesthetics and performance. Engineered with vanilla CSS and responsive structures.', 'ascendance' ); ?>
+
+			<p class="hero-subtitle">
+				<?php esc_html_e( 'Premium geopolitical, economic, and technology intelligence delivered weekly. Briefs, dynamic updates, and deep-dive dossiers calibrated to your membership tier.', 'ascendance' ); ?>
 			</p>
-			<div class="hero-ctas reveal active">
-				<a href="#features" class="btn btn-primary"><?php esc_html_e( 'Explore Features', 'ascendance' ); ?></a>
-				<a href="#about" class="btn btn-secondary"><?php esc_html_e( 'About Designer', 'ascendance' ); ?></a>
-			</div>
-		</div>
-	</section>
 
-	<!-- Features Section -->
-	<section id="features" class="features-section">
-		<div class="container">
-			<div class="section-header reveal">
-				<span class="section-subtitle"><?php esc_html_e( 'Exclusive Capabilities', 'ascendance' ); ?></span>
-				<h2 class="section-title"><?php esc_html_e( 'Engineered for Visual Perfection', 'ascendance' ); ?></h2>
+			<div class="hero-ctas">
+				<a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>" class="btn btn-primary" id="hero-cta-subscribe">
+					<?php esc_html_e( 'Subscribe Free', 'ascendance' ); ?>
+				</a>
+				<a href="<?php echo esc_url( home_url( '/intelligence/' ) ); ?>" class="btn btn-secondary" id="hero-cta-explore">
+					<?php esc_html_e( 'Browse Intelligence', 'ascendance' ); ?>
+				</a>
 			</div>
 
-			<div class="grid-features">
-				<div class="feature-card reveal">
-					<div class="feature-icon">
-						<i class="fa-solid fa-bolt"></i>
-					</div>
-					<h3><?php esc_html_e( 'Ultra Performance', 'ascendance' ); ?></h3>
-					<p><?php esc_html_e( 'Slick, lightning-fast rendering built on optimized vanilla structure. No heavy builders or code bloat.', 'ascendance' ); ?></p>
-				</div>
-
-				<div class="feature-card reveal">
-					<div class="feature-icon">
-						<i class="fa-solid fa-palette"></i>
-					</div>
-					<h3><?php esc_html_e( 'Premium Aesthetics', 'ascendance' ); ?></h3>
-					<p><?php esc_html_e( 'Sophisticated dark mode, vibrant neon accents, glowing borders, and flawless glassmorphic cards.', 'ascendance' ); ?></p>
-				</div>
-
-				<div class="feature-card reveal">
-					<div class="feature-icon">
-						<i class="fa-solid fa-mobile-screen"></i>
-					</div>
-					<h3><?php esc_html_e( 'Fully Responsive', 'ascendance' ); ?></h3>
-					<p><?php esc_html_e( 'Flawless layouts engineered to look outstanding on mobile, tablet, and desktop viewports.', 'ascendance' ); ?></p>
-				</div>
-
-				<div class="feature-card reveal">
-					<div class="feature-icon">
-						<i class="fa-solid fa-code"></i>
-					</div>
-					<h3><?php esc_html_e( 'Clean Architecture', 'ascendance' ); ?></h3>
-					<p><?php esc_html_e( 'Strictly adhering to WordPress standards with clean PHP code, dynamic content loops, and semantic HTML.', 'ascendance' ); ?></p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- About / Showcase Section -->
-	<section id="about" class="about-section">
-		<div class="container">
-			<div class="about-grid">
-				<div class="about-content reveal">
-					<span class="section-subtitle"><?php esc_html_e( 'Ascendance Vision', 'ascendance' ); ?></span>
-					<h2 class="section-title" style="margin-bottom: 1.5rem; text-align: left;"><?php esc_html_e( 'Crafted With Absolute Precision', 'ascendance' ); ?></h2>
-					<p style="color: var(--text-secondary); margin-bottom: 1.2rem;">
-						<?php esc_html_e( 'This theme represents the peak of custom WordPress development. We bypass complex drag-and-drop builders to deliver direct, blazing-fast front-end layouts written with clean code.', 'ascendance' ); ?>
-					</p>
-					<p style="color: var(--text-secondary);">
-						<?php esc_html_e( 'Designed by Raj, Ascendance utilizes glassmorphic backdrops, smooth gradient overflows, and scroll-reveal triggers to keep users deeply engaged.', 'ascendance' ); ?>
-					</p>
-
-					<div class="stats-grid">
-						<div class="stat-item">
-							<div class="stat-number">99%</div>
-							<div class="stat-label"><?php esc_html_e( 'Core Web Vitals', 'ascendance' ); ?></div>
-						</div>
-						<div class="stat-item">
-							<div class="stat-number">0.2s</div>
-							<div class="stat-label"><?php esc_html_e( 'Initial Load Time', 'ascendance' ); ?></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="about-image reveal">
-					<div class="about-img-wrapper">
+			<div class="hero-stats">
+				<div class="hero-stat-item">
+					<span class="hero-stat-number">
 						<?php
-						$showcase_img = get_template_directory_uri() . '/assets/images/showcase.png';
+						// Live brief count
+						$brief_count = wp_count_posts( 'brief' )->publish;
+						echo esc_html( $brief_count > 0 ? $brief_count . '+' : '50+' );
 						?>
-						<img src="<?php echo esc_url( $showcase_img ); ?>" alt="Ascendance Showcase Mockup" onerror="this.src='https://placehold.co/600x450/080710/ffffff?text=Ascendance+Showcase';">
-					</div>
+					</span>
+					<span class="hero-stat-label"><?php esc_html_e( 'Intelligence Briefs', 'ascendance' ); ?></span>
+				</div>
+				<div class="hero-stat-item">
+					<span class="hero-stat-number">3</span>
+					<span class="hero-stat-label"><?php esc_html_e( 'Membership Tiers', 'ascendance' ); ?></span>
+				</div>
+				<div class="hero-stat-item">
+					<span class="hero-stat-number">6</span>
+					<span class="hero-stat-label"><?php esc_html_e( 'Strategic Sectors', 'ascendance' ); ?></span>
+				</div>
+				<div class="hero-stat-item">
+					<span class="hero-stat-number">40+</span>
+					<span class="hero-stat-label"><?php esc_html_e( 'Countries Covered', 'ascendance' ); ?></span>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Blog / Recent Posts Section -->
-	<section id="blog" class="posts-section">
+	<!-- ═══ LIVE INTELLIGENCE FEED ════════════════════════════ -->
+	<section class="section bg-navy-mid" id="latest-intelligence">
 		<div class="container">
-			<div class="section-header reveal">
-				<span class="section-subtitle"><?php esc_html_e( 'Our Journal', 'ascendance' ); ?></span>
-				<h2 class="section-title"><?php esc_html_e( 'Latest Insights & Design News', 'ascendance' ); ?></h2>
+			<div class="section-header">
+				<span class="section-eyebrow"><?php esc_html_e( 'Live Feed', 'ascendance' ); ?></span>
+				<h2 class="section-title reveal"><?php esc_html_e( 'Latest Intelligence', 'ascendance' ); ?></h2>
+				<p class="section-lead reveal reveal-delay-1"><?php esc_html_e( 'The most recent briefs, updates, and dossiers from the Ascendance intelligence ledger.', 'ascendance' ); ?></p>
 			</div>
 
-			<div class="posts-grid">
+			<div class="intel-grid">
 				<?php
-				$latest_posts = new WP_Query(
-					array(
-						'posts_per_page'      => 3,
-						'post_status'         => 'publish',
-						'ignore_sticky_posts' => true,
-					)
-				);
+				$live_feed = new WP_Query( array(
+					'post_type'      => array( 'brief', 'update', 'dossier' ),
+					'posts_per_page' => 6,
+					'post_status'    => 'publish',
+					'orderby'        => 'date',
+					'order'          => 'DESC',
+				) );
 
-				if ( $latest_posts->have_posts() ) :
-					while ( $latest_posts->have_posts() ) :
-						$latest_posts->the_post();
-						?>
-						<article id="post-<?php the_ID(); ?>" <?php post_class( 'post-card reveal' ); ?>>
-							<div class="post-thumb">
-								<?php if ( has_post_thumbnail() ) : ?>
-									<?php the_post_thumbnail( 'medium_large' ); ?>
-								<?php else : ?>
-									<img src="https://placehold.co/600x400/080710/ffffff?text=<?php echo urlencode( get_the_title() ); ?>" alt="<?php the_title_attribute(); ?>">
-								<?php endif; ?>
-								
-								<span class="post-category">
-									<?php
-									$categories = get_the_category();
-									if ( ! empty( $categories ) ) {
-										echo esc_html( $categories[0]->name );
-									} else {
-										echo esc_html__( 'Article', 'ascendance' );
-									}
-									?>
-								</span>
-							</div>
-
-							<div class="post-content">
-								<div class="post-meta">
-									<span><i class="fa-regular fa-calendar"></i> <?php echo get_the_date(); ?></span>
-									<span><i class="fa-regular fa-user"></i> <?php the_author(); ?></span>
-								</div>
-								<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-								<div class="post-excerpt">
-									<?php the_excerpt(); ?>
-								</div>
-								<a href="<?php the_permalink(); ?>" class="read-more">
-									<?php esc_html_e( 'Read More', 'ascendance' ); ?> <i class="fa-solid fa-arrow-right"></i>
-								</a>
-							</div>
-						</article>
-						<?php
+				if ( $live_feed->have_posts() ) :
+					while ( $live_feed->have_posts() ) :
+						$live_feed->the_post();
+						get_template_part( 'template-parts/intelligence-card', null, array( 'post_id' => get_the_ID() ) );
 					endwhile;
 					wp_reset_postdata();
 				else :
-					// Show beautiful static placeholder cards if there are no posts in the database yet
-					for ( $i = 1; $i <= 3; $i ++ ) :
-						?>
-						<article class="post-card reveal">
-							<div class="post-thumb">
-								<img src="https://placehold.co/600x400/080710/ffffff?text=Sample+Article+<?php echo $i; ?>" alt="Placeholder Post">
-								<span class="post-category"><?php echo $i === 1 ? 'Design' : ( $i === 2 ? 'Coding' : 'Aesthetics' ); ?></span>
-							</div>
-							<div class="post-content">
-								<div class="post-meta">
-									<span><i class="fa-regular fa-calendar"></i> <?php echo date( 'M d, Y' ); ?></span>
-									<span><i class="fa-regular fa-user"></i> Raj</span>
-								</div>
-								<h3><a href="#"><?php echo $i === 1 ? 'Mastering Glassmorphism in Modern Websites' : ( $i === 2 ? 'Building Lightning Fast Themes with Vanilla CSS' : 'Why Visual Aesthetics Drive User Retention' ); ?></a></h3>
-								<div class="post-excerpt">
-									<p><?php echo $i === 1 ? 'Discover how to implement sleek CSS backdrop filters and borders to create gorgeous interfaces.' : ( $i === 2 ? 'Learn our key strategies for writing performant PHP templates and optimizing style packages.' : 'Explore the psychological connection between color harmony, layouts, and visitor trust.' ); ?></p>
-								</div>
-								<a href="#" class="read-more"><?php esc_html_e( 'Read More', 'ascendance' ); ?> <i class="fa-solid fa-arrow-right"></i></a>
-							</div>
-						</article>
-						<?php
-					endfor;
+					echo '<p style="color:rgba(247,244,239,0.4);font-family:var(--font-heading);font-size:0.9rem;">';
+					esc_html_e( 'No intelligence content published yet. Check back soon.', 'ascendance' );
+					echo '</p>';
 				endif;
 				?>
 			</div>
-		</div>
-	</section>
 
-	<!-- Call To Action Section / Newsletter -->
-	<section id="cta" class="cta-section">
-		<div class="container">
-			<div class="cta-box reveal">
-				<h2><?php esc_html_e( 'Join the Ascendance Movement', 'ascendance' ); ?></h2>
-				<p><?php esc_html_e( 'Get notified when new templates, design systems, and components are released. Subscribe to Raj\'s exclusive dev logs.', 'ascendance' ); ?></p>
-				<form class="cta-form" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
-					<input type="email" placeholder="<?php esc_attr_e( 'Enter your email address', 'ascendance' ); ?>" required>
-					<button type="submit"><?php esc_html_e( 'Subscribe', 'ascendance' ); ?></button>
-				</form>
+			<div style="text-align:center;margin-top:var(--space-8);">
+				<a href="<?php echo esc_url( home_url( '/intelligence/' ) ); ?>" class="btn btn-secondary" id="home-view-all">
+					<?php esc_html_e( 'View All Intelligence', 'ascendance' ); ?>
+					<i class="fa-solid fa-arrow-right" style="margin-left:8px;color:var(--color-red);"></i>
+				</a>
 			</div>
 		</div>
 	</section>
 
+	<!-- ═══ PLATFORM PILLARS ══════════════════════════════════ -->
+	<section class="pillars-section section" id="platform">
+		<div class="container">
+			<div class="section-header" style="text-align:center;max-width:580px;margin:0 auto var(--space-8);">
+				<span class="section-eyebrow"><?php esc_html_e( 'What We Deliver', 'ascendance' ); ?></span>
+				<h2 class="section-title reveal"><?php esc_html_e( 'Three Intelligence Products', 'ascendance' ); ?></h2>
+				<p class="section-lead reveal reveal-delay-1"><?php esc_html_e( 'Every product type is crafted for a different decision-making cadence — from strategic planning to real-time situational awareness.', 'ascendance' ); ?></p>
+			</div>
+
+			<div class="pillars-grid">
+				<div class="pillar-card reveal">
+					<div class="pillar-icon"><i class="fa-solid fa-file-contract"></i></div>
+					<h3><?php esc_html_e( 'Intelligence Briefs', 'ascendance' ); ?></h3>
+					<p><?php esc_html_e( 'Structured weekly analysis. Each brief opens with a falsifiable analytical claim, followed by key findings, source verification, and scenario forecasts up to 18 months out.', 'ascendance' ); ?></p>
+				</div>
+				<div class="pillar-card reveal reveal-delay-1">
+					<div class="pillar-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+					<h3><?php esc_html_e( 'Dynamic Updates', 'ascendance' ); ?></h3>
+					<p><?php esc_html_e( 'Real-time situational updates linked to parent briefs. Delivered as developments occur — with impact assessment ratings from Low to Critical.', 'ascendance' ); ?></p>
+				</div>
+				<div class="pillar-card reveal reveal-delay-2">
+					<div class="pillar-icon"><i class="fa-solid fa-layer-group"></i></div>
+					<h3><?php esc_html_e( 'Strategic Dossiers', 'ascendance' ); ?></h3>
+					<p><?php esc_html_e( 'Deep-dive actor and country profiles. Living documents updated monthly, combining historical context with active intelligence threads across five strategic dimensions.', 'ascendance' ); ?></p>
+				</div>
+			</div>
+
+			<div style="text-align:center;margin-top:var(--space-8);">
+				<a href="<?php echo esc_url( home_url( '/services/' ) ); ?>" class="btn btn-secondary" id="home-learn-more">
+					<?php esc_html_e( 'Learn More About Each Product', 'ascendance' ); ?>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══ MEMBERSHIP TIERS ══════════════════════════════════ -->
+	<section class="tiers-section section-lg" id="pricing">
+		<div class="container">
+			<div class="section-header" style="text-align:center;max-width:540px;margin:0 auto var(--space-8);">
+				<span class="section-eyebrow"><?php esc_html_e( 'Membership', 'ascendance' ); ?></span>
+				<h2 class="section-title reveal"><?php esc_html_e( 'Intelligence Tiers', 'ascendance' ); ?></h2>
+				<p class="section-lead reveal reveal-delay-1"><?php esc_html_e( 'Choose the tier calibrated to your intelligence requirements. Upgrade or downgrade at any time.', 'ascendance' ); ?></p>
+			</div>
+
+			<div class="tiers-grid">
+				<!-- Essential -->
+				<div class="tier-card reveal">
+					<div class="tier-name"><?php esc_html_e( 'Essential', 'ascendance' ); ?></div>
+					<div class="tier-price">$29<span>/mo</span></div>
+					<p class="tier-desc"><?php esc_html_e( 'Foundational intelligence access for individuals and small teams building their strategic awareness.', 'ascendance' ); ?></p>
+					<ul class="tier-features">
+						<li><?php esc_html_e( '2 Intelligence Briefs per week', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Daily Dynamic Updates', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Regional coverage (1 region)', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Email newsletter digest', 'ascendance' ); ?></li>
+						<li class="locked"><?php esc_html_e( 'Strategic Dossiers', 'ascendance' ); ?></li>
+						<li class="locked"><?php esc_html_e( 'API access', 'ascendance' ); ?></li>
+					</ul>
+					<a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>" class="btn btn-secondary" id="tier-essential-cta">
+						<?php esc_html_e( 'Start Essential', 'ascendance' ); ?>
+					</a>
+				</div>
+
+				<!-- Professional (featured) -->
+				<div class="tier-card featured reveal reveal-delay-1">
+					<div class="tier-name"><?php esc_html_e( 'Professional', 'ascendance' ); ?></div>
+					<div class="tier-price">$79<span>/mo</span></div>
+					<p class="tier-desc"><?php esc_html_e( 'Comprehensive intelligence access for analysts, consultants, and mid-market enterprise teams.', 'ascendance' ); ?></p>
+					<ul class="tier-features">
+						<li><?php esc_html_e( 'All Intelligence Briefs (unlimited)', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Real-time Dynamic Updates', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Global regional coverage', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Strategic Dossiers (read access)', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Weekly analyst call', 'ascendance' ); ?></li>
+						<li class="locked"><?php esc_html_e( 'API access', 'ascendance' ); ?></li>
+					</ul>
+					<a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>" class="btn btn-primary" id="tier-professional-cta">
+						<?php esc_html_e( 'Start Professional', 'ascendance' ); ?>
+					</a>
+				</div>
+
+				<!-- Enterprise -->
+				<div class="tier-card reveal reveal-delay-2">
+					<div class="tier-name"><?php esc_html_e( 'Enterprise', 'ascendance' ); ?></div>
+					<div class="tier-price">$249<span>/mo</span></div>
+					<p class="tier-desc"><?php esc_html_e( 'Institutional-grade intelligence for large enterprise, government, and investment teams.', 'ascendance' ); ?></p>
+					<ul class="tier-features">
+						<li><?php esc_html_e( 'Everything in Professional', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Full Dossier library access', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'REST API access', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Bespoke intelligence requests', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'Dedicated analyst relationship', 'ascendance' ); ?></li>
+						<li><?php esc_html_e( 'White-label report exports', 'ascendance' ); ?></li>
+					</ul>
+					<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn-secondary" id="tier-enterprise-cta">
+						<?php esc_html_e( 'Contact for Enterprise', 'ascendance' ); ?>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══ NEWSLETTER CTA ════════════════════════════════════ -->
+	<?php
+	get_template_part( 'template-parts/cta-strip', null, array(
+		'heading'    => __( 'Get Intelligence in Your Inbox', 'ascendance' ),
+		'body'       => __( 'Subscribe to the weekly Ascendance Brief — a curated digest of the most significant geopolitical, economic, and technology developments. Free for the first 30 days.', 'ascendance' ),
+		'btn_label'  => __( 'Subscribe Free', 'ascendance' ),
+		'btn_url'    => home_url( '/newsletter/' ),
+		'btn2_label' => __( 'View Pricing', 'ascendance' ),
+		'btn2_url'   => home_url( '/services/' ),
+	) );
+	?>
+
 </main><!-- #primary -->
 
-<?php
-get_footer();
+<?php get_footer(); ?>

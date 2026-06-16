@@ -556,7 +556,7 @@ The Sakania-Lobito Corridor concession award in May 2026 represents a structural
         }
 
         // Fetch terms for selection
-        $topics = get_terms( array( 'taxonomy' => 'industry', 'hide_empty' => false ) ); // using industry as topics per CPT_Taxonomy class
+        $topics = get_terms( array( 'taxonomy' => 'topic', 'hide_empty' => false ) );
         $regions = get_terms( array( 'taxonomy' => 'region', 'hide_empty' => false ) );
 
         ?>

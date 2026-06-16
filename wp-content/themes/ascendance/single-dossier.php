@@ -29,11 +29,11 @@ get_header();
 					<div style="display: flex; gap: 8px; margin-bottom: var(--space-10);">
 						<span class="paywall-badge" style="background-color: var(--color-red); color: var(--color-white);"><?php echo esc_html( ucfirst( $tier ) ); ?> <?php esc_html_e( 'Dossier', 'ascendance' ); ?></span>
 						<?php
-						$industries = get_the_terms( $post_id, 'industry' );
-						if ( ! empty( $industries ) && ! is_wp_error( $industries ) ) :
-							foreach ( $industries as $industry ) :
+						$topics = get_the_terms( $post_id, 'topic' );
+						if ( ! empty( $topics ) && ! is_wp_error( $topics ) ) :
+							foreach ( $topics as $topic ) :
 								?>
-								<span style="border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 11px; padding: 2px 8px; border-radius: var(--radius-sm);"><?php echo esc_html( $industry->name ); ?></span>
+								<span style="border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 11px; padding: 2px 8px; border-radius: var(--radius-sm);"><?php echo esc_html( $topic->name ); ?></span>
 								<?php
 							endforeach;
 						endif;

@@ -1,0 +1,130 @@
+{
+    "key": "group_ascendance_update",
+    "title": "Intelligence Update Metadata",
+    "fields": [
+        {
+            "key": "field_update_parent_brief",
+            "label": "Parent Intelligence Brief",
+            "name": "parent_brief",
+            "type": "post_object",
+            "instructions": "Link this dynamic update to its parent intelligence dossier or brief.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "brief",
+                "dossier"
+            ],
+            "taxonomy": "",
+            "allow_null": 0,
+            "multiple": 0,
+            "return_format": "id",
+            "ui": 1
+        },
+        {
+            "key": "field_update_date",
+            "label": "Update Date",
+            "name": "update_date",
+            "type": "date_picker",
+            "instructions": "The development date (not the publish date).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "F j, Y",
+            "return_format": "Y-m-d",
+            "first_day": 1
+        },
+        {
+            "key": "field_update_one_line_summary",
+            "label": "One Line Summary",
+            "name": "one_line_summary",
+            "type": "text",
+            "instructions": "Max 160 characters. Renders as meta description.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": 160
+        },
+        {
+            "key": "field_update_impact_assessment",
+            "label": "Impact Assessment",
+            "name": "impact_assessment",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "low": "Low - Minor adjustments only",
+                "medium": "Medium - Notable shifting variables",
+                "high": "High - Major trend disruption",
+                "critical": "Critical - Dynamic realignment required"
+            },
+            "default_value": [
+                "medium"
+            ],
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 1,
+            "ajax": 0,
+            "return_format": "value",
+            "placeholder": ""
+        },
+        {
+            "key": "field_update_key_update",
+            "label": "Key Update Content",
+            "name": "key_update",
+            "type": "wysiwyg",
+            "instructions": "The latest dynamic developments and changes.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "update"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": ""
+}

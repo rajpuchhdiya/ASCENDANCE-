@@ -35,7 +35,7 @@ get_header();
 						<article id="post-<?php the_ID(); ?>" class="card" style="padding: var(--space-30); display: flex; flex-direction: column; gap: 12px;">
 							<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
 								<div class="card-meta" style="margin-bottom: 0;">
-									<span class="card-tag"><?php the_terms( $post_id, 'industry', '', ', ', '' ); ?></span>
+									<span class="card-tag"><?php the_terms( $post_id, 'topic', '', ', ', '' ); ?></span>
 									<span><?php echo get_the_date(); ?></span>
 								</div>
 								<span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"><?php echo esc_html( ucfirst( $tier ) ); ?> Tier</span>

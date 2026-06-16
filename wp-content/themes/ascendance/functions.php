@@ -37,8 +37,9 @@ if ( ! function_exists( 'ascendance_setup' ) ) :
 		// This theme uses wp_nav_menu() in two locations.
 		register_nav_menus(
 			array(
-				'menu-primary' => esc_html__( 'Primary Header Menu', 'ascendance' ),
-				'menu-footer'  => esc_html__( 'Footer Menu', 'ascendance' ),
+				'menu-primary'      => esc_html__( 'Primary Header Menu', 'ascendance' ),
+				'menu-footer'       => esc_html__( 'Footer Quick Links', 'ascendance' ),
+				'menu-footer-intel' => esc_html__( 'Footer Intelligence Links', 'ascendance' ),
 			)
 		);
 
@@ -131,6 +132,23 @@ function ascendance_scripts() {
 		wp_enqueue_script( 'ascendance-js', get_template_directory_uri() . '/assets/js/main.js', array(), '2.0.0', true );
 	}
 
+	// Pages CSS — sitewide (supplements style.css token system)
+	wp_enqueue_style(
+		'ascendance-pages',
+		get_template_directory_uri() . '/assets/css/pages.css',
+		array( 'ascendance-style' ),
+		'2.0.0'
+	);
+
+	// Pages JS — sitewide interactive behaviours
+	wp_enqueue_script(
+		'ascendance-pages',
+		get_template_directory_uri() . '/assets/js/pages.js',
+		array(),
+		'2.0.0',
+		true
+	);
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -152,3 +170,48 @@ function ascendance_custom_excerpt_more( $more ) {
 	return '...';
 }
 add_filter( 'excerpt_more', 'ascendance_custom_excerpt_more' );
+
+/**
+ * Render a tier access badge HTML string.
+ *
+ * @param string $tier  Tier slug: essential | professional | enterprise
+ * @return string HTML badge span.
+ */
+function ascendance_tier_badge( string $tier ): string {
+	$labels = [
+		'essential'    => 'Essential',
+		'professional' => 'Professional',
+		'enterprise'   => 'Enterprise',
+	];
+	$label = $labels[ $tier ] ?? ucfirst( $tier );
+	return '<span class="tier-badge ' . esc_attr( $tier ) . '">' . esc_html( $label ) . '</span>';
+}
+
+/**
+ * Render an impact assessment badge HTML string.
+ *
+ * @param string $impact  Impact slug: low | medium | high | critical
+ * @return string HTML badge span.
+ */
+function ascendance_impact_badge( string $impact ): string {
+	$labels = [
+		'low'      => 'Low',
+		'medium'   => 'Medium',
+		'high'     => 'High',
+		'critical' => 'Critical',
+	];
+	$label = $labels[ $impact ] ?? ucfirst( $impact );
+	return '<span class="impact-badge ' . esc_attr( $impact ) . '">' . esc_html( $label ) . '</span>';
+}
+
+/**
+ * Return the post type label for a CPT slug.
+ */
+function ascendance_cpt_label( string $post_type ): string {
+	return match ( $post_type ) {
+		'brief'   => 'Brief',
+		'update'  => 'Update',
+		'dossier' => 'Dossier',
+		default   => ucfirst( $post_type ),
+	};
+}
