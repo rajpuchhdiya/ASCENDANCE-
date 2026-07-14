@@ -35,39 +35,39 @@ $faq_items = array(
 <main id="primary" class="site-main">
 
 	<!-- ═══ PAGE HERO ═════════════════════════════════════════ -->
-	<section class="page-hero">
-		<div class="container">
+	<section class="page-hero bg-navy-deep text-white py-16 md:py-24 border-b border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
 			<div class="page-hero-inner">
-				<p class="page-hero-eyebrow"><?php esc_html_e( '// Help & Support', 'ascendance' ); ?></p>
-				<h1 class="page-hero-title"><?php esc_html_e( 'Frequently Asked Questions', 'ascendance' ); ?></h1>
-				<p class="page-hero-desc"><?php esc_html_e( 'Everything you need to know about Ascendance — membership, content, access, and billing.', 'ascendance' ); ?></p>
+				<p class="page-hero-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-4 block"><?php esc_html_e( '// Help & Support', 'ascendance' ); ?></p>
+				<h1 class="page-hero-title text-3xl md:text-5xl font-sans font-bold leading-tight mb-6"><?php esc_html_e( 'Frequently Asked Questions', 'ascendance' ); ?></h1>
+				<p class="page-hero-desc text-base md:text-lg text-cream/80 max-w-[720px] leading-relaxed"><?php esc_html_e( 'Everything you need to know about Ascendance — membership, content, access, and billing.', 'ascendance' ); ?></p>
 			</div>
 		</div>
 	</section>
 
 	<!-- ═══ FAQ SECTION ════════════════════════════════════════ -->
-	<section class="faq-section section-lg">
-		<div class="container">
+	<section class="faq-section section py-20 bg-cream dark:bg-navy-deep border-b border-brand-divider-light dark:border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
 
 			<!-- Category Filter Buttons -->
-			<div class="faq-categories">
-				<button class="faq-cat-btn active" data-cat="all" id="faq-cat-all"><?php esc_html_e( 'All Questions', 'ascendance' ); ?></button>
-				<button class="faq-cat-btn" data-cat="membership" id="faq-cat-membership"><?php esc_html_e( 'Membership', 'ascendance' ); ?></button>
-				<button class="faq-cat-btn" data-cat="content" id="faq-cat-content"><?php esc_html_e( 'Content', 'ascendance' ); ?></button>
-				<button class="faq-cat-btn" data-cat="access" id="faq-cat-access"><?php esc_html_e( 'Access', 'ascendance' ); ?></button>
-				<button class="faq-cat-btn" data-cat="platform" id="faq-cat-platform"><?php esc_html_e( 'Platform', 'ascendance' ); ?></button>
-				<button class="faq-cat-btn" data-cat="billing" id="faq-cat-billing"><?php esc_html_e( 'Billing', 'ascendance' ); ?></button>
+			<div class="faq-categories flex flex-wrap gap-3 justify-center mb-12">
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150 active" data-cat="all" id="faq-cat-all"><?php esc_html_e( 'All Questions', 'ascendance' ); ?></button>
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150" data-cat="membership" id="faq-cat-membership"><?php esc_html_e( 'Membership', 'ascendance' ); ?></button>
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150" data-cat="content" id="faq-cat-content"><?php esc_html_e( 'Content', 'ascendance' ); ?></button>
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150" data-cat="access" id="faq-cat-access"><?php esc_html_e( 'Access', 'ascendance' ); ?></button>
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150" data-cat="platform" id="faq-cat-platform"><?php esc_html_e( 'Platform', 'ascendance' ); ?></button>
+				<button class="faq-cat-btn px-5 py-2.5 bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark text-sm text-brand-text-muted dark:text-cream/70 font-sans font-bold cursor-pointer rounded-sm hover:border-brand-red transition-all duration-150" data-cat="billing" id="faq-cat-billing"><?php esc_html_e( 'Billing', 'ascendance' ); ?></button>
 			</div>
 
 			<!-- FAQ Accordion -->
-			<div class="faq-list" id="faq-accordion">
+			<div class="faq-list max-w-[800px] mx-auto flex flex-col gap-4" id="faq-accordion">
 				<?php foreach ( $faq_items as $i => $faq ) : ?>
-					<details class="faq-item" data-cat="<?php echo esc_attr( $faq['cat'] ); ?>" id="faq-item-<?php echo esc_attr( $i + 1 ); ?>">
-						<summary class="faq-question">
+					<details class="faq-item bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark rounded-sm transition-all duration-300 [&[open]]:border-brand-red [&[open]]:shadow-sm" data-cat="<?php echo esc_attr( $faq['cat'] ); ?>" id="faq-item-<?php echo esc_attr( $i + 1 ); ?>">
+						<summary class="faq-question flex justify-between items-center px-6 py-5 font-sans font-bold text-base text-brand-text-primary dark:text-white cursor-pointer select-none list-none marker:hidden [&::-webkit-details-marker]:hidden">
 							<?php echo esc_html( $faq['q'] ); ?>
-							<span class="faq-icon" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
+							<span class="faq-icon text-brand-red text-xs transition-transform duration-200" aria-hidden="true"><i class="fa-solid fa-plus"></i></span>
 						</summary>
-						<div class="faq-answer">
+						<div class="faq-answer px-6 pb-6 pt-0 text-sm text-brand-text-muted dark:text-cream/70 leading-relaxed">
 							<?php echo esc_html( $faq['a'] ); ?>
 						</div>
 					</details>
@@ -75,13 +75,13 @@ $faq_items = array(
 			</div>
 
 			<!-- Still have questions? -->
-			<div style="text-align:center;margin-top:var(--space-12);padding-top:var(--space-8);border-top:1px solid var(--color-divider-dark);">
-				<p style="font-family:var(--font-heading);font-size:0.9rem;color:rgba(247,244,239,0.5);margin-bottom:var(--space-4);">
+			<div class="faq-footer text-center mt-16 max-w-[600px] mx-auto border-t border-brand-divider-light dark:border-brand-divider-dark/20 pt-10">
+				<p class="faq-footer-text text-base text-brand-text-muted dark:text-cream/70 mb-4">
 					<?php esc_html_e( "Didn't find what you were looking for?", 'ascendance' ); ?>
 				</p>
-				<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn-secondary" id="faq-contact-cta">
+				<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn-secondary border border-brand-divider-light dark:border-brand-divider-dark text-brand-text-primary dark:text-cream hover:bg-brand-divider-light dark:hover:bg-brand-divider-dark flex items-center justify-center gap-2 max-w-xs mx-auto" id="faq-contact-cta">
 					<?php esc_html_e( 'Contact Support', 'ascendance' ); ?>
-					<i class="fa-solid fa-arrow-right" style="margin-left:8px;color:var(--color-red);"></i>
+					<i class="fa-solid fa-arrow-right text-brand-red"></i>
 				</a>
 			</div>
 		</div>

@@ -180,7 +180,7 @@ class CPT_Taxonomy {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => false,
-            'menu_position'      => 5,
+            'menu_position'      => 32,
             'menu_icon'          => 'dashicons-media-document',
             'show_in_rest'       => true, // Required for Gutenberg editor & REST API
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'custom-fields' ),
@@ -211,7 +211,7 @@ class CPT_Taxonomy {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => false,
-            'menu_position'      => 6,
+            'menu_position'      => 33,
             'menu_icon'          => 'dashicons-update',
             'show_in_rest'       => true,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
@@ -242,11 +242,43 @@ class CPT_Taxonomy {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => false,
-            'menu_position'      => 7,
+            'menu_position'      => 34,
             'menu_icon'          => 'dashicons-portfolio',
             'show_in_rest'       => true,
             'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
             'taxonomies'         => array( 'topic', 'region', 'tier', 'intelligence_tag' ),
+        ) );
+
+        // 4. Intelligence Event (event)
+        $labels_event = array(
+            'name'               => _x( 'Intelligence Events', 'post type general name', 'ascendance-core' ),
+            'singular_name'      => _x( 'Event', 'post type singular name', 'ascendance-core' ),
+            'menu_name'          => _x( 'Events', 'admin menu', 'ascendance-core' ),
+            'add_new'            => _x( 'Add New', 'event', 'ascendance-core' ),
+            'add_new_item'       => __( 'Add New Intelligence Event', 'ascendance-core' ),
+            'edit_item'          => __( 'Edit Event', 'ascendance-core' ),
+            'view_item'          => __( 'View Event', 'ascendance-core' ),
+            'all_items'          => __( 'All Events', 'ascendance-core' ),
+            'search_items'       => __( 'Search Intelligence Events', 'ascendance-core' ),
+            'not_found'          => __( 'No events found.', 'ascendance-core' ),
+        );
+
+        register_post_type( 'event', array(
+            'labels'             => $labels_event,
+            'public'             => true,
+            'publicly_queryable' => true,
+            'show_ui'            => true,
+            'show_in_menu'       => true,
+            'query_var'          => true,
+            'rewrite'            => array( 'slug' => 'events', 'with_front' => false ),
+            'capability_type'    => 'post',
+            'has_archive'        => true,
+            'hierarchical'       => false,
+            'menu_position'      => 35,
+            'menu_icon'          => 'dashicons-calendar-alt',
+            'show_in_rest'       => true,
+            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt' ),
+            'taxonomies'         => array( 'topic', 'region' ),
         ) );
     }
 }

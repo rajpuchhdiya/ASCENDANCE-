@@ -15,6 +15,7 @@ if ( version_compare( PHP_VERSION, '8.2.0', '<' ) ) {
 }
 
 // 1. Lightweight Native .env Parser (looks in current dir and parent dirs for security outside web root)
+file_put_contents(__DIR__ . '/trace.txt', "[" . date('H:i:s') . "] wp-config.php start\n");
 $env_file = null;
 $paths_to_check = array(
     __DIR__ . '/.env',
@@ -65,7 +66,7 @@ if ( ! defined( 'WP_ENVIRONMENT_TYPE' ) ) {
 if ( ! defined( 'DB_NAME' ) )     define( 'DB_NAME', 'ascendance' );
 if ( ! defined( 'DB_USER' ) )     define( 'DB_USER', 'root' );
 if ( ! defined( 'DB_PASSWORD' ) ) define( 'DB_PASSWORD', '' );
-if ( ! defined( 'DB_HOST' ) )     define( 'DB_HOST', 'localhost' );
+if ( ! defined( 'DB_HOST' ) )     define( 'DB_HOST', '127.0.0.1' );
 if ( ! defined( 'DB_CHARSET' ) )  define( 'DB_CHARSET', 'utf8mb4' );
 if ( ! defined( 'DB_COLLATE' ) )  define( 'DB_COLLATE', '' );
 
@@ -77,6 +78,8 @@ switch ( WP_ENVIRONMENT_TYPE ) {
         define( 'WP_DEBUG_DISPLAY', true );
         define( 'SCRIPT_DEBUG', true );
         define( 'SAVEQUERIES', true );
+        define( 'WP_HTTP_BLOCK_EXTERNAL', true );
+        define( 'WP_ACCESSIBLE_HOSTS', 'localhost,127.0.0.1,api.wordpress.org,downloads.wordpress.org,wordpress.org' );
         break;
 
     case 'staging':

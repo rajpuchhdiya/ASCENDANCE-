@@ -1,0 +1,80 @@
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+
+# AI crawler rules for Ascendance
+User-agent: GPTBot
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: ClaudeBot
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: PerplexityBot
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: Google-Extended
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: Gemini
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: anthropic-ai
+Allow: /Ascendance/llms.txt
+Allow: /Ascendance/llms-full.txt
+Allow: /Ascendance/briefs/
+Allow: /Ascendance/dossiers/
+Allow: /Ascendance/updates/
+Disallow: /Ascendance/wp-admin/
+Disallow: /Ascendance/pricing/
+Disallow: /Ascendance/checkout/
+Disallow: /Ascendance/wp-content/plugins/
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+

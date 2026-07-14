@@ -6,9 +6,17 @@ $pmpro_user_fields = array();
 // Add default group.
 $cb = new stdClass();
 $cb->name = 'checkout_boxes';
-$cb->label = apply_filters( 'pmpro_default_field_group_label', __( 'More Information','paid-memberships-pro' ) );
+$cb->label = 'More Information';
 $cb->order = 0;
 $pmpro_field_groups = array( 'checkout_boxes' => $cb );
+
+add_action( 'init', 'pmpro_init_default_field_groups', 5 );
+function pmpro_init_default_field_groups() {
+	global $pmpro_field_groups;
+	if ( isset( $pmpro_field_groups['checkout_boxes'] ) ) {
+		$pmpro_field_groups['checkout_boxes']->label = apply_filters( 'pmpro_default_field_group_label', __( 'More Information','paid-memberships-pro' ) );
+	}
+}
 
 /**
  * Check if a variable is a PMPro_Field.

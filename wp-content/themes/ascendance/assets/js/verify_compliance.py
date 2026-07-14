@@ -41,7 +41,8 @@ def check_file(filepath):
 
 # Walk through theme and plugin files
 for root, dirs, files in os.walk(theme_dir):
-    if "node_modules" in root or "assets/dist" in root or ".git" in root:
+    norm_root = root.replace("\\", "/")
+    if "node_modules" in norm_root or "assets/dist" in norm_root or ".git" in norm_root:
         continue
     for file in files:
         if file.endswith((".php", ".css", ".js")):

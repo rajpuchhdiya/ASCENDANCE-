@@ -90,6 +90,20 @@ Follow these steps to initialize your local development environment:
      cd wp-content/themes/ascendance
      npm install
      npm run build
+
+---
+
+## Repository Bootstrap (first-time setup)
+
+- Create branches locally and push:
+```bash
+git checkout -b staging origin/staging || git checkout -b staging
+git checkout -b feature/your-feature
+git push -u origin staging
+git push -u origin feature/your-feature
+```
+- Ensure `.gitignore` exists (see [.gitignore](.gitignore)).
+- Add project-wide deploy notes in [DEPLOY.md](DEPLOY.md).
      ```
 
 ---

@@ -88,81 +88,223 @@
         });
     }
 
-    /* ── Intelligence Hub Filter Tabs ─────────────────────────── */
+    /* ── Intelligence Hub AJAX Filter ─────────────────────────── */
     function initFilterTabs() {
-        const tabs  = document.querySelectorAll('.filter-tab');
-        const cards = document.querySelectorAll('.intel-card');
-        if (!tabs.length) return;
+        const tabs      = document.querySelectorAll('.filter-tab');
+        const selects   = document.querySelectorAll('.filter-select');
+        const grid      = document.getElementById('intel-hub-grid');
+        const pagWrap   = document.getElementById('intel-pagination');
+        const loading   = document.getElementById('intel-loading');
+        const countEl   = document.getElementById('intel-results-count');
 
+        if (!grid) return; // not on intelligence hub page
+
+        // Current filter state
+        let state = { type: 'all', topic: '', region: '', page: 1 };
+
+        /* ── Core AJAX fetch ──────────────────────────────────── */
+        function fetchIntel() {
+            if (!window.ascendance_params) return;
+
+            // Show loading overlay
+            if (loading) {
+                loading.style.opacity = '1';
+                loading.style.pointerEvents = 'auto';
+            }
+            grid.style.opacity = '0.4';
+            grid.style.transition = 'opacity 0.2s ease';
+
+            const formData = new FormData();
+            formData.append('action', 'ascendance_intel_filter');
+            formData.append('nonce',  ascendance_params.nonce);
+            formData.append('intel-type', state.type);
+            formData.append('topic',      state.topic);
+            formData.append('region',     state.region);
+            formData.append('page',       state.page);
+
+            fetch(ascendance_params.ajax_url, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return;
+
+                // Inject cards
+                grid.innerHTML = data.data.html;
+                grid.style.opacity = '1';
+
+                // Inject pagination
+                if (pagWrap) {
+                    pagWrap.innerHTML = data.data.pagination
+                        ? `<div class="archive-pagination-inner">${data.data.pagination}</div>`
+                        : '';
+                    // Bind pagination link clicks
+                    bindPaginationLinks();
+                }
+
+                // Update results count
+                if (countEl) {
+                    countEl.textContent = data.data.total + ' result' + (data.data.total === 1 ? '' : 's');
+                }
+
+                // Hide loading overlay
+                if (loading) {
+                    loading.style.opacity = '0';
+                    loading.style.pointerEvents = 'none';
+                }
+
+                // Re-trigger scroll reveal on new cards
+                initScrollReveal();
+
+                // Smooth scroll to grid top
+                grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            })
+            .catch(() => {
+                grid.style.opacity = '1';
+                if (loading) {
+                    loading.style.opacity = '0';
+                    loading.style.pointerEvents = 'none';
+                }
+            });
+        }
+
+        /* ── Pagination link intercept ────────────────────────── */
+        function bindPaginationLinks() {
+            if (!pagWrap) return;
+            const links = pagWrap.querySelectorAll('a.page-numbers');
+            links.forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+
+                    // Extract page number from href  (/page/3/ or ?paged=3)
+                    const href = link.href || '';
+                    let pageNum = 1;
+
+                    const matchSlash = href.match(/\/page\/(\d+)/);
+                    const matchQuery = href.match(/[?&]paged?=(\d+)/);
+
+                    if (matchSlash) pageNum = parseInt(matchSlash[1], 10);
+                    else if (matchQuery) pageNum = parseInt(matchQuery[1], 10);
+                    else if (link.classList.contains('prev')) pageNum = Math.max(1, state.page - 1);
+                    else if (link.classList.contains('next')) pageNum = state.page + 1;
+
+                    state.page = pageNum;
+
+                    // Highlight current-page button optimistically
+                    pagWrap.querySelectorAll('.page-numbers').forEach(n => n.classList.remove('current'));
+                    link.classList.add('current');
+
+                    fetchIntel();
+                });
+            });
+        }
+
+        /* ── Filter tab binding ───────────────────────────────── */
         tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
+            tab.addEventListener('click', e => {
+                e.preventDefault();
                 tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-
-                const type = tab.dataset.type;
-                cards.forEach(card => {
-                    if (type === 'all' || card.dataset.postType === type) {
-                        card.style.display = '';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                state.type = tab.dataset.type || 'all';
+                state.page = 1; // reset to page 1 on filter change
+                fetchIntel();
             });
         });
 
-        // Taxonomy select filters
-        const selects = document.querySelectorAll('.filter-select');
+        /* ── Select dropdown binding ──────────────────────────── */
         selects.forEach(select => {
             select.addEventListener('change', () => {
-                const taxonomy = select.dataset.taxonomy;
-                const value    = select.value;
-
-                cards.forEach(card => {
-                    // Only filter visible cards
-                    if (card.style.display === 'none') return;
-
-                    if (!value) {
-                        card.style.opacity = '1';
-                        card.style.pointerEvents = '';
-                        return;
-                    }
-
-                    const cardTaxValues = (card.dataset[taxonomy] || '').split(',');
-                    if (cardTaxValues.includes(value)) {
-                        card.style.opacity = '1';
-                        card.style.pointerEvents = '';
-                    } else {
-                        card.style.opacity = '0.25';
-                        card.style.pointerEvents = 'none';
-                    }
-                });
+                const tax = select.dataset.taxonomy;
+                if (tax === 'topic')  state.topic  = select.value;
+                if (tax === 'region') state.region = select.value;
+                state.page = 1; // reset to page 1 on filter change
+                fetchIntel();
             });
+        });
+
+        // Bind pagination links on initial page load
+        bindPaginationLinks();
+
+        /* ── "Clear Filters" button — event delegation ────────── */
+        // Use document-level delegation so it works on AJAX-injected buttons
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('[data-action="intel-reset"]');
+            if (!btn) return;
+
+            // Reset JS state
+            state = { type: 'all', topic: '', region: '', page: 1 };
+
+            // Reset UI controls
+            tabs.forEach(t => t.classList.remove('active'));
+            const allTab = document.querySelector('.filter-tab[data-type="all"]');
+            if (allTab) allTab.classList.add('active');
+            selects.forEach(s => { s.value = ''; });
+
+            fetchIntel();
         });
     }
 
     /* ── Newsletter & Contact Form ─────────────────────────────── */
     function initForms() {
-        // Newsletter inline form
-        const nlForm = document.querySelector('.newsletter-form-inline, .newsletter-form-full');
-        if (nlForm) {
-            nlForm.addEventListener('submit', (e) => {
+        // Newsletter inline/full forms
+        const nlForms = document.querySelectorAll('.newsletter-form-inline, .newsletter-form-full, #ascendance-newsletter-form');
+        nlForms.forEach(form => {
+            form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const emailInput = nlForm.querySelector('input[type="email"]');
-                const btn        = nlForm.querySelector('button[type="submit"]');
+                const emailInput = form.querySelector('input[type="email"]');
+                const nameInput  = form.querySelector('input[name="first_name"]');
+                const btn        = form.querySelector('button[type="submit"]');
                 const email      = emailInput ? emailInput.value.trim() : '';
+                const firstName  = nameInput ? nameInput.value.trim() : '';
 
                 if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showFormMsg(nlForm, 'Please enter a valid email address.', 'error');
+                    showFormMsg(form, 'Please enter a valid email address.', 'error');
                     return;
                 }
 
-                // Replace with actual ESP endpoint when configured
-                btn.textContent = 'Subscribed!';
-                btn.disabled    = true;
-                emailInput.value = '';
-                showFormMsg(nlForm, 'Thank you! Your subscription is confirmed.', 'success');
+                btn.disabled = true;
+                const origText = btn.textContent;
+                btn.textContent = 'Subscribing...';
+
+                const ajaxUrl = (typeof ascendance_params !== 'undefined') ? ascendance_params.ajax_url : '/Ascendance/wp-admin/admin-ajax.php';
+                
+                const formData = new FormData();
+                formData.append('action', 'ascendance_subscribe');
+                formData.append('email', email);
+                formData.append('first_name', firstName);
+
+                fetch(ajaxUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.textContent = 'Subscribed!';
+                        if (emailInput) emailInput.value = '';
+                        if (nameInput) nameInput.value = '';
+                        showFormMsg(form, data.data.message || 'Thank you! Your subscription is confirmed.', 'success');
+                        
+                        // Push newsletter signup event to GTM dataLayer
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'newsletter_signup',
+                            'form_id': form.id || 'unknown'
+                        });
+                    } else {
+                        btn.textContent = origText;
+                        btn.disabled = false;
+                        showFormMsg(form, data.data.message || 'Subscription failed. Please try again.', 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.textContent = origText;
+                    btn.disabled = false;
+                    showFormMsg(form, 'Connection error. Please try again later.', 'error');
+                });
             });
-        }
+        });
 
         // Native contact form
         const contactForm = document.querySelector('.contact-form-native');

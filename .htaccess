@@ -1,8 +1,98 @@
+# BEGIN WebP Redirection
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_ACCEPT} image/webp
+  RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+  RewriteRule (.+)\.(jpe?g|png)$ $1.$2.webp [T=image/webp,E=accept:1]
+</IfModule>
+<IfModule mod_headers.c>
+  Header append Vary Accept env=REDIRECT_accept
+</IfModule>
+# END WebP Redirection
+
+# BEGIN Cache-Control Headers & Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    
+    # CSS and JS
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    
+    # Fonts
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+# END Cache-Control Headers & Compression
+
+# BEGIN Security Headers
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "no-referrer-when-downgrade"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+  Header always set Content-Security-Policy "default-src 'self' blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; frame-src 'self' blob: data: https://www.google.com https://recaptcha.google.com; child-src 'self' blob: https://www.google.com https://recaptcha.google.com; frame-ancestors 'self';"
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "(^\.|wp-config.php)$">
+  Require all denied
+</FilesMatch>
+
+# Disable xmlrpc
+<Files xmlrpc.php>
+  Require all denied
+</Files>
+# END Security Headers
+
+# BEGIN Legacy 301 Redirects
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /Ascendance/
+
+  # Specific Page Redirects
+  RewriteRule ^contact-us/?$ contact/ [R=301,L]
+  RewriteRule ^services-and-industries/?$ services/ [R=301,L]
+
+  # Blog to Intelligence Wildcard redirects
+  RewriteRule ^blog/(.*)$ intelligence/$1 [R=301,L]
+  RewriteRule ^blog/?$ intelligence/ [R=301,L]
+</IfModule>
+# END Legacy 301 Redirects
+
+# BEGIN Robots.txt Routing
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /Ascendance/
+  RewriteRule ^robots\.txt$ index.php?robots=1 [L]
+</IfModule>
+# END Robots.txt Routing
 
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
 # dynamically generated, and should only be modified via WordPress filters.
 # Any changes to the directives between these markers will be overwritten.
+# Protect wp-config and env
+<IfModule mod_rewrite.c>
+RewriteRule (^|/)(?:\.env|wp-config.php) - [F,L]
+</IfModule>
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

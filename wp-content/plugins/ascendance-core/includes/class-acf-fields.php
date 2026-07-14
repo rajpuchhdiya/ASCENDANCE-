@@ -206,6 +206,7 @@ class ACF_Fields {
                     'instructions' => __( 'The minimum membership tier required to unlock this intelligence brief.', 'ascendance-core' ),
                     'required' => 1,
                     'choices' => array(
+                        'public'       => __( 'Public (Free)', 'ascendance-core' ),
                         'essential'    => __( 'Essential (Tier 1)', 'ascendance-core' ),
                         'professional' => __( 'Professional (Tier 2)', 'ascendance-core' ),
                         'enterprise'   => __( 'Enterprise (Tier 3)', 'ascendance-core' ),
@@ -474,6 +475,7 @@ class ACF_Fields {
                     'type' => 'select',
                     'required' => 1,
                     'choices' => array(
+                        'public'       => __( 'Public (Free)', 'ascendance-core' ),
                         'essential'    => __( 'Essential (Tier 1)', 'ascendance-core' ),
                         'professional' => __( 'Professional (Tier 2)', 'ascendance-core' ),
                         'enterprise'   => __( 'Enterprise (Tier 3)', 'ascendance-core' ),
@@ -649,6 +651,76 @@ class ACF_Fields {
                         'param' => 'post_type',
                         'operator' => '==',
                         'value' => 'dossier',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+        ) );
+
+        // 4. Event Field Group
+        acf_add_local_field_group( array(
+            'key' => 'group_ascendance_event',
+            'title' => __( 'Intelligence Event Metadata', 'ascendance-core' ),
+            'fields' => array(
+                array(
+                    'key' => 'field_event_date',
+                    'label' => __( 'Event Date & Time', 'ascendance-core' ),
+                    'name' => 'event_date',
+                    'type' => 'text',
+                    'instructions' => __( 'The date and time of the event (e.g., "July 9, 2026 // 14:00 CET").', 'ascendance-core' ),
+                    'required' => 1,
+                    'placeholder' => 'July 9, 2026 // 14:00 CET',
+                ),
+                array(
+                    'key' => 'field_event_location',
+                    'label' => __( 'Event Location / Route', 'ascendance-core' ),
+                    'name' => 'event_location',
+                    'type' => 'text',
+                    'instructions' => __( 'The physical or virtual location (e.g., "Zoom Secure Webinar").', 'ascendance-core' ),
+                    'required' => 1,
+                    'default_value' => 'Zoom Secured Webinar',
+                ),
+                array(
+                    'key' => 'field_event_type',
+                    'label' => __( 'Event Type', 'ascendance-core' ),
+                    'name' => 'event_type',
+                    'type' => 'select',
+                    'instructions' => __( 'The classification of this event.', 'ascendance-core' ),
+                    'required' => 1,
+                    'choices' => array(
+                        'Closed Roundtable' => __( 'Closed Roundtable', 'ascendance-core' ),
+                        'Webinar Briefing'  => __( 'Webinar Briefing', 'ascendance-core' ),
+                        'Strategic Briefing' => __( 'Strategic Briefing', 'ascendance-core' ),
+                    ),
+                    'default_value' => 'Webinar Briefing',
+                    'ui' => 1,
+                ),
+                array(
+                    'key' => 'field_event_speaker',
+                    'label' => __( 'Lead Presenter / Speaker', 'ascendance-core' ),
+                    'name' => 'event_speaker',
+                    'type' => 'text',
+                    'instructions' => __( 'The name of the lead analyst presenting (e.g., "Dr. Amara Osei").', 'ascendance-core' ),
+                    'required' => 1,
+                    'default_value' => 'Ascendance Lead Analyst Desk',
+                ),
+                array(
+                    'key' => 'field_event_registration_url',
+                    'label' => __( 'Registration URL', 'ascendance-core' ),
+                    'name' => 'registration_url',
+                    'type' => 'text',
+                    'instructions' => __( 'External URL for registration, or leave empty/set to "#rsvp" to use the onsite form.', 'ascendance-core' ),
+                    'required' => 0,
+                    'default_value' => '#rsvp',
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'event',
                     ),
                 ),
             ),

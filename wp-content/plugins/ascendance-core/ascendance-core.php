@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ascendance Core
  * Plugin URI: https://github.com/raj/ascendance-core
- * Description: Core platform architecture helper for Ascendance. Registers CPTs, Taxonomies, ACF Fields, Custom Paywall, Member Dashboard logic, AEO/GEO crawlers, and GA4 tracking.
+ * Description: Core platform architecture helper for Ascendance. Registers CPTs, Taxonomies, ACF Fields, Custom Paywall, Member Dashboard logic, AEO/GEO crawlers, GA4 tracking, hidden login URL, and Google reCAPTCHA v3 protection.
  * Version: 1.0.0
  * Author: Raj
  * Author URI: https://github.com/raj
@@ -97,6 +97,31 @@ add_action( 'plugins_loaded', function() {
     // 9. Mission Control Admin Dashboard
     if ( class_exists( 'Ascendance\Core\Mission_Control' ) ) {
         Ascendance\Core\Mission_Control::get_instance();
+    }
+
+    // 10. Stripe Billing overrides
+    if ( class_exists( 'Ascendance\Core\Stripe_Billing' ) ) {
+        Ascendance\Core\Stripe_Billing::get_instance();
+    }
+
+    // 11. Brevo Newsletter Integration
+    if ( class_exists( 'Ascendance\Core\Newsletter' ) ) {
+        Ascendance\Core\Newsletter::get_instance();
+    }
+
+    // 12. Native next-gen Image Optimizer
+    if ( class_exists( 'Ascendance\Core\Image_Optimizer' ) ) {
+        Ascendance\Core\Image_Optimizer::get_instance();
+    }
+
+    // 13. Hidden Login URL (WPS Hide Login equivalent)
+    if ( class_exists( 'Ascendance\Core\Login_Security' ) ) {
+        Ascendance\Core\Login_Security::get_instance();
+    }
+
+    // 14. Google reCAPTCHA v3 — invisible, score-based protection on login, registration, and lost-password
+    if ( class_exists( 'Ascendance\Core\ReCaptcha' ) ) {
+        Ascendance\Core\ReCaptcha::get_instance();
     }
 } );
 

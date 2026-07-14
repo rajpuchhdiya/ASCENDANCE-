@@ -1,3 +1,29 @@
+# WordPress common ignores
+.env
+.env.local
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backups/
+wp-content/cache/
+node_modules/
+.sass-cache/
+.DS_Store
+
+# Composer
+/vendor/
+composer.lock
+
+# OS and IDE
+.vscode/
+.idea/
+Thumbs.db
 /wp-content/uploads/ 
 /node_modules/ 
 /.env 
+
+# Backups, logs and archives
+wp-content/updraft/
+wp-content/wflogs/
+*.zip
+wp-content/debug.log

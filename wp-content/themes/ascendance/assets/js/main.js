@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeaderScroll();
     initMobileMenu();
     initScrollReveal();
+    initHeaderSearch();
+    initHeaderAccountDropdown();
+    initThemeToggle();
 });
 
 /**
@@ -112,4 +115,138 @@ function initScrollReveal() {
     revealElements.forEach(el => {
         observer.observe(el);
     });
+}
+
+/**
+ * 4. Expandable search icon/field toggles
+ */
+function initHeaderSearch() {
+    const searchWrap = document.querySelector('.header-search-wrap');
+    if (!searchWrap) return;
+    
+    const searchInput = searchWrap.querySelector('.search-field');
+    const searchBtn = searchWrap.querySelector('.search-submit');
+    
+    searchBtn.addEventListener('click', (e) => {
+        if (!searchWrap.classList.contains('active')) {
+            e.preventDefault();
+            searchWrap.classList.add('active');
+            searchInput.focus();
+        } else if (searchInput.value.trim() === '') {
+            e.preventDefault();
+            searchWrap.classList.remove('active');
+            searchInput.blur();
+        }
+    });
+    
+    // Close search when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchWrap.contains(e.target)) {
+            searchWrap.classList.remove('active');
+        }
+    });
+
+    searchInput.addEventListener('focus', () => {
+        searchWrap.classList.add('active');
+    });
+
+    searchInput.addEventListener('blur', () => {
+        if (searchInput.value.trim() === '') {
+            searchWrap.classList.remove('active');
+        }
+    });
+}
+
+/**
+ * 5. Desktop Account dropdown toggle
+ */
+function initHeaderAccountDropdown() {
+    const dropdown = document.querySelector('.header-account-dropdown');
+    if (!dropdown) return;
+    
+    const toggle = dropdown.querySelector('.account-toggle');
+    
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+}
+
+/**
+ * 6. Dynamic Theme Toggle (Dark/Light Mode)
+ */
+function initThemeToggle() {
+    const desktopToggle = document.getElementById('theme-toggle');
+    const mobileToggle = document.getElementById('theme-toggle-mobile');
+
+    if (!desktopToggle && !mobileToggle) return;
+
+    const getTheme = () => {
+        return document.documentElement.getAttribute('data-theme') || 'light';
+    };
+
+    const updateToggleUI = (theme) => {
+        const desktopIcon = desktopToggle ? desktopToggle.querySelector('i') : null;
+        const mobileIcon = mobileToggle ? mobileToggle.querySelector('i') : null;
+        const mobileText = mobileToggle ? mobileToggle.querySelector('span') : null;
+
+        if (theme === 'dark') {
+            if (desktopIcon) {
+                desktopIcon.className = 'fa-solid fa-sun';
+            }
+            if (mobileIcon) {
+                mobileIcon.className = 'fa-solid fa-sun';
+            }
+            if (mobileText) {
+                mobileText.textContent = 'Light Mode';
+            }
+        } else {
+            if (desktopIcon) {
+                desktopIcon.className = 'fa-solid fa-moon';
+            }
+            if (mobileIcon) {
+                mobileIcon.className = 'fa-solid fa-moon';
+            }
+            if (mobileText) {
+                mobileText.textContent = 'Dark Mode';
+            }
+        }
+    };
+
+    const setTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark-theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark-theme', 'dark');
+        }
+        try {
+            localStorage.setItem('theme', theme);
+        } catch (e) {
+            // Local storage might be blocked in some browser settings
+        }
+        updateToggleUI(theme);
+    };
+
+    const toggleTheme = () => {
+        const currentTheme = getTheme();
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+    };
+
+    if (desktopToggle) {
+        desktopToggle.addEventListener('click', toggleTheme);
+    }
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Initialize UI to match current applied state
+    updateToggleUI(getTheme());
 }

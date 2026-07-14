@@ -10,13 +10,19 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: ascendance
 */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* -------------------------------------------------------------
    1. BRAND DESIGN SYSTEM TOKENS (CSS Custom Properties Only)
+   Note: Tailwind mapping in tailwind.config.js references these values.
 ------------------------------------------------------------- */
 :root {
-    /* Brand Colors (Section 3.1) */
+    /* Brand Colors */
     --color-navy: #0F1E35;
     --color-navy-deep: #0A1628;
+    --color-deep-navy: var(--color-navy-deep);
     --color-navy-mid: #182D4A;
     --color-cream: #F7F4EF;
     --color-white: #FFFFFF;
@@ -31,7 +37,7 @@ Text Domain: ascendance
     --color-warning: #E67E22;
     --color-info: #2980B9;
 
-    /* Semantic surface tokens — default: editorial register (Section 3.5) */
+    /* Semantic surface tokens */
     --surface-bg: var(--color-cream);
     --surface-card: var(--color-white);
     --surface-text: var(--color-text-primary);
@@ -39,7 +45,7 @@ Text Domain: ascendance
     --surface-border: var(--color-divider-light);
     --surface-accent: var(--color-red);
 
-    /* Semantics & Contextual Tokens (Derived from Brand Colors) */
+    /* Semantics & Contextual Tokens */
     --bg-main: var(--surface-bg);
     --bg-card: var(--surface-card);
     --text-primary: var(--surface-text);
@@ -50,7 +56,19 @@ Text Domain: ascendance
     --accent-color: var(--surface-accent);
     --accent-hover: #9E1416;
 
-    /* Typography Fonts (Section 3.2) */
+    /* Form control tokens */
+    --input-bg: var(--color-white);
+    --input-text: var(--color-text-primary);
+    --input-border: var(--border-color);
+
+    /* Header tokens */
+    --header-bg: var(--color-white);
+    --header-border: var(--color-divider-light);
+    --header-text: var(--color-text-primary);
+    --header-text-muted: var(--color-text-muted);
+    --header-text-hover: var(--color-red);
+
+    /* Typography Fonts */
     --font-serif: "Noto Serif", Georgia, serif;
     --font-sans: "Cooper Hewitt", "Barlow", "Roboto", sans-serif;
     --font-mono: "JetBrains Mono", monospace;
@@ -58,7 +76,7 @@ Text Domain: ascendance
     --font-heading: var(--font-sans);
     --font-body: var(--font-serif);
 
-    /* Typography Scale (Section 3.3) */
+    /* Typography Scale */
     --font-size-xs: 0.8rem;
     --font-size-sm: 0.95rem;
     --font-size-base: 1.1rem;
@@ -77,520 +95,667 @@ Text Domain: ascendance
     --text-4xl: 2.5rem;
     --text-5xl: 3rem;
 
-    /* Typography Weights */
     --weight-normal: 400;
     --weight-medium: 500;
     --weight-bold: 700;
 
-    /* Spacing Scale (4px base, Section 3.3) */
-    --space-1: 0.25rem;   /* 4px  */
-    --space-2: 0.5rem;    /* 8px  */
-    --space-3: 0.75rem;   /* 12px */
-    --space-4: 1rem;      /* 16px */
-    --space-6: 1.5rem;    /* 24px */
-    --space-8: 2rem;      /* 32px */
-    --space-12: 3rem;     /* 48px */
-    --space-16: 4rem;     /* 64px */
-    --space-24: 6rem;     /* 96px */
+    /* Spacing Scale */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-24: 6rem;
 
-    /* Legacy Spacing (Mapped to base scale) */
-    --space-10: var(--space-2);
-    --space-20: var(--space-4);
-    --space-30: var(--space-6);
-    --space-40: var(--space-8);
-    --space-50: var(--space-12);
-    --space-60: var(--space-16);
-    --space-70: var(--space-24);
-    --space-80: 8rem;
-
-    /* Borders & Border Radius (Capped at 2px ceiling, Section 3.3) */
+    /* Borders & Border Radius (Capped at 2px ceiling) */
     --radius-sm: 2px;
     --radius-md: 2px;
     --radius-lg: 2px;
     --radius-full: 2px;
-
-    /* Line Widths */
-    --border-thin: 1px;
-    --border-thick: 3px;
 
     /* Transition & Timing */
     --transition-fast: 120ms;
     --transition-base: 200ms;
     --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 
-    /* Shadows (Subtle, compliant with dark surfaces) */
+    /* Shadows */
     --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.15);
     --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     --shadow-red: 0 0 15px rgba(188, 27, 29, 0.3);
 }
 
-/* Phase 2 — data terminal register (Section 3.5) */
-[data-register="terminal"] {
+/* Dark Mode Token Overrides */
+html[data-theme="dark"],
+html.dark-theme,
+html.dark {
     --surface-bg: var(--color-navy-deep);
     --surface-card: var(--color-navy-mid);
     --surface-text: var(--color-cream);
     --surface-text-muted: #B0B0BD;
     --surface-border: var(--color-divider-dark);
     --surface-accent: var(--color-red-light);
+
+    --bg-main: var(--surface-bg);
+    --bg-card: var(--surface-card);
+    --text-primary: var(--surface-text);
+    --text-secondary: var(--surface-text-muted);
+    --text-muted: var(--surface-text-muted);
+    --border-color: var(--surface-border);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --accent-color: var(--surface-accent);
+    --accent-hover: #E04B4B;
+
+    --input-bg: var(--color-navy-deep);
+    --input-text: var(--color-white);
+    --input-border: var(--border-color);
+
+    --header-bg: var(--color-navy-deep);
+    --header-border: var(--color-divider-dark);
+    --header-text: var(--color-cream);
+    --header-text-muted: rgba(247, 244, 239, 0.6);
+    --header-text-hover: var(--color-white);
 }
 
-/* -------------------------------------------------------------
-   2. GENERAL RESET & BASE STYLES
-------------------------------------------------------------- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: var(--font-body);
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    font-size: var(--font-size-base);
-    line-height: 1.7;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-}
-
-a {
-    color: var(--accent-color);
-    text-decoration: none;
-    transition: var(--transition-fast);
-}
-
-a:hover {
-    color: var(--text-primary);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    font-weight: var(--weight-bold);
-    color: var(--color-white);
-    line-height: 1.25;
-    margin-bottom: var(--space-20);
-}
-
-h1 { font-size: var(--font-size-xxl); }
-h2 { font-size: var(--font-size-xl); }
-h3 { font-size: var(--font-size-lg); }
-h4 { font-size: var(--font-size-md); }
-h5 { font-size: var(--font-size-base); }
-h6 { font-size: var(--font-size-sm); }
-
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--space-30);
-}
-
-/* -------------------------------------------------------------
-   3. NAVIGATION & LAYOUT HEADER
-------------------------------------------------------------- */
-.site-header {
-    width: 100%;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    background-color: var(--color-deep-navy);
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.site-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.site-logo a {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-bold);
-    letter-spacing: -0.5px;
-    color: var(--color-white);
-    display: flex;
-    align-items: center;
-    gap: var(--space-10);
-}
-
-.site-logo a::before {
-    content: '';
-    display: block;
-    width: 12px;
-    height: 12px;
-    background-color: var(--color-red);
-    border-radius: var(--radius-full);
-}
-
-.main-navigation {
-    display: flex;
-    align-items: center;
-    gap: var(--space-40);
-}
-
-.main-menu {
-    display: flex;
-    list-style: none;
-    gap: var(--space-30);
-}
-
-.main-menu a {
-    color: var(--text-secondary);
-    font-family: var(--font-heading);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-medium);
-}
-
-.main-menu a:hover,
-.main-menu .current-menu-item > a {
-    color: var(--color-white);
-}
-
-/* -------------------------------------------------------------
-   4. BUTTON STYLES (No Hardcoded Colors)
-------------------------------------------------------------- */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 28px;
-    font-family: var(--font-heading);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-bold);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: var(--transition-fast);
-}
-
-.btn-primary {
-    background-color: var(--color-red);
-    color: var(--color-white);
-}
-
-.btn-primary:hover {
-    background-color: var(--accent-hover);
-    color: var(--color-white);
-    box-shadow: var(--shadow-red);
-}
-
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-navy);
-    border-color: var(--border-hover);
-}
-
-.btn-accent {
-    background-color: var(--color-cream);
-    color: var(--color-deep-navy);
-}
-
-.btn-accent:hover {
-    background-color: var(--color-white);
-    color: var(--color-deep-navy);
-}
-
-/* -------------------------------------------------------------
-   5. CARD STYLES (Token Driven)
-------------------------------------------------------------- */
-.card {
-    background-color: var(--bg-card);
-    border-left: var(--border-thick) solid var(--color-red);
-    border-top: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--space-30);
-    box-shadow: var(--shadow-md);
-    transition: var(--transition-smooth);
-}
-
-.card:hover {
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.card-title {
-    font-family: var(--font-heading);
-    color: var(--color-white);
-    margin-bottom: var(--space-10);
-}
-
-.card-meta {
-    font-size: var(--font-size-xs);
-    color: var(--text-muted);
-    font-family: var(--font-heading);
-    margin-bottom: var(--space-20);
-    display: flex;
-    gap: var(--space-20);
-}
-
-.card-tag {
-    color: var(--color-red);
-    text-transform: uppercase;
-    font-weight: var(--weight-bold);
-    letter-spacing: 1px;
-}
-
-/* -------------------------------------------------------------
-   6. FORM STYLES (Token Driven)
-------------------------------------------------------------- */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-20);
-}
-
-label {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-medium);
-    color: var(--text-secondary);
-    margin-bottom: var(--space-10);
-    display: block;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select,
-textarea {
-    width: 100%;
-    padding: 12px 16px;
-    background-color: var(--color-navy);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    color: var(--color-white);
-    font-family: var(--font-body);
-    font-size: var(--font-size-sm);
-    outline: none;
-    transition: var(--transition-fast);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: var(--color-red);
-    box-shadow: var(--shadow-red);
-}
-
-/* -------------------------------------------------------------
-   7. THEME LAYOUT REGISTERS (Editorial, Dossier, Data Terminal)
-------------------------------------------------------------- */
-
-/* A. Editorial Register: Elegant, readable contrast, cream background, serif style */
-.register-editorial {
-    background-color: var(--color-cream);
-    color: var(--color-deep-navy);
-    font-family: var(--font-body);
-    padding: var(--space-60) 0;
-}
-
-.register-editorial h1,
-.register-editorial h2,
-.register-editorial h3,
-.register-editorial h4 {
-    color: var(--color-deep-navy);
-    font-family: var(--font-heading);
-    font-weight: var(--weight-bold);
-}
-
-.register-editorial .entry-content {
-    max-width: 740px;
-    margin: 0 auto;
-    font-size: 1.2rem;
-    line-height: 1.8;
-}
-
-.register-editorial p {
-    margin-bottom: var(--space-30);
-}
-
-.register-editorial blockquote {
-    font-style: italic;
-    border-left: 3px solid var(--color-red);
-    padding-left: var(--space-20);
-    margin: var(--space-40) 0;
-    color: rgba(10, 22, 40, 0.85);
-}
-
-/* B. Dossier Register: Structured grids, compact headers, white/navy high density contrast */
-.register-dossier {
-    background-color: var(--color-deep-navy);
-    color: var(--color-white);
-    font-family: var(--font-heading);
-}
-
-.register-dossier-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--space-40);
-    padding: var(--space-50) 0;
-}
-
-@media (max-width: 768px) {
-    .register-dossier-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.register-dossier-meta {
-    background-color: var(--color-navy);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: var(--space-30);
-    align-self: start;
-}
-
-.register-dossier-meta-item {
-    border-bottom: 1px solid var(--border-color);
-    padding: var(--space-10) 0;
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--font-size-sm);
-}
-
-.register-dossier-meta-item:last-child {
-    border-bottom: none;
-}
-
-.register-dossier-meta-label {
-    color: var(--text-muted);
-    text-transform: uppercase;
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.5px;
-}
-
-/* C. Data Terminal Register: High-contrast console, mono typography, dark base */
-.register-terminal {
-    background-color: #030810;
-    color: #00FF66; /* Console Green */
-    font-family: var(--font-mono);
-    padding: var(--space-40);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-red);
-    box-shadow: var(--shadow-red);
-}
-
-.register-terminal-header {
-    border-bottom: 1px dashed var(--color-red);
-    padding-bottom: var(--space-10);
-    margin-bottom: var(--space-20);
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--font-size-xs);
-    color: var(--color-red);
-}
-
-.register-terminal-row {
-    display: flex;
-    margin-bottom: var(--space-10);
-}
-
-.register-terminal-prompt {
-    color: var(--color-red);
-    margin-right: var(--space-10);
-}
-
-.register-terminal-alert {
-    color: var(--color-white);
-    background-color: var(--color-red);
-    padding: 2px 8px;
-    font-size: var(--font-size-xs);
-    display: inline-block;
-    border-radius: var(--radius-sm);
-}
-
-/* -------------------------------------------------------------
-   8. PLATFORM PAYWALL MODULE STYLING
-------------------------------------------------------------- */
-.paywall-container {
-    position: relative;
-    margin-top: var(--space-40);
-    padding-top: var(--space-80);
-    text-align: center;
-}
-
-.paywall-fade {
-    position: absolute;
-    top: -200px;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background: transparent;
-    pointer-events: none;
-}
-
-.register-editorial .paywall-fade {
-    background: transparent;
-}
-
-.paywall-cta-box {
-    background-color: var(--color-navy);
-    border-left: var(--border-thick) solid var(--color-red);
-    border-top: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: var(--space-50) var(--space-40);
-    max-width: 650px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-lg), var(--shadow-red);
-}
-
-.register-editorial .paywall-cta-box {
-    background-color: var(--color-navy-deep);
-    color: var(--color-cream);
-    border-left: var(--border-thick) solid var(--color-red);
-    border-top: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.paywall-badge {
-    background-color: var(--color-red);
-    color: var(--color-white);
-    padding: 4px 12px;
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    font-family: var(--font-heading);
-    font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    display: inline-block;
-    margin-bottom: var(--space-20);
-}
-
-/* -------------------------------------------------------------
-   9. MOBILE RESPONSIVENESS
-------------------------------------------------------------- */
-@media (max-width: 768px) {
+/* Base resets that work alongside Tailwind */
+@layer base {
     body {
-        font-size: var(--font-size-sm);
+        @apply bg-cream text-brand-text-primary font-serif antialiased overflow-x-hidden;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
     }
     
-    h1 { font-size: var(--font-size-xl); }
-    h2 { font-size: var(--font-size-lg); }
-    
-    .site-header {
-        height: 70px;
+    a {
+        @apply transition-colors duration-150;
+        color: var(--accent-color);
+    }
+
+    a:hover {
+        color: var(--text-primary);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-sans font-bold text-brand-text-primary mb-5 leading-tight;
+        color: var(--text-primary);
+    }
+
+    h1 { @apply text-4xl md:text-5xl; }
+    h2 { @apply text-3xl md:text-4xl; }
+    h3 { @apply text-2xl md:text-3xl; }
+    h4 { @apply text-xl md:text-2xl; }
+    h5 { @apply text-lg md:text-xl; }
+    h6 { @apply text-base md:text-lg; }
+}
+
+/* Layered Components for backward compatibility */
+@layer components {
+    .container {
+        @apply w-full max-w-[1200px] mx-auto px-6 md:px-8;
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center px-7 py-3 font-sans font-bold text-sm rounded-sm cursor-pointer transition-colors duration-150 border border-transparent;
+    }
+
+    .btn-primary {
+        @apply btn bg-brand-red text-white hover:bg-brand-red-light hover:shadow-[0_0_15px_rgba(188,27,29,0.3)];
+    }
+
+    .btn-secondary {
+        @apply btn bg-transparent border-brand-divider-light text-brand-text-primary hover:bg-brand-divider-light;
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .theme-toggle-btn {
+        @apply inline-flex items-center justify-center w-[38px] h-[38px] bg-transparent border border-brand-divider-light text-brand-text-muted rounded-sm cursor-pointer transition-all duration-150 hover:text-brand-text-primary hover:border-brand-text-primary hover:bg-brand-red/5;
+        border-color: var(--header-border);
+        color: var(--header-text-muted);
+    }
+
+    .theme-toggle-btn-mobile {
+        @apply inline-flex items-center justify-center w-full py-2.5 bg-transparent border border-brand-divider-light text-brand-text-muted rounded-sm cursor-pointer transition-all duration-150 hover:text-brand-text-primary hover:border-brand-text-primary hover:bg-brand-red/10 mt-4 font-sans text-sm font-bold;
+    }
+
+    .card {
+        @apply bg-white border-l-[3px] border-l-brand-red border-y border-r border-brand-divider-light rounded-sm p-8 shadow-[0_10px_15px_-3px_rgba(0,0,0,0.15)] transition-all duration-300 hover:border-y-brand-text-primary/15 hover:border-r-brand-text-primary/15 hover:-translate-y-0.5 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.15)];
+        background-color: var(--bg-card);
+        border-color: var(--border-color);
+    }
+
+    .card-title {
+        @apply font-sans text-brand-text-primary mb-2.5;
+        color: var(--text-primary);
+    }
+
+    .card-meta {
+        @apply text-xs text-brand-text-muted font-sans mb-5 flex gap-5;
+        color: var(--text-muted);
+    }
+
+    .card-tag {
+        @apply text-brand-red uppercase font-bold tracking-wider;
+    }
+
+    /* Form Styles */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+        @apply w-full px-4 py-3 bg-white border border-brand-divider-light rounded-sm text-brand-text-primary font-serif text-sm outline-none transition-all duration-150 focus:border-brand-red focus:shadow-[0_0_15px_rgba(188,27,29,0.3)];
+        background-color: var(--input-bg);
+        border-color: var(--input-border);
+        color: var(--input-text);
+    }
+
+    /* Register layout overrides */
+    .register-editorial {
+        @apply bg-cream text-navy-deep font-serif py-16;
+        background-color: var(--color-cream);
+        color: var(--color-navy-deep);
     }
     
-    .main-navigation {
-        gap: var(--space-20);
+    .register-editorial h1,
+    .register-editorial h2,
+    .register-editorial h3,
+    .register-editorial h4 {
+        @apply text-navy-deep font-sans font-bold;
+        color: var(--color-navy-deep);
+    }
+
+    .register-editorial .entry-content {
+        @apply max-w-[740px] mx-auto text-lg leading-relaxed;
+    }
+
+    .register-editorial p {
+        @apply mb-8;
+    }
+
+    .register-editorial blockquote {
+        @apply italic border-l-[3px] border-brand-red pl-5 my-10 text-navy-deep/85;
+    }
+
+    .register-dossier {
+        @apply bg-navy-deep text-white font-sans;
+        background-color: var(--color-navy-deep);
+        color: var(--color-white);
+    }
+
+    .register-dossier-grid {
+        @apply grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 py-12;
+    }
+
+    .register-dossier-meta {
+        @apply bg-navy border border-brand-divider-light/10 rounded-sm p-8 self-start;
+        background-color: var(--color-navy);
+        border-color: var(--border-color);
+    }
+
+    .register-dossier-meta-item {
+        @apply border-b border-brand-divider-light/10 py-2.5 flex justify-between text-sm last:border-b-0;
+        border-color: var(--border-color);
+    }
+
+    .register-dossier-meta-label {
+        @apply text-brand-text-muted uppercase text-xs tracking-wider;
+        color: var(--text-muted);
+    }
+
+    .register-terminal {
+        @apply bg-[#030810] text-[#00FF66] font-mono p-10 rounded-sm border border-brand-red shadow-[0_0_15px_rgba(188,27,29,0.3)];
+    }
+
+    .register-terminal-header {
+        @apply border-b border-dashed border-brand-red pb-2.5 mb-5 flex justify-between text-xs text-brand-red;
+    }
+
+    .register-terminal-row {
+        @apply flex mb-2.5;
+    }
+
+    .register-terminal-prompt {
+        @apply text-brand-red mr-2.5;
+    }
+
+    .register-terminal-alert {
+        @apply text-white bg-brand-red px-2 py-0.5 text-xs inline-block rounded-sm;
+    }
+
+    .paywall-container {
+        @apply relative mt-10 pt-20 text-center;
+    }
+
+    .paywall-fade {
+        @apply absolute -top-[200px] left-0 w-full h-[200px] bg-transparent pointer-events-none;
+    }
+
+    .paywall-cta-box {
+        @apply bg-navy border-l-[3px] border-l-brand-red border-y border-r border-brand-divider-light/10 rounded-sm p-12 max-w-[650px] mx-auto shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5),_0_0_15px_rgba(188,27,29,0.3)];
+        background-color: var(--color-navy);
+        border-color: var(--border-color);
+    }
+
+    .register-editorial .paywall-cta-box {
+        @apply bg-navy-deep text-cream border-l-[3px] border-l-brand-red border-y border-r border-brand-divider-light/10;
+        background-color: var(--color-navy-deep);
+        border-color: var(--border-color);
+    }
+
+    .paywall-badge {
+        @apply bg-brand-red text-white px-3 py-1 rounded-sm text-xs font-sans font-bold uppercase inline-block mb-5;
+    }
+
+    .breadcrumbs-container {
+        @apply bg-navy-deep border-b border-brand-divider-dark py-2 relative z-10;
+        background-color: var(--color-navy-deep) !important;
+        border-bottom: 1px solid var(--color-divider-dark) !important;
+    }
+
+    .breadcrumbs-container #breadcrumbs {
+        @apply font-sans text-[0.72rem] text-cream/55 m-0 flex items-center flex-wrap gap-2;
+    }
+
+    .breadcrumbs-container #breadcrumbs a {
+        @apply text-cream/75 no-underline transition-colors duration-150 hover:text-white;
+    }
+
+    .breadcrumbs-container #breadcrumbs span {
+        @apply text-cream/55 inline-flex items-center gap-2;
+    }
+
+    .breadcrumbs-container #breadcrumbs .breadcrumb_last {
+        @apply text-white font-bold;
+    }
+
+    .back-to-login-link {
+        @apply text-navy-deep font-sans text-sm no-underline font-bold inline-flex items-center gap-2 transition-colors duration-150 hover:text-brand-red;
+        color: var(--color-navy-deep) !important;
+    }
+
+    .back-to-login-link i {
+        @apply text-brand-red text-xs transition-transform duration-150;
+        color: var(--color-red) !important;
+    }
+
+    .back-to-login-link:hover i {
+        @apply -translate-x-1;
+    }
+
+    .main-navigation.open {
+        display: flex !important;
+    }
+
+    /* Checklist Locked Feature Lock Icon Override */
+    .tier-features li.locked::before {
+        content: '\f023' !important;
+        font-family: 'Font Awesome 6 Free' !important;
+        font-weight: 900 !important;
+        color: rgba(247, 244, 239, 0.3) !important;
+    }
+
+    html[data-theme="light"] .tier-features li.locked::before {
+        color: rgba(10, 22, 40, 0.3) !important;
+    }
+
+    /* Dark Mode Buttons and Hero Background Overrides (Bulletproof for dark, dark-theme, and data-theme="dark") */
+    html[data-theme="dark"] .btn-secondary,
+    html.dark-theme .btn-secondary,
+    .dark .btn-secondary {
+        color: var(--color-cream) !important;
+        border-color: rgba(247, 244, 239, 0.3) !important;
     }
     
-    .main-menu {
-        display: none; /* Relies on Hamburger toggling class */
+    html[data-theme="dark"] .btn-secondary:hover,
+    html.dark-theme .btn-secondary:hover,
+    .dark .btn-secondary:hover {
+        background-color: rgba(247, 244, 239, 0.1) !important;
+        border-color: rgba(247, 244, 239, 0.5) !important;
+        color: var(--color-white) !important;
+    }
+
+    html[data-theme="dark"] .hero-section,
+    html.dark-theme .hero-section,
+    .dark .hero-section {
+        background-color: var(--color-navy-deep) !important;
+        border-bottom-color: var(--color-divider-dark) !important;
+    }
+
+    html[data-theme="dark"] .hero-title,
+    html.dark-theme .hero-title,
+    .dark .hero-title,
+    html[data-theme="dark"] .hero-stat-number,
+    html.dark-theme .hero-stat-number,
+    .dark .hero-stat-number {
+        color: var(--color-white) !important;
+    }
+
+    html[data-theme="dark"] .hero-subtitle,
+    html.dark-theme .hero-subtitle,
+    .dark .hero-subtitle,
+    html[data-theme="dark"] .hero-stat-label,
+    html.dark-theme .hero-stat-label,
+    .dark .hero-stat-label {
+        color: rgba(247, 244, 239, 0.65) !important;
+    }
+
+    /* Dossier Entry Content Heading Styling & Spacing */
+    .register-dossier .entry-content h2,
+    .register-dossier .entry-content h3,
+    .register-dossier .entry-content h4 {
+        margin-top: 2.5rem !important;
+        margin-bottom: 1.25rem !important;
+        font-family: var(--font-sans) !important;
+        font-weight: 700 !important;
+    }
+
+    /* Light Mode Dossier Headings */
+    html[data-theme="light"] .register-dossier .entry-content h2,
+    html[data-theme="light"] .register-dossier .entry-content h3,
+    html[data-theme="light"] .register-dossier .entry-content h4 {
+        color: var(--color-navy-deep) !important;
+    }
+
+    /* Dark Mode Dossier Headings */
+    html[data-theme="dark"] .register-dossier .entry-content h2,
+    html.dark-theme .register-dossier .entry-content h2,
+    .dark .register-dossier .entry-content h2,
+    html[data-theme="dark"] .register-dossier .entry-content h3,
+    html.dark-theme .register-dossier .entry-content h3,
+    .dark .register-dossier .entry-content h3,
+    html[data-theme="dark"] .register-dossier .entry-content h4,
+    html.dark-theme .register-dossier .entry-content h4,
+    .dark .register-dossier .entry-content h4 {
+        color: var(--color-white) !important;
+    }
+
+    /* Dossier Layout Spacing & Padding Adjustments */
+    .register-dossier {
+        padding-top: 3.5rem !important;
+        padding-bottom: 4rem !important;
+    }
+
+    .dossier-summary-block,
+    .dossier-findings-block,
+    .dossier-takeaways-block {
+        padding: 2rem !important;
+        margin-bottom: 2.5rem !important;
+    }
+
+    /* Comments Section Polish & Gap Fixes */
+    .dossier-footer {
+        margin-top: 4rem !important;
+        padding-top: 2rem !important;
+    }
+    
+    .dossier-footer-meta {
+        margin-bottom: 2.5rem !important;
+    }
+    
+    .comments-area {
+        margin-top: 3rem !important;
+        padding-top: 2rem !important;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    #reply-title {
+        font-family: var(--font-sans) !important;
+        font-weight: 700 !important;
+        font-size: 1.5rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1.5rem !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .comment-form p {
+        margin-bottom: 1.25rem !important;
+    }
+    
+    .comment-form-comment label,
+    .comment-form-author label,
+    .comment-form-email label {
+        display: block !important;
+        font-family: var(--font-sans) !important;
+        font-weight: 700 !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 0.5rem !important;
+        color: var(--text-secondary) !important;
+    }
+    
+    .comment-form-comment textarea {
+        min-height: 120px !important;
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--input-border) !important;
+        color: var(--input-text) !important;
+    }
+    
+    .comment-form-author input,
+    .comment-form-email input {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--input-border) !important;
+        color: var(--input-text) !important;
+    }
+    
+    .form-submit {
+        margin-top: 1.5rem !important;
+        margin-bottom: 3rem !important;
+    }
+    
+    .form-submit input[type="submit"] {
+        @apply bg-brand-red text-white hover:bg-brand-red-light font-sans font-bold text-sm uppercase tracking-wider py-3 px-6 rounded-sm cursor-pointer transition-colors duration-150 border-none !important;
+    }
+
+    /* Dossier Header Badges & Title Spacing Override */
+    .dossier-header-badges {
+        margin-bottom: 1.5rem !important;
+        display: flex !important;
+        gap: 10px !important;
+    }
+
+    .dossier-title {
+        margin-top: 0.5rem !important;
+    }
+
+    /* Light Mode Cross-Referenced Briefing Cards Contrast Fix */
+    html[data-theme="light"] .dossier-brief-link-card {
+        background-color: var(--color-white) !important;
+        border-color: var(--color-divider-light) !important;
+    }
+
+    html[data-theme="light"] .dossier-brief-link-card:hover {
+        background-color: var(--color-cream) !important;
+        border-color: rgba(188, 27, 29, 0.3) !important;
+    }
+
+    /* Footer Social Links Visibility Override */
+    .site-footer .social-link,
+    html[data-theme="light"] .site-footer .social-link,
+    html[data-theme="dark"] .site-footer .social-link {
+        background-color: var(--color-navy) !important;
+        color: rgba(247, 244, 239, 0.55) !important;
+        border-color: var(--color-divider-dark) !important;
+    }
+
+    .site-footer .social-link:hover,
+    html[data-theme="light"] .site-footer .social-link:hover,
+    html[data-theme="dark"] .site-footer .social-link:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: var(--color-red) !important;
+        border-color: var(--color-red) !important;
+    }
+
+    /* Footer Language Switcher Contrast Override */
+    .footer-lang-switch .lang-link {
+        color: rgba(247, 244, 239, 0.6) !important;
+    }
+
+    .footer-lang-switch .lang-link:hover {
+        color: var(--color-white) !important;
+    }
+
+    .footer-lang-switch .lang-link.active {
+        color: #E04B4B !important; /* Bright red for high contrast in dark footer */
+    }
+
+    /* Fix Yoast Breadcrumbs Container Alignment */
+    .breadcrumbs-container {
+        display: block !important;
+    }
+    .breadcrumbs-container .container {
+        display: block !important;
+    }
+    .breadcrumbs-container #breadcrumbs {
+        display: flex !important;
+    }
+
+    /* Fix Dossier Page Container Centering */
+    .register-dossier .container {
+        max-width: 1200px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 1.5rem !important; /* px-6 */
+        padding-right: 1.5rem !important; /* px-6 */
+    }
+    @media (min-width: 768px) {
+        .register-dossier .container {
+            padding-left: 2rem !important; /* px-8 */
+            padding-right: 2rem !important; /* px-8 */
+        }
+    }
+
+    /* Modern Custom Intelligence Card Hover Glows */
+    .hover\:shadow-low-glow:hover {
+        box-shadow: 0 0 15px rgba(39, 174, 96, 0.1) !important;
+    }
+    .hover\:shadow-medium-glow:hover {
+        box-shadow: 0 0 15px rgba(41, 128, 185, 0.1) !important;
+    }
+    .hover\:shadow-high-glow:hover {
+        box-shadow: 0 0 15px rgba(230, 126, 34, 0.1) !important;
+    }
+    .hover\:shadow-critical-glow:hover {
+        box-shadow: 0 0 15px rgba(188, 27, 29, 0.12) !important;
     }
 }
+
+/* Redesigned Subscriber Dashboard Styles */
+.dashboard-welcome-banner::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: radial-gradient(circle at 100% 50%, rgba(188, 27, 29, 0.08) 0%, transparent 70%) !important;
+    pointer-events: none !important;
+}
+
+/* Force Subscriber Dashboard Welcome Banner to remain dark navy in both light and dark modes */
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy,
+div.dashboard-welcome-banner.bg-navy {
+    background-color: var(--color-navy-deep) !important;
+    border-color: var(--color-divider-dark) !important;
+    color: var(--color-white) !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy h2,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy h2,
+div.dashboard-welcome-banner.bg-navy h2 {
+    color: var(--color-white) !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-session-active-tag,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-session-active-tag,
+div.dashboard-welcome-banner.bg-navy .dashboard-session-active-tag {
+    color: #E04B4B !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-session-meta,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-session-meta,
+div.dashboard-welcome-banner.bg-navy .dashboard-session-meta {
+    color: var(--color-cream) !important;
+    opacity: 0.55 !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-session-meta *,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-session-meta *,
+div.dashboard-welcome-banner.bg-navy .dashboard-session-meta * {
+    color: var(--color-cream) !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-active-level-label,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-active-level-label,
+div.dashboard-welcome-banner.bg-navy .dashboard-active-level-label {
+    color: var(--color-cream) !important;
+    opacity: 0.45 !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-billing-cycle-label,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-billing-cycle-label,
+div.dashboard-welcome-banner.bg-navy .dashboard-billing-cycle-label {
+    color: var(--color-cream) !important;
+    opacity: 0.45 !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .dashboard-billing-info-val,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .dashboard-billing-info-val,
+div.dashboard-welcome-banner.bg-navy .dashboard-billing-info-val {
+    color: #E04B4B !important;
+}
+html[data-theme="light"] div.dashboard-welcome-banner.bg-navy .bg-navy-deep\/60,
+html[data-theme="dark"] div.dashboard-welcome-banner.bg-navy .bg-navy-deep\/60,
+div.dashboard-welcome-banner.bg-navy .bg-navy-deep\/60 {
+    background-color: rgba(10, 22, 40, 0.6) !important;
+    border-color: rgba(42, 58, 85, 0.4) !important;
+}
+
+/* Account Action Buttons Styling */
+.dashboard-services-grid a {
+    background-color: var(--color-cream) !important;
+    border-color: var(--color-divider-light) !important;
+}
+html[data-theme="dark"] .dashboard-services-grid a,
+html.dark-theme .dashboard-services-grid a,
+.dark .dashboard-services-grid a {
+    background-color: rgba(10, 22, 40, 0.4) !important;
+    border-color: var(--color-divider-dark) !important;
+}
+.dashboard-services-grid a:hover {
+    border-color: var(--color-red) !important;
+    background-color: var(--color-white) !important;
+}
+html[data-theme="dark"] .dashboard-services-grid a:hover,
+html.dark-theme .dashboard-services-grid a:hover,
+.dark .dashboard-services-grid a:hover {
+    background-color: rgba(10, 22, 40, 0.8) !important;
+    border-color: var(--color-red-light) !important;
+}
+
+/* Premium Geopolitical Command Center Overrides */
+.dashboard-metric-card {
+    border-color: var(--color-divider-light) !important;
+}
+html[data-theme="dark"] .dashboard-metric-card,
+html.dark-theme .dashboard-metric-card,
+.dark .dashboard-metric-card {
+    background-color: rgba(24, 45, 74, 0.4) !important;
+    border-color: rgba(42, 58, 85, 0.4) !important;
+}
+.dashboard-metric-card:hover {
+    box-shadow: 0 4px 12px rgba(10, 22, 40, 0.05) !important;
+    border-color: var(--color-divider-dark) !important;
+}
+html[data-theme="dark"] .dashboard-metric-card:hover,
+html.dark-theme .dashboard-metric-card:hover,
+.dark .dashboard-metric-card:hover {
+    box-shadow: 0 4px 15px rgba(188, 27, 29, 0.05) !important;
+    border-color: var(--color-red-light) !important;
+}
+
+.dashboard-feed-card {
+    border-color: var(--color-divider-light) !important;
+}
+html[data-theme="dark"] .dashboard-feed-card,
+html.dark-theme .dashboard-feed-card,
+.dark .dashboard-feed-card {
+    background-color: rgba(15, 30, 53, 0.5) !important;
+    border-color: rgba(42, 58, 85, 0.4) !important;
+}
+

@@ -36,11 +36,25 @@ class Search_SEO {
         // Custom Weighted Search logic
         add_filter( 'posts_clauses', array( $this, 'custom_weighted_search' ), 10, 2 );
 
+        // Restrict frontend search to intelligence post types
+        add_action( 'pre_get_posts', array( $this, 'restrict_search_post_types' ) );
+
         // Native Head JSON-LD Schema injection (Yoast Free compatible)
         add_action( 'wp_head', array( $this, 'inject_custom_schema' ) );
 
         // PMPro Level Change -> Newsletter Sync (Brevo)
         add_action( 'pmpro_after_change_membership_level', array( $this, 'sync_subscriber_to_newsletter' ), 10, 3 );
+    }
+
+    /**
+     * Restrict search results to Briefs, Dossiers, and Updates CPTs on the frontend
+     */
+    public function restrict_search_post_types( $query ) {
+        if ( is_admin() || ! $query->is_search() || ! $query->is_main_query() ) {
+            return $query;
+        }
+        $query->set( 'post_type', array( 'brief', 'dossier', 'update' ) );
+        return $query;
     }
 
     /**
@@ -75,7 +89,10 @@ class Search_SEO {
             END)
         ";
 
-        $clauses['select'] .= ", ($relevance) AS search_relevance";
+        if ( ! isset( $clauses['fields'] ) ) {
+            $clauses['fields'] = '';
+        }
+        $clauses['fields'] .= ", ($relevance) AS search_relevance";
         $clauses['orderby'] = "search_relevance DESC, {$wpdb->posts}.post_date DESC";
 
         return $clauses;
@@ -126,12 +143,69 @@ class Search_SEO {
             'hasPart'             => array(
                 '@type'               => 'WebPageElement',
                 'isAccessibleForFree' => 'False',
-                'cssSelector'         => '.paywall-container'
+                'cssSelector'         => '.paywall-gated-content'
             )
         );
 
         echo "\n" . '<!-- Ascendance Custom JSON-LD Paywall Schema -->' . "\n";
         echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
+
+        // Inject FAQ Schema if questions are found in the content
+        $faq_items = $this->get_faq_items( $post_id );
+        if ( ! empty( $faq_items ) ) {
+            $faq_schema = array(
+                '@context'   => 'https://schema.org',
+                '@type'      => 'FAQPage',
+                'mainEntity' => array(),
+            );
+            
+            foreach ( $faq_items as $item ) {
+                $faq_schema['mainEntity'][] = array(
+                    '@type'          => 'Question',
+                    'name'           => $item['question'],
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text'  => $item['answer'],
+                    ),
+                );
+            }
+            
+            echo "\n" . '<!-- Ascendance Dynamic FAQ Schema -->' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode( $faq_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
+        }
+    }
+
+    /**
+     * Parse post content for H2 headings ending with "?" and extract the following paragraph as the answer.
+     *
+     * @param int $post_id The post ID.
+     * @return array Array of FAQ items with question and answer.
+     */
+    private function get_faq_items( $post_id ) {
+        $post = get_post( $post_id );
+        if ( ! $post ) {
+            return array();
+        }
+
+        $content = $post->post_content;
+        $faq_items = array();
+
+        // Match h2 questions and their following paragraph answers (allowing Gutenberg comments in-between)
+        if ( preg_match_all( '/<h2[^>]*>(.*?\?)<\/h2>(?:\s*|<!--.*?-->)*?(<p[^>]*>.*?<\/p>)/is', $content, $matches, PREG_SET_ORDER ) ) {
+            foreach ( $matches as $match ) {
+                $question = wp_strip_all_tags( $match[1] );
+                $answer = wp_strip_all_tags( $match[2] );
+
+                if ( ! empty( $question ) && ! empty( $answer ) ) {
+                    $faq_items[] = array(
+                        'question' => trim( $question ),
+                        'answer'   => trim( $answer ),
+                    );
+                }
+            }
+        }
+
+        return $faq_items;
     }
 
     /**

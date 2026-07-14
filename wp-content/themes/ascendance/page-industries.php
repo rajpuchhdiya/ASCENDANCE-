@@ -63,20 +63,20 @@ $sectors = array(
 <main id="primary" class="site-main">
 
 	<!-- ═══ PAGE HERO ═════════════════════════════════════════ -->
-	<section class="page-hero">
-		<div class="container">
+	<section class="page-hero bg-navy-deep text-white py-16 md:py-24 border-b border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
 			<div class="page-hero-inner">
-				<p class="page-hero-eyebrow"><?php esc_html_e( '// Strategic Sectors', 'ascendance' ); ?></p>
-				<h1 class="page-hero-title"><?php esc_html_e( 'Intelligence Across Six Sectors', 'ascendance' ); ?></h1>
-				<p class="page-hero-desc"><?php esc_html_e( 'Ascendance covers the six domains where strategic risk is highest and decision-making demands the most rigorous forward-looking analysis.', 'ascendance' ); ?></p>
+				<p class="page-hero-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-4 block"><?php esc_html_e( '// Strategic Sectors', 'ascendance' ); ?></p>
+				<h1 class="page-hero-title text-3xl md:text-5xl font-sans font-bold leading-tight mb-6"><?php esc_html_e( 'Intelligence Across Six Sectors', 'ascendance' ); ?></h1>
+				<p class="page-hero-desc text-base md:text-lg text-cream/80 max-w-[720px] leading-relaxed"><?php esc_html_e( 'Ascendance covers the six domains where strategic risk is highest and decision-making demands the most rigorous forward-looking analysis.', 'ascendance' ); ?></p>
 			</div>
 		</div>
 	</section>
 
 	<!-- ═══ SECTORS GRID ══════════════════════════════════════ -->
-	<section class="industry-section section-lg" id="sectors">
-		<div class="container">
-			<div class="industry-grid">
+	<section class="industry-section section py-20 bg-cream dark:bg-navy-deep border-b border-brand-divider-light dark:border-brand-divider-dark" id="sectors">
+		<div class="container mx-auto px-6 md:px-8">
+			<div class="industry-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 				<?php foreach ( $sectors as $sector ) :
 					// Find the topic term for this sector
 					$topic_term = get_term_by( 'name', $sector['topic'], 'topic' );
@@ -85,20 +85,22 @@ $sectors = array(
 						: home_url( '/intelligence/' );
 					if ( is_wp_error( $archive_url ) ) $archive_url = home_url( '/intelligence/' );
 				?>
-					<a href="<?php echo esc_url( $archive_url ); ?>" class="industry-card reveal">
-						<div class="industry-card-icon">
-							<i class="fa-solid <?php echo esc_attr( $sector['icon'] ); ?>"></i>
+					<a href="<?php echo esc_url( $archive_url ); ?>" class="industry-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-8 rounded-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between reveal">
+						<div>
+							<div class="industry-card-icon text-3xl text-brand-red mb-6">
+								<i class="fa-solid <?php echo esc_attr( $sector['icon'] ); ?>"></i>
+							</div>
+							<h3 class="text-xl font-sans font-bold text-brand-text-primary dark:text-white mb-4"><?php echo esc_html( $sector['title'] ); ?></h3>
+							<p class="text-sm text-brand-text-muted dark:text-cream/70 leading-relaxed mb-6"><?php echo esc_html( $sector['desc'] ); ?></p>
+							<div class="flex gap-1.5 flex-wrap my-2">
+								<?php foreach ( $sector['tags'] as $tag ) : ?>
+									<span class="font-sans text-[10px] font-bold uppercase tracking-wider text-brand-red dark:text-brand-red-light bg-brand-red/5 border border-brand-red/10 px-2 py-0.5 rounded-sm">
+										<?php echo esc_html( $tag ); ?>
+									</span>
+								<?php endforeach; ?>
+							</div>
 						</div>
-						<h3><?php echo esc_html( $sector['title'] ); ?></h3>
-						<p><?php echo esc_html( $sector['desc'] ); ?></p>
-						<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--space-2);">
-							<?php foreach ( $sector['tags'] as $tag ) : ?>
-								<span style="font-family:var(--font-heading);font-size:0.65rem;color:rgba(188,27,29,0.8);background:rgba(188,27,29,0.08);border:1px solid rgba(188,27,29,0.15);padding:2px 8px;border-radius:2px;">
-									<?php echo esc_html( $tag ); ?>
-								</span>
-							<?php endforeach; ?>
-						</div>
-						<div class="industry-card-link">
+						<div class="industry-card-link font-sans font-bold text-xs text-brand-red hover:text-brand-red-light transition-colors duration-150 flex items-center gap-1.5 mt-6">
 							<?php esc_html_e( 'View Intelligence', 'ascendance' ); ?>
 							<i class="fa-solid fa-arrow-right"></i>
 						</div>
@@ -109,13 +111,13 @@ $sectors = array(
 	</section>
 
 	<!-- ═══ RECENT CROSS-SECTOR INTELLIGENCE ══════════════════ -->
-	<section class="section bg-navy-mid">
-		<div class="container">
-			<div class="section-header">
-				<span class="section-eyebrow"><?php esc_html_e( 'Cross-Sector', 'ascendance' ); ?></span>
-				<h2 class="section-title reveal"><?php esc_html_e( 'Recent Intelligence Across Sectors', 'ascendance' ); ?></h2>
+	<section class="section bg-navy-mid py-20 border-b border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
+			<div class="section-header mb-12">
+				<span class="section-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-3 block"><?php esc_html_e( 'Cross-Sector', 'ascendance' ); ?></span>
+				<h2 class="section-title text-3xl md:text-4xl font-sans font-bold text-white mb-4 reveal"><?php esc_html_e( 'Recent Intelligence Across Sectors', 'ascendance' ); ?></h2>
 			</div>
-			<div class="intel-grid">
+			<div class="intel-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 				<?php
 				$cross_sector = new WP_Query( array(
 					'post_type'      => array( 'brief', 'dossier' ),

@@ -53,10 +53,14 @@ require_once( PMPRO_DIR . '/classes/class-pmpro-admin-activity-email.php' );    
 require_once( PMPRO_DIR . '/includes/filters.php' );                // filters, hacks, etc, moved into the plugin
 require_once( PMPRO_DIR . '/includes/reports.php' );                // load reports for admin (reports may also include tracking code, etc)
 
-require_once( PMPRO_DIR . '/adminpages/reports/logins.php' );            // load the Logins report
-require_once( PMPRO_DIR . '/adminpages/reports/memberships.php' );       // load the Memberships report
-require_once( PMPRO_DIR . '/adminpages/reports/members-per-level.php' ); // load the Members Per Level report
-require_once( PMPRO_DIR . '/adminpages/reports/sales.php' );             // load the Sales report
+// Load reports on init after textdomain is ready.
+add_action( 'init', 'pmpro_load_reports_on_init', 5 );
+function pmpro_load_reports_on_init() {
+	require_once( PMPRO_DIR . '/adminpages/reports/logins.php' );            // load the Logins report
+	require_once( PMPRO_DIR . '/adminpages/reports/memberships.php' );       // load the Memberships report
+	require_once( PMPRO_DIR . '/adminpages/reports/members-per-level.php' ); // load the Members Per Level report
+	require_once( PMPRO_DIR . '/adminpages/reports/sales.php' );             // load the Sales report
+}
 
 require_once( PMPRO_DIR . '/adminpages/member-edit.php' ); // load the Member Edit admin page.
 require_once( PMPRO_DIR . '/adminpages/member-edit/pmpro-abstract-class-member-edit-panel.php' );

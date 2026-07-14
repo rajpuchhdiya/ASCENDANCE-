@@ -48,9 +48,10 @@ class Member_Dashboard {
      */
     public function render_dashboard() {
         if ( ! is_user_logged_in() ) {
-            return '<div style="text-align:center; padding:var(--space-50) 0;">
-                <h3>' . esc_html__( 'Subscriber Area Restricted', 'ascendance-core' ) . '</h3>
-                <p style="color:var(--text-secondary); margin-bottom:var(--space-30);">' . esc_html__( 'Please sign in or register to view your custom dashboard feed.', 'ascendance-core' ) . '</p>
+            return '<div class="card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-8 rounded-sm shadow-sm text-center py-16 flex flex-col items-center gap-4">
+                <i class="fa-solid fa-lock text-3xl text-brand-red mb-2"></i>
+                <h3 class="text-xl font-sans font-bold text-brand-text-primary dark:text-white">' . esc_html__( 'Subscriber Area Restricted', 'ascendance-core' ) . '</h3>
+                <p class="text-sm text-brand-text-muted dark:text-cream/70 max-w-[400px] leading-relaxed mb-4">' . esc_html__( 'Please sign in or register to view your custom dashboard feed.', 'ascendance-core' ) . '</p>
                 <a href="' . esc_url( wp_login_url( get_permalink() ) ) . '" class="btn btn-primary">' . esc_html__( 'Sign In to Account', 'ascendance-core' ) . '</a>
             </div>';
         }
@@ -61,10 +62,10 @@ class Member_Dashboard {
         // Fetch membership details
         $level_name = __( 'Free Guest', 'ascendance-core' );
         $billing_info = __( 'Free Access', 'ascendance-core' );
-        $pmpro_active = function_exists( 'pmpro_get_membership_level_for_user' );
+        $pmpro_active = function_exists( 'pmpro_getMembershipLevelForUser' );
 
         if ( $pmpro_active ) {
-            $user_level = pmpro_get_membership_level_for_user( $user_id );
+            $user_level = pmpro_getMembershipLevelForUser( $user_id );
             if ( ! empty( $user_level ) ) {
                 $level_name = esc_html( $user_level->name );
                 $billing_info = sprintf( 
@@ -76,64 +77,174 @@ class Member_Dashboard {
             }
         }
 
+        // Fetch dynamic counts for telemetry stats
+        $briefs_count = wp_count_posts( 'brief' )->publish;
+        $dossiers_count = wp_count_posts( 'dossier' )->publish;
+        $region_count = wp_count_terms( 'region' );
+        $region_text = ! is_wp_error( $region_count ) ? sprintf( _n( '%d Region', '%d Regions', $region_count, 'ascendance-core' ), $region_count ) : 'Global';
+
         ob_start();
         ?>
-        <div class="ascendance-dashboard">
+        <div class="ascendance-dashboard flex flex-col gap-8">
             <!-- Dashboard Welcome Header -->
-            <div style="background-color: var(--color-navy); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--space-40); margin-bottom: var(--space-40); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-20);">
-                <div>
-                    <span style="color: var(--color-red); text-transform: uppercase; font-family: var(--font-heading); font-weight: var(--weight-bold); font-size: var(--font-size-xs); letter-spacing: 1px;"><?php esc_html_e( 'Subscriber Portal', 'ascendance-core' ); ?></span>
-                    <h2 style="margin-bottom: 0; margin-top: 4px;"><?php printf( esc_html__( 'Welcome, %s', 'ascendance-core' ), esc_html( $user_data->display_name ) ); ?></h2>
+            <div class="dashboard-welcome-banner bg-navy text-white border border-brand-divider-dark p-6 rounded-sm shadow-md flex justify-between items-center flex-wrap gap-6 relative overflow-hidden">
+                <div class="relative z-10 flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
+                        <span class="text-[9px] font-mono uppercase tracking-widest text-brand-red font-bold dashboard-session-active-tag"><?php esc_html_e( 'Credentials Verified // Session Active', 'ascendance-core' ); ?></span>
+                    </div>
+                    <h2 class="text-2xl font-sans font-bold text-white"><?php printf( esc_html__( 'Welcome, %s', 'ascendance-core' ), esc_html( $user_data->display_name ) ); ?></h2>
+                    <div class="text-[10px] font-mono text-cream/40 flex items-center gap-2.5 mt-1 dashboard-session-meta">
+                        <span>UID: <?php echo esc_html( $user_id ); ?></span>
+                        <span>|</span>
+                        <span>Role: Subscriber</span>
+                        <span>|</span>
+                        <span>Session Ref: <?php echo esc_html( substr( md5( $user_id . time() ), 0, 8 ) ); ?></span>
+                    </div>
                 </div>
-                <div style="text-align: right;">
-                    <span style="font-family: var(--font-heading); font-size: var(--font-size-xs); color: var(--text-muted); display: block;"><?php esc_html_e( 'ACTIVE TIER', 'ascendance-core' ); ?></span>
-                    <span class="paywall-badge" style="margin-bottom: 0; margin-top: 4px;"><?php echo esc_html( $level_name ); ?></span>
-                    <span style="display: block; font-size: var(--font-size-xs); color: var(--text-secondary); margin-top: 4px;"><?php echo esc_html( $billing_info ); ?></span>
+                
+                <div class="relative z-10 flex items-center gap-4 bg-navy-deep/60 px-4 py-3 rounded-sm border border-brand-divider-dark/40">
+                    <div class="text-right">
+                        <span class="block text-[9px] font-sans font-bold text-cream/40 uppercase tracking-widest dashboard-active-level-label"><?php esc_html_e( 'ACTIVE LEVEL TIER', 'ascendance-core' ); ?></span>
+                        <span class="block text-sm font-sans font-bold text-white uppercase mt-0.5"><?php echo esc_html( $level_name ); ?></span>
+                    </div>
+                    <div class="w-px h-8 bg-brand-divider-dark/60"></div>
+                    <div class="text-left">
+                        <span class="block text-[9px] font-sans font-bold text-cream/40 uppercase tracking-widest dashboard-billing-cycle-label"><?php esc_html_e( 'BILLING CYCLE', 'ascendance-core' ); ?></span>
+                        <span class="block text-xs font-mono font-bold text-[#E04B4B] uppercase mt-0.5 dashboard-billing-info-val"><?php echo esc_html( $billing_info ); ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Command Center Telemetry Metrics Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="dashboard-metric-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-4 rounded-sm shadow-sm flex items-center gap-4 hover:translate-y-[-1px] transition-all duration-200">
+                    <div class="w-10 h-10 rounded-sm bg-brand-red/10 dark:bg-brand-red/20 flex items-center justify-center text-brand-red text-base shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-mono text-brand-text-muted dark:text-cream/50 uppercase tracking-wider leading-none"><?php esc_html_e( 'SECURITY CLEARANCE', 'ascendance-core' ); ?></span>
+                        <span class="text-xs font-sans font-bold text-brand-text-primary dark:text-white mt-1"><?php echo esc_html( $level_name ); ?></span>
+                    </div>
+                </div>
+                <div class="dashboard-metric-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-4 rounded-sm shadow-sm flex items-center gap-4 hover:translate-y-[-1px] transition-all duration-200">
+                    <div class="w-10 h-10 rounded-sm bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center text-blue-500 dark:text-blue-400 text-base shrink-0">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-mono text-brand-text-muted dark:text-cream/50 uppercase tracking-wider leading-none"><?php esc_html_e( 'MONITORED REGIONS', 'ascendance-core' ); ?></span>
+                        <span class="text-xs font-sans font-bold text-brand-text-primary dark:text-white mt-1"><?php echo esc_html( $region_text ); ?></span>
+                    </div>
+                </div>
+                <div class="dashboard-metric-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-4 rounded-sm shadow-sm flex items-center gap-4 hover:translate-y-[-1px] transition-all duration-200">
+                    <div class="w-10 h-10 rounded-sm bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center text-amber-500 dark:text-amber-400 text-base shrink-0">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-mono text-brand-text-muted dark:text-cream/50 uppercase tracking-wider leading-none"><?php esc_html_e( 'DECRYPTION KEYSETS', 'ascendance-core' ); ?></span>
+                        <span class="text-xs font-sans font-bold text-brand-text-primary dark:text-white mt-1"><?php printf( esc_html__( '%d Active Keys', 'ascendance-core' ), $briefs_count + $dossiers_count ); ?></span>
+                    </div>
+                </div>
+                <div class="dashboard-metric-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-4 rounded-sm shadow-sm flex items-center gap-4 hover:translate-y-[-1px] transition-all duration-200">
+                    <div class="w-10 h-10 rounded-sm bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center text-green-500 dark:text-green-400 text-base shrink-0">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-mono text-brand-text-muted dark:text-cream/50 uppercase tracking-wider leading-none"><?php esc_html_e( 'BILLING CYCLE STATUS', 'ascendance-core' ); ?></span>
+                        <span class="text-xs font-sans font-bold text-brand-text-primary dark:text-white mt-1"><?php echo esc_html( $billing_info ); ?></span>
+                    </div>
                 </div>
             </div>
 
             <!-- Dashboard Grid -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-40);">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 <!-- Left: Feeds -->
-                <div>
+                <div class="lg:col-span-2 flex flex-col gap-8">
                     <!-- Section: Recent Intelligence Briefs -->
-                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: var(--space-20);"><i class="fa-solid fa-file-invoice" style="color: var(--color-red); margin-right: 10px;"></i><?php esc_html_e( 'Latest Intelligence Briefs', 'ascendance-core' ); ?></h3>
-                    <div style="display: flex; flex-direction: column; gap: var(--space-20); margin-bottom: var(--space-40);">
-                        <?php $this->render_dashboard_feed( 'brief', 3 ); ?>
+                    <div class="dashboard-feed-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 md:p-8 rounded-sm shadow-sm">
+                        <h3 class="text-sm font-sans font-bold text-brand-text-primary dark:text-white uppercase tracking-wider mb-6 border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2.5 flex items-center gap-2">
+                            <i class="fa-solid fa-file-invoice text-brand-red text-xs"></i>
+                            <?php esc_html_e( 'Latest Intelligence Briefs', 'ascendance-core' ); ?>
+                        </h3>
+                        <div class="flex flex-col">
+                            <?php $this->render_dashboard_feed( 'brief', 3 ); ?>
+                        </div>
                     </div>
 
                     <!-- Section: Latest Updates -->
-                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: var(--space-20);"><i class="fa-solid fa-clock-rotate-left" style="color: var(--color-red); margin-right: 10px;"></i><?php esc_html_e( 'Real-time Intelligence Updates', 'ascendance-core' ); ?></h3>
-                    <div style="display: flex; flex-direction: column; gap: var(--space-20); margin-bottom: var(--space-40);">
-                        <?php $this->render_dashboard_feed( 'update', 3 ); ?>
+                    <div class="dashboard-feed-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 md:p-8 rounded-sm shadow-sm">
+                        <h3 class="text-sm font-sans font-bold text-brand-text-primary dark:text-white uppercase tracking-wider mb-6 border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2.5 flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-brand-red text-xs"></i>
+                            <?php esc_html_e( 'Real-time Intelligence Updates', 'ascendance-core' ); ?>
+                        </h3>
+                        <div class="flex flex-col">
+                            <?php $this->render_dashboard_feed( 'update', 3 ); ?>
+                        </div>
                     </div>
 
                     <!-- Section: Latest Dossiers -->
-                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: var(--space-20);"><i class="fa-solid fa-folder-open" style="color: var(--color-red); margin-right: 10px;"></i><?php esc_html_e( 'High-Density Dossiers', 'ascendance-core' ); ?></h3>
-                    <div style="display: flex; flex-direction: column; gap: var(--space-20); margin-bottom: var(--space-40);">
-                        <?php $this->render_dashboard_feed( 'dossier', 3 ); ?>
+                    <div class="dashboard-feed-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 md:p-8 rounded-sm shadow-sm">
+                        <h3 class="text-sm font-sans font-bold text-brand-text-primary dark:text-white uppercase tracking-wider mb-6 border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2.5 flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-brand-red text-xs"></i>
+                            <?php esc_html_e( 'High-Density Dossiers', 'ascendance-core' ); ?>
+                        </h3>
+                        <div class="flex flex-col">
+                            <?php $this->render_dashboard_feed( 'dossier', 3 ); ?>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Right: Recommendations & Settings -->
-                <div>
+                <div class="lg:col-span-1 flex flex-col gap-8">
                     <!-- Personalized Recommendations -->
-                    <div style="background-color: var(--color-navy); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-30); margin-bottom: var(--space-30);">
-                        <h4 style="margin-bottom: var(--space-20); border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--color-red); margin-right: 8px;"></i><?php esc_html_e( 'Personalized For You', 'ascendance-core' ); ?></h4>
+                    <div class="bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 md:p-8 rounded-sm shadow-sm flex flex-col gap-4">
+                        <h4 class="text-xs font-sans font-bold text-brand-text-primary dark:text-white uppercase tracking-wider border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-brand-red text-xs"></i>
+                            <?php esc_html_e( 'Targeted Briefings', 'ascendance-core' ); ?>
+                        </h4>
                         <?php $this->render_recommended_feed( $user_id ); ?>
                     </div>
 
                     <!-- Member Quick Actions -->
-                    <div style="background-color: var(--color-navy); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--space-30);">
-                        <h4 style="margin-bottom: var(--space-20); border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;"><i class="fa-solid fa-user-gear" style="color: var(--color-red); margin-right: 8px;"></i><?php esc_html_e( 'Account Services', 'ascendance-core' ); ?></h4>
-                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: var(--font-size-sm); font-family: var(--font-heading);">
+                    <div class="bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 md:p-8 rounded-sm shadow-sm flex flex-col gap-4">
+                        <h4 class="text-xs font-sans font-bold text-brand-text-primary dark:text-white uppercase tracking-wider border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear text-brand-red text-xs"></i>
+                            <?php esc_html_e( 'Account Services', 'ascendance-core' ); ?>
+                        </h4>
+                        <div class="dashboard-services-grid grid grid-cols-2 gap-3">
                             <?php if ( function_exists( 'pmpro_url' ) ) : ?>
-                                <li><a href="<?php echo esc_url( pmpro_url( 'account' ) ); ?>"><i class="fa-regular fa-id-card" style="margin-right:8px;"></i> <?php esc_html_e( 'Manage Subscription', 'ascendance-core' ); ?></a></li>
-                                <li><a href="<?php echo esc_url( pmpro_url( 'billing' ) ); ?>"><i class="fa-regular fa-credit-card" style="margin-right:8px;"></i> <?php esc_html_e( 'Update Billing Info', 'ascendance-core' ); ?></a></li>
+                                <a href="<?php echo esc_url( add_query_arg( 'portal', '1', pmpro_url( 'account' ) ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
+                                    <i class="fa-regular fa-id-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                    <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Manage Tier', 'ascendance-core' ); ?></span>
+                                </a>
+                                <a href="<?php echo esc_url( pmpro_url( 'billing' ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
+                                    <i class="fa-regular fa-credit-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                    <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Billing Info', 'ascendance-core' ); ?></span>
+                                </a>
                             <?php endif; ?>
-                            <li><a href="<?php echo esc_url( get_edit_user_link() ); ?>"><i class="fa-regular fa-user" style="margin-right:8px;"></i> <?php esc_html_e( 'Edit Profile Preferences', 'ascendance-core' ); ?></a></li>
-                            <li><a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>"><i class="fa-solid fa-arrow-right-from-bracket" style="margin-right:8px; color: var(--color-red);"></i> <?php esc_html_e( 'Sign Out', 'ascendance-core' ); ?></a></li>
-                        </ul>
+                            <a href="<?php echo esc_url( get_edit_user_link() ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group <?php echo !function_exists( 'pmpro_url' ) ? 'col-span-2' : ''; ?>">
+                                <i class="fa-regular fa-user text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Preferences', 'ascendance-core' ); ?></span>
+                            </a>
+                            <a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group <?php echo !function_exists( 'pmpro_url' ) ? 'col-span-2' : ''; ?>">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Sign Out', 'ascendance-core' ); ?></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Platform System Telemetry Logs Panel -->
+                    <div class="bg-[#030810] border border-brand-red/20 p-4 rounded-sm shadow-md font-mono text-[9px] text-[#00FF66] flex flex-col gap-2.5 shadow-[0_0_15px_rgba(188,27,29,0.05)]">
+                        <div class="flex justify-between border-b border-brand-red/20 pb-1.5 text-brand-red font-bold">
+                            <span>SECURE TERMINAL LOG</span>
+                            <span>v2.1</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span>[SYS] Decoders online ... OK</span>
+                            <span>[FEED] Satellite relays active ... SYNCED</span>
+                            <span>[USER] Cryptographic verification ... PASS</span>
+                            <span>[MEM] Credentials level matched ... OK</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,43 +266,82 @@ class Member_Dashboard {
         if ( $query->have_posts() ) {
             while ( $query->have_posts() ) {
                 $query->the_post();
+                $post_id = get_the_ID();
                 
                 // Fetch required tier access
-                $tier = get_field( 'tier_access', get_the_ID() );
-                $tier_label = $tier ? ucfirst( $tier ) : 'Essential';
-                
-                // Dynamic styling: updates show impact assess, briefs show claims
-                $extra_meta = '';
-                if ( 'update' === $post_type ) {
-                    $impact = get_field( 'impact_assessment', get_the_ID() );
-                    $impact_colors = array( 'low' => '#00FF66', 'medium' => '#FFCC00', 'high' => '#FF6600', 'critical' => 'var(--color-red)' );
-                    $color = isset( $impact_colors[ $impact ] ) ? $impact_colors[ $impact ] : '#FFCC00';
-                    $extra_meta = '<span style="color:' . esc_attr( $color ) . '; font-family: var(--font-mono); font-size:11px; text-transform:uppercase; border:1px solid ' . esc_attr( $color ) . '; padding:2px 6px; border-radius:var(--radius-sm); margin-left:10px;">Impact: ' . esc_html( $impact ) . '</span>';
+                $tier = get_field( 'tier_access', $post_id );
+                if ( ! $tier ) {
+                    $terms = wp_get_post_terms( $post_id, 'tier', array( 'fields' => 'slugs' ) );
+                    $tier = ( ! empty( $terms ) && ! is_wp_error( $terms ) ) ? $terms[0] : 'essential';
                 }
+                $tier_label = ucfirst( $tier );
                 
+                // Region list
+                $region_list = get_the_term_list( $post_id, 'region', '', ', ', '' ) ?: 'Global';
+                
+                // Dynamic styling
+                $border_class = 'border-l-[3px] border-l-brand-red';
+                $extra_badge = '';
+                $attachment_block = '';
+
+                if ( 'brief' === $post_type ) {
+                    $border_class = 'border-l-[3px] border-l-[#2980B9]';
+                    $claim = get_field( 'analytical_claim', $post_id );
+                    if ( $claim ) {
+                        $attachment_block = '<div class="mt-1.5 pl-3 border-l-2 border-brand-red/30 text-[10px] text-brand-text-muted dark:text-cream/60 leading-relaxed font-sans italic">
+                            <span class="font-bold text-brand-red not-italic">CLAIM //</span> ' . esc_html( $claim ) . '
+                        </div>';
+                    }
+                } elseif ( 'update' === $post_type ) {
+                    $impact = get_field( 'impact_assessment', $post_id ) ?: 'medium';
+                    $impact_details = array(
+                        'low'      => array( 'border' => 'border-l-[3px] border-l-[#27AE60]', 'badge' => 'bg-[#27AE60]/10 text-[#27AE60]' ),
+                        'medium'   => array( 'border' => 'border-l-[3px] border-l-[#2980B9]', 'badge' => 'bg-[#2980B9]/10 text-[#2980B9]' ),
+                        'high'     => array( 'border' => 'border-l-[3px] border-l-[#E67E22]', 'badge' => 'bg-[#E67E22]/10 text-[#E67E22]' ),
+                        'critical' => array( 'border' => 'border-l-[3px] border-l-brand-red', 'badge' => 'bg-brand-red/10 text-brand-red' ),
+                    );
+                    $style = isset( $impact_details[ $impact ] ) ? $impact_details[ $impact ] : $impact_details['medium'];
+                    $border_class = $style['border'];
+                    $extra_badge = '<span class="' . esc_attr( $style['badge'] ) . ' px-1.5 py-0.5 rounded-sm text-[8px] uppercase tracking-widest font-sans font-bold">' . esc_html( $impact ) . '</span>';
+                } elseif ( 'dossier' === $post_type ) {
+                    $border_class = 'border-l-[3px] border-l-brand-red';
+                    $attachment_block = '<div class="text-[9px] font-mono text-brand-red uppercase tracking-wider mt-1.5 flex items-center gap-1.5"><i class="fa-solid fa-folder-open text-[8px]"></i>' . esc_html__( 'Strategic Intelligence Dossier Volume', 'ascendance-core' ) . '</div>';
+                }
                 ?>
-                <div class="card" style="padding: var(--space-20); display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                        <div class="card-meta" style="margin-bottom: 0;">
-                            <span class="card-tag"><?php echo esc_html( $post_type ); ?></span>
-                            <span><?php echo get_the_date(); ?></span>
-                            <?php echo $extra_meta; ?>
+                <div class="bg-transparent <?php echo esc_attr( $border_class ); ?> pl-4 py-3.5 pr-2 border-b border-brand-divider-light dark:border-brand-divider-dark/40 last:border-b-0 first:pt-0 last:pb-0 hover:translate-x-0.5 transition-transform duration-200 relative flex flex-col gap-1.5">
+                    <div class="flex justify-between items-center text-[9px] font-mono font-bold tracking-wider text-brand-text-muted dark:text-cream/50 gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="uppercase font-sans font-bold text-brand-red"><?php echo esc_html( $post_type ); ?></span>
+                            <span>•</span>
+                            <span>
+                                <?php 
+                                if ( 'update' === $post_type ) {
+                                    echo get_the_date( 'd.m.Y // H:i \U\T\C' );
+                                } else {
+                                    echo get_the_date( 'd F Y' );
+                                }
+                                ?>
+                            </span>
+                            <?php if ( $extra_badge ) : ?>
+                                <span>•</span>
+                                <?php echo $extra_badge; ?>
+                            <?php endif; ?>
                         </div>
-                        <span style="font-size: 11px; font-family: var(--font-heading); color: var(--color-cream); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"><?php echo esc_html( $tier_label ); ?> Tier</span>
+                        <span class="text-brand-text-primary dark:text-cream font-sans uppercase font-bold text-[8px] tracking-widest"><?php echo esc_html( $tier_label ); ?> Tier</span>
                     </div>
-                    <h4 style="margin-bottom: 0; font-size: var(--font-size-sm);"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
-                    
-                    <?php if ( 'brief' === $post_type && get_field( 'analytical_claim' ) ) : ?>
-                        <div style="font-family: var(--font-mono); font-size: 12px; color: #00FF66; background: #030810; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(0,255,102,0.1); margin-top:4px;">
-                            <strong style="color:var(--color-red);">CLAIM // </strong> <?php echo esc_html( get_field( 'analytical_claim' ) ); ?>
-                        </div>
-                    <?php endif; ?>
+                    <h4 class="text-xs font-sans font-bold text-brand-text-primary dark:text-white leading-snug m-0">
+                        <a href="<?php the_permalink(); ?>" class="hover:text-brand-red dark:hover:text-brand-red-light transition-colors"><?php the_title(); ?></a>
+                    </h4>
+                    <div class="text-[10px] text-brand-text-muted dark:text-cream/70 flex items-center gap-1">
+                        <span class="font-bold text-brand-text-primary dark:text-cream"><?php esc_html_e( 'Region:', 'ascendance-core' ); ?></span> <span><?php echo strip_tags( $region_list ); ?></span>
+                    </div>
+                    <?php echo $attachment_block; ?>
                 </div>
                 <?php
             }
             wp_reset_postdata();
         } else {
-            echo '<p style="color: var(--text-muted); font-size: var(--font-size-sm); font-style: italic;">' . sprintf( __( 'No %s published yet.', 'ascendance-core' ), esc_html( $post_type ) . 's' ) . '</p>';
+            echo '<p class="text-xs text-brand-text-muted dark:text-cream/50 italic py-2">' . sprintf( __( 'No %s published yet.', 'ascendance-core' ), esc_html( $post_type ) . 's' ) . '</p>';
         }
     }
 
@@ -236,20 +386,23 @@ class Member_Dashboard {
         $query = new \WP_Query( $args );
 
         if ( $query->have_posts() ) {
-            echo '<div style="display: flex; flex-direction: column; gap: 12px;">';
+            echo '<div class="flex flex-col gap-3">';
             while ( $query->have_posts() ) {
                 $query->the_post();
                 ?>
-                <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-size: var(--font-size-xs);">
-                    <a href="<?php the_permalink(); ?>" style="color: var(--text-primary); font-weight: var(--weight-bold); display: block; margin-bottom: 4px;"><?php the_title(); ?></a>
-                    <span style="color: var(--color-red); text-transform: uppercase; font-family: var(--font-heading); font-size: 10px; font-weight: bold;"><?php echo esc_html( get_post_type() ); ?></span>
+                <div class="flex items-start justify-between gap-3 text-xs border-b border-brand-divider-light dark:border-brand-divider-dark/40 pb-2 last:border-b-0 last:pb-0">
+                    <div class="flex flex-col gap-1">
+                        <a href="<?php the_permalink(); ?>" class="font-sans font-bold text-brand-text-primary dark:text-cream hover:text-brand-red dark:hover:text-brand-red-light transition-colors leading-snug"><?php the_title(); ?></a>
+                        <span class="text-[9px] font-mono text-brand-text-muted dark:text-cream/50 uppercase"><?php echo esc_html( get_post_type() ); ?></span>
+                    </div>
+                    <i class="fa-solid fa-angle-right text-[10px] text-brand-red/60 mt-1"></i>
                 </div>
                 <?php
             }
             echo '</div>';
             wp_reset_postdata();
         } else {
-            echo '<p style="color: var(--text-muted); font-size: var(--font-size-xs); font-style: italic;">' . esc_html__( 'Configure your profile preferences below to receive specialized intelligence notifications.', 'ascendance-core' ) . '</p>';
+            echo '<p class="text-xs text-brand-text-muted dark:text-cream/50 italic leading-relaxed">' . esc_html__( 'Configure your profile preferences below to receive specialized intelligence notifications.', 'ascendance-core' ) . '</p>';
         }
     }
 
@@ -265,48 +418,47 @@ class Member_Dashboard {
 
         ob_start();
         ?>
-        <div class="pricing-matrix" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-30); padding: var(--space-40) 0;">
+        <div class="pricing-table-matrix">
             <!-- Plan 1: Essential -->
-            <div class="card" style="text-align: center; display: flex; flex-direction: column; border-top: 3px solid var(--border-color);">
-                <span style="font-family: var(--font-heading); text-transform: uppercase; color: var(--text-muted); font-size: var(--font-size-xs); font-weight: bold; letter-spacing: 1px;"><?php esc_html_e( 'Tier 1', 'ascendance-core' ); ?></span>
-                <h3 style="margin-top: 8px; margin-bottom: 4px;"><?php esc_html_e( 'Essential', 'ascendance-core' ); ?></h3>
-                <div style="font-family: var(--font-heading); margin-bottom: var(--space-30);">
-                    <span style="font-size: var(--font-size-xl); font-weight: bold; color: var(--color-white);">$150</span>
-                    <span style="color: var(--text-muted);">/ month</span>
+            <div class="card pricing-tier-card">
+                <span class="pricing-tier-card-number"><?php esc_html_e( 'Tier 1', 'ascendance-core' ); ?></span>
+                <h3><?php esc_html_e( 'Essential', 'ascendance-core' ); ?></h3>
+                <div class="pricing-tier-card-price-row">
+                    <span class="pricing-tier-card-price">$150</span>
+                    <span class="pricing-tier-card-price-period">/ month</span>
                 </div>
-                <p style="color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-40); flex-grow: 1;">
+                <p class="pricing-tier-card-desc">
                     <?php esc_html_e( 'Full access to Intelligence Briefs, tracking updates, and primary industry research feeds.', 'ascendance-core' ); ?>
                 </p>
-                <a href="<?php echo esc_url( add_query_arg( 'level', '1', $checkout_url ) ); ?>" class="btn btn-secondary" style="width: 100%;"><?php esc_html_e( 'Select Plan', 'ascendance-core' ); ?></a>
+                <a href="<?php echo esc_url( add_query_arg( 'level', '1', $checkout_url ) ); ?>" class="btn btn-secondary"><?php esc_html_e( 'Select Plan', 'ascendance-core' ); ?></a>
             </div>
 
             <!-- Plan 2: Professional (Recommended) -->
-            <div class="card" style="text-align: center; display: flex; flex-direction: column; border-top: 3px solid var(--color-red); box-shadow: var(--shadow-lg), var(--shadow-red); transform: scale(1.02); position: relative; background: linear-gradient(180deg, rgba(15,30,53,1) 0%, rgba(10,22,40,1) 100%);">
+            <div class="card pricing-tier-card featured-pricing">
                 <span class="paywall-badge" style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%);"><?php esc_html_e( 'Recommended', 'ascendance-core' ); ?></span>
-                <span style="font-family: var(--font-heading); text-transform: uppercase; color: var(--color-red); font-size: var(--font-size-xs); font-weight: bold; letter-spacing: 1px; margin-top: 8px;"><?php esc_html_e( 'Tier 2', 'ascendance-core' ); ?></span>
-                <h3 style="margin-top: 8px; margin-bottom: 4px; color: var(--color-white);"><?php esc_html_e( 'Professional', 'ascendance-core' ); ?></h3>
-                <div style="font-family: var(--font-heading); margin-bottom: var(--space-30);">
-                    <span style="font-size: var(--font-size-xl); font-weight: bold; color: var(--color-white);">$299</span>
-                    <span style="color: var(--text-muted);">/ month</span>
+                <span class="pricing-tier-card-number" style="color: var(--color-red);"><?php esc_html_e( 'Tier 2', 'ascendance-core' ); ?></span>
+                <h3><?php esc_html_e( 'Professional', 'ascendance-core' ); ?></h3>
+                <div class="pricing-tier-card-price-row">
+                    <span class="pricing-tier-card-price">$299</span>
+                    <span class="pricing-tier-card-price-period">/ month</span>
                 </div>
-                <p style="color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-40); flex-grow: 1;">
+                <p class="pricing-tier-card-desc">
                     <?php esc_html_e( 'Unlock high-density Dossiers, downloads, stakeholder profiling, and cross-referenced historical indexes.', 'ascendance-core' ); ?>
                 </p>
-                <a href="<?php echo esc_url( add_query_arg( 'level', '2', $checkout_url ) ); ?>" class="btn btn-primary" style="width: 100%;"><?php esc_html_e( 'Activate Professional', 'ascendance-core' ); ?></a>
+                <a href="<?php echo esc_url( add_query_arg( 'level', '2', $checkout_url ) ); ?>" class="btn btn-primary"><?php esc_html_e( 'Activate Professional', 'ascendance-core' ); ?></a>
             </div>
 
             <!-- Plan 3: Enterprise -->
-            <div class="card" style="text-align: center; display: flex; flex-direction: column; border-top: 3px solid var(--border-color);">
-                <span style="font-family: var(--font-heading); text-transform: uppercase; color: var(--text-muted); font-size: var(--font-size-xs); font-weight: bold; letter-spacing: 1px;"><?php esc_html_e( 'Tier 3', 'ascendance-core' ); ?></span>
-                <h3 style="margin-top: 8px; margin-bottom: 4px;"><?php esc_html_e( 'Enterprise', 'ascendance-core' ); ?></h3>
-                <div style="font-family: var(--font-heading); margin-bottom: var(--space-30);">
-                    <span style="font-size: var(--font-size-xl); font-weight: bold; color: var(--color-white);">$599</span>
-                    <span style="color: var(--text-muted);">/ month</span>
+            <div class="card pricing-tier-card">
+                <span class="pricing-tier-card-number"><?php esc_html_e( 'Tier 3', 'ascendance-core' ); ?></span>
+                <h3><?php esc_html_e( 'Enterprise', 'ascendance-core' ); ?></h3>
+                <div class="pricing-tier-card-price-row">
+                    <span class="pricing-tier-card-price"><?php esc_html_e( 'Custom', 'ascendance-core' ); ?></span>
                 </div>
-                <p style="color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-40); flex-grow: 1;">
+                <p class="pricing-tier-card-desc">
                     <?php esc_html_e( 'Full access to complete intelligence base, direct API hooks, dedicated dashboard instances, and custom queries.', 'ascendance-core' ); ?>
                 </p>
-                <a href="<?php echo esc_url( add_query_arg( 'level', '3', $checkout_url ) ); ?>" class="btn btn-secondary" style="width: 100%;"><?php esc_html_e( 'Contact Enterprise', 'ascendance-core' ); ?></a>
+                <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="btn btn-secondary"><?php esc_html_e( 'Contact Enterprise', 'ascendance-core' ); ?></a>
             </div>
         </div>
         <?php

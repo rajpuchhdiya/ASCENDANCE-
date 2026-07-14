@@ -12,18 +12,18 @@ get_header();
 
 <main id="primary" class="site-main">
 
-	<header class="page-header" style="background-color: var(--color-deep-navy); border-bottom: 1px solid var(--border-color); padding: var(--space-60) 0; text-align: center;">
-		<div class="container">
-			<span style="color: var(--color-red); font-family: var(--font-heading); text-transform: uppercase; font-weight: bold; font-size: var(--font-size-xs); letter-spacing: 1px;"><?php esc_html_e( 'Acquire License', 'ascendance' ); ?></span>
-			<h1 class="page-title" style="margin-top: 10px; margin-bottom: 15px; color: var(--color-white);"><?php esc_html_e( 'Membership & Access Plans', 'ascendance' ); ?></h1>
-			<p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: var(--font-size-sm); line-height: 1.6;">
+	<header class="page-header-premium bg-navy-deep text-white py-16 md:py-24 border-b border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
+			<span class="page-header-premium-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-4 block"><?php esc_html_e( 'Acquire License', 'ascendance' ); ?></span>
+			<h1 class="page-header-premium-title text-3xl md:text-5xl font-sans font-bold leading-tight mb-6"><?php esc_html_e( 'Membership & Access Plans', 'ascendance' ); ?></h1>
+			<p class="page-header-premium-desc text-base md:text-lg text-cream/80 max-w-[720px] leading-relaxed">
 				<?php esc_html_e( 'Choose a professional intelligence tier. Unlock forward-looking briefs, critical timelines, and high-density dossiers mapped by industry experts.', 'ascendance' ); ?>
 			</p>
 		</div>
 	</header>
 
-	<div class="content-wrapper" style="padding: var(--space-50) 0;">
-		<div class="container">
+	<div class="archive-layout-wrapper py-16 md:py-24 bg-cream dark:bg-navy-deep border-b border-brand-divider-light dark:border-brand-divider-dark">
+		<div class="container mx-auto px-6 md:px-8">
 			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 				<div class="entry-content">
 					<?php
@@ -36,7 +36,7 @@ get_header();
 					if ( shortcode_exists( 'ascendance_pricing_table' ) ) {
 						echo do_shortcode( '[ascendance_pricing_table]' );
 					} else {
-						echo '<p style="text-align:center; color:var(--text-muted);">' . esc_html__( 'Pricing table shortcode is currently loading.', 'ascendance' ) . '</p>';
+						echo '<p class="text-center text-brand-text-muted dark:text-cream/50 font-sans text-sm">' . esc_html__( 'Pricing table shortcode is currently loading.', 'ascendance' ) . '</p>';
 					}
 					?>
 				</div>
