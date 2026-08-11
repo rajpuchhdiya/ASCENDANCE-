@@ -170,6 +170,7 @@ $has_real_events = $events_query->have_posts();
                                 <textarea id="rsvp-note" name="note" rows="4" class="w-full px-3 py-2 bg-white dark:bg-navy-deep border border-brand-divider-light dark:border-brand-divider-dark rounded-sm text-brand-text-primary dark:text-cream font-serif text-sm outline-none transition-all duration-150 focus:border-brand-red" placeholder="<?php esc_attr_e( 'Ask a question or request credentials check...', 'ascendance' ); ?>"></textarea>
                             </div>
 
+                            <div id="events-rsvp-msg" style="display:none; margin-bottom:15px; padding:12px; border-radius:4px; font-weight:500; font-size:14px; font-family:var(--font-ui);"></div>
                             <button type="submit" class="btn btn-primary w-full flex justify-center items-center py-2.5 gap-2" id="rsvp-submit-btn">
                                 <?php esc_html_e( 'Submit RSVP Inquiry', 'ascendance' ); ?>
                                 <i class="fa-solid fa-ticket text-xs"></i>
@@ -246,15 +247,48 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         
         const btn = $('#rsvp-submit-btn');
+        const msgDiv = $('#events-rsvp-msg');
         const originalHtml = btn.html();
         
+        var fd = new FormData(this);
+        fd.append('action', 'as_submit_rsvp');
+        
+        msgDiv.hide();
         btn.attr('disabled', true).html('<i class="fa-solid fa-spinner fa-spin mr-2"></i> Submitting...');
         
-        setTimeout(function() {
+        fetch('<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>', {
+            method: 'POST',
+            body: fd
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
             btn.attr('disabled', false).html(originalHtml);
-            alert('RSVP Submission Received!\nOur events desk will verify your credentials and send a secure briefing link to your email.');
-            $('#events-rsvp-form')[0].reset();
-        }, 1200);
+            if (data.success) {
+                msgDiv.css({
+                    'display': 'block',
+                    'color': '#155724',
+                    'background-color': '#d4edda',
+                    'border': '1px solid #c3e6cb'
+                }).text('RSVP Submission Received! Our events desk will verify your credentials and send a secure briefing link to your email shortly.');
+                $('#events-rsvp-form')[0].reset();
+            } else {
+                msgDiv.css({
+                    'display': 'block',
+                    'color': '#721c24',
+                    'background-color': '#f8d7da',
+                    'border': '1px solid #f5c6cb'
+                }).text('Error: ' + (data.data || 'Failed to submit.'));
+            }
+        })
+        .catch(function(err) {
+            btn.attr('disabled', false).html(originalHtml);
+            msgDiv.css({
+                'display': 'block',
+                'color': '#721c24',
+                'background-color': '#f8d7da',
+                'border': '1px solid #f5c6cb'
+            }).text('An error occurred. Please try again.');
+        });
     });
 });
 </script>

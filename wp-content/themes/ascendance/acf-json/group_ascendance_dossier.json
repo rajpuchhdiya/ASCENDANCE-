@@ -27,7 +27,7 @@
             "name": "analytical_claim",
             "type": "textarea",
             "instructions": "The primary forward-looking claim or core thesis of this dossier.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -46,7 +46,7 @@
             "name": "public_excerpt",
             "type": "textarea",
             "instructions": "Visible to non-subscribers, the AI citation surface (50-80 words).",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -65,7 +65,7 @@
             "name": "executive_summary",
             "type": "textarea",
             "instructions": "A high-level summary of the dossier.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -84,7 +84,7 @@
             "name": "key_findings",
             "type": "wysiwyg",
             "instructions": "Key findings bullet points, data, and critical details.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -122,7 +122,7 @@
                     "name": "takeaway",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -162,7 +162,7 @@
                     "name": "name",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -218,7 +218,7 @@
                     "name": "source_name",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -298,7 +298,7 @@
             "name": "brief_version",
             "type": "number",
             "instructions": "Increments on substantive revision.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -338,7 +338,7 @@
             "name": "tier_access",
             "type": "select",
             "instructions": "The minimum membership tier required to unlock this intelligence dossier.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -423,7 +423,7 @@
                     "name": "name",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -442,7 +442,7 @@
                     "name": "role",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -499,7 +499,7 @@
                     "name": "revision_date",
                     "type": "date_picker",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -516,7 +516,7 @@
                     "name": "revision_summary",
                     "type": "textarea",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -556,7 +556,7 @@
                     "name": "block_title",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -594,7 +594,7 @@
                             "name": "column_1",
                             "type": "text",
                             "instructions": "",
-                            "required": 1,
+                            "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
                                 "width": "",
@@ -645,8 +645,8 @@
                             "append": "",
                             "maxlength": ""
                         }
-                      ]
-                    }
+                    ]
+                }
             ]
         },
         {
@@ -674,7 +674,7 @@
                     "name": "file",
                     "type": "file",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -693,7 +693,7 @@
                     "name": "label",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",

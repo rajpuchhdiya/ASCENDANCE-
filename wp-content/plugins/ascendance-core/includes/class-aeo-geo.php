@@ -86,7 +86,8 @@ class AEO_GEO {
         echo "## Core Sections\n\n";
         echo "- [/briefs]( " . esc_url( get_post_type_archive_link( 'brief' ) ) . " ) - Weekly Intelligence Briefs archives.\n";
         echo "- [/dossiers]( " . esc_url( get_post_type_archive_link( 'dossier' ) ) . " ) - Complete detailed dossiers.\n";
-        echo "- [/updates]( " . esc_url( get_post_type_archive_link( 'update' ) ) . " ) - Dynamic impact assessments.\n\n";
+        echo "- [/updates]( " . esc_url( get_post_type_archive_link( 'update' ) ) . " ) - Dynamic impact assessments.\n";
+        echo "- [/entities]( " . esc_url( home_url( '/entities/' ) ) . " ) - Interconnected entity intelligence graph directory.\n\n";
         
         echo "## Available Briefings & Documents\n\n";
         
@@ -128,7 +129,7 @@ class AEO_GEO {
         echo "========================================================================\n\n";
         
         $query = new \WP_Query( array(
-            'post_type'      => array( 'brief', 'dossier', 'update' ),
+            'post_type'      => array( 'brief', 'dossier', 'update', 'entity' ),
             'posts_per_page' => 50,
             'post_status'    => 'publish',
             'orderby'        => 'date',

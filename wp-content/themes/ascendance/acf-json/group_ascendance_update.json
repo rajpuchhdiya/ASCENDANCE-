@@ -8,7 +8,7 @@
             "name": "parent_brief",
             "type": "post_object",
             "instructions": "Link this dynamic update to its parent intelligence dossier or brief.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -20,7 +20,7 @@
                 "dossier"
             ],
             "taxonomy": "",
-            "allow_null": 0,
+            "allow_null": 1,
             "multiple": 0,
             "return_format": "id",
             "ui": 1
@@ -31,7 +31,7 @@
             "name": "update_date",
             "type": "date_picker",
             "instructions": "The development date (not the publish date).",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -48,7 +48,7 @@
             "name": "one_line_summary",
             "type": "text",
             "instructions": "Max 160 characters. Renders as meta description.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -67,7 +67,7 @@
             "name": "impact_assessment",
             "type": "select",
             "instructions": "",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -83,7 +83,7 @@
             "default_value": [
                 "medium"
             ],
-            "allow_null": 0,
+            "allow_null": 1,
             "multiple": 0,
             "ui": 1,
             "ajax": 0,
@@ -96,7 +96,7 @@
             "name": "key_update",
             "type": "wysiwyg",
             "instructions": "The latest dynamic developments and changes.",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",

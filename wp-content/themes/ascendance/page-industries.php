@@ -1,151 +1,122 @@
 <?php
 /**
- * Template Name: Industries
- * Page template for the Industries/Sectors page.
+ * Template Name: Industries We Cover
  *
  * @package Ascendance
  */
 
 get_header();
-
-$sectors = array(
-	array(
-		'icon'   => 'fa-earth-americas',
-		'title'  => 'Geopolitics & Diplomacy',
-		'slug'   => 'geopolitics',
-		'topic'  => 'Geopolitics',
-		'desc'   => 'Interstate relations, multilateral frameworks, alliance architecture, territorial disputes, and the strategic competition between major powers.',
-		'tags'   => array( 'SIGINT', 'Diplomatic Intelligence', 'Military Affairs' ),
-	),
-	array(
-		'icon'   => 'fa-chart-line',
-		'title'  => 'Economics & Markets',
-		'slug'   => 'economics',
-		'topic'  => 'Economics & Markets',
-		'desc'   => 'Trade policy, sanctions regimes, sovereign debt dynamics, currency risk, commodity markets, and the intersection of economic policy with geopolitical strategy.',
-		'tags'   => array( 'Economic Intelligence', 'Financial Intelligence', 'Emerging Markets' ),
-	),
-	array(
-		'icon'   => 'fa-microchip',
-		'title'  => 'Technology & AI',
-		'slug'   => 'technology',
-		'topic'  => 'Technology & AI',
-		'desc'   => 'AI regulation divergence, semiconductor supply chains, cyber threat landscapes, platform governance, and the weaponisation of technology in strategic competition.',
-		'tags'   => array( 'Technology Risk', 'Regulatory Risk', 'OSINT' ),
-	),
-	array(
-		'icon'   => 'fa-bolt',
-		'title'  => 'Energy & Resources',
-		'slug'   => 'energy',
-		'topic'  => 'Energy & Resources',
-		'desc'   => 'Energy security, LNG market dynamics, renewable transition risk, critical mineral supply chains, and the geopolitics of climate policy.',
-		'tags'   => array( 'Critical Infrastructure', 'Political Risk', 'Economic Intelligence' ),
-	),
-	array(
-		'icon'   => 'fa-shield-halved',
-		'title'  => 'Security & Defence',
-		'slug'   => 'security',
-		'topic'  => 'Security & Defence',
-		'desc'   => 'Military modernisation, theatre balance dynamics, hybrid warfare, sub-threshold coercion, and the evolution of deterrence doctrine across major military powers.',
-		'tags'   => array( 'Military Affairs', 'SIGINT', 'HUMINT' ),
-	),
-	array(
-		'icon'   => 'fa-scale-balanced',
-		'title'  => 'Governance & Policy',
-		'slug'   => 'governance',
-		'topic'  => 'Governance & Policy',
-		'desc'   => 'Sanctions policy, regulatory frameworks, democratic backsliding risk, institutional stability assessments, and the political economy of policy change.',
-		'tags'   => array( 'Regulatory Risk', 'Political Risk', 'Diplomatic Intelligence' ),
-	),
-);
 ?>
 
-<main id="primary" class="site-main">
+<main>
+<section class="ind-hero">
+	<div class="wrap">
+		<span class="kicker">Industries we cover</span>
+		<h1>Seven sectors, one framework.</h1>
+		<p>The US-DRC Strategic Partnership Agreement, signed 4 December 2025, creates specific investment frameworks across seven sectors, from critical minerals and Grand Inga hydropower to the Lobito Corridor and defense cooperation. We cover each with analysis and advisory built for the SPA framework, not generic Africa consulting.</p>
+	</div>
+</section>
 
-	<!-- ═══ PAGE HERO ═════════════════════════════════════════ -->
-	<section class="page-hero bg-navy-deep text-white py-16 md:py-24 border-b border-brand-divider-dark">
-		<div class="container mx-auto px-6 md:px-8">
-			<div class="page-hero-inner">
-				<p class="page-hero-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-4 block"><?php esc_html_e( '// Strategic Sectors', 'ascendance' ); ?></p>
-				<h1 class="page-hero-title text-3xl md:text-5xl font-sans font-bold leading-tight mb-6"><?php esc_html_e( 'Intelligence Across Six Sectors', 'ascendance' ); ?></h1>
-				<p class="page-hero-desc text-base md:text-lg text-cream/80 max-w-[720px] leading-relaxed"><?php esc_html_e( 'Ascendance covers the six domains where strategic risk is highest and decision-making demands the most rigorous forward-looking analysis.', 'ascendance' ); ?></p>
+<section class="section" style="padding-top:8px;">
+	<div class="wrap">
+		<div class="ind-grid">
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">01</span><div><h3>Energy</h3><p class="ind-sub">Grand Inga and the power sector</p></div></div>
+				<ul class="ind-list">
+					<li>Grand Inga implementation tracking and partnership opportunities</li>
+					<li>Power-sector policy monitoring and regulatory-change assessment</li>
+					<li>Government and SOE relationship strategies for PPAs</li>
+					<li>Community engagement for infrastructure affecting local populations</li>
+					<li>Environmental and social governance advisory</li>
+					<li>Regional power-export opportunities (DRC-Rwanda-Zambia integration)</li>
+				</ul>
+			</article>
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">02</span><div><h3>Mining &amp; Resources</h3><p class="ind-sub">Critical minerals and the SAR</p></div></div>
+				<ul class="ind-list">
+					<li>SAR opportunity assessment and government priority analysis</li>
+					<li>Competitor analysis on Chinese and other mining operations</li>
+					<li>Community engagement and traditional-authority relationship guidance</li>
+					<li>Permitting-process navigation and government relations</li>
+					<li>ESG compliance balancing international standards with DRC realities</li>
+					<li>Lobito Corridor logistics and export-route optimization</li>
+					<li>Security-risk assessment and mitigation planning</li>
+				</ul>
+			</article>
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">03</span><div><h3>Infrastructure</h3><p class="ind-sub">The Lobito Corridor and procurement</p></div></div>
+				<ul class="ind-list">
+					<li>Lobito Corridor development tracking and partnership identification</li>
+					<li>Government procurement guidance and tender support</li>
+					<li>Multi-ministry coordination for complex approvals</li>
+					<li>Community relations for linear infrastructure (road, rail, transmission)</li>
+					<li>Payment-structure negotiation support and risk mitigation</li>
+					<li>Public-private partnership (PPP) framework advisory</li>
+				</ul>
+			</article>
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">04</span><div><h3>Private Equity &amp; Investment Funds</h3><p class="ind-sub">Diligence, monitoring and exit</p></div></div>
+				<ul class="ind-list">
+					<li>Political-risk due diligence for pre-investment assessment</li>
+					<li>SAR opportunity assessment for mining-focused funds</li>
+					<li>Portfolio monitoring on political developments affecting investments</li>
+					<li>Portfolio-company advisory on government relations</li>
+					<li>ESG advisory ensuring compliance across the portfolio</li>
+					<li>LP communication support and exit-timing considerations</li>
+				</ul>
+			</article>
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">05</span><div><h3>Security &amp; Defense</h3><p class="ind-sub">Operating environment and engagement</p></div></div>
+				<ul class="ind-list">
+					<li>Armed-conflict monitoring and security-situation assessment</li>
+					<li>Government security-sector relationship guidance</li>
+					<li>UN and international-framework compliance advisory</li>
+					<li>Operating-environment assessments for high-risk provinces</li>
+					<li>Community engagement for security operations</li>
+					<li>Defense-procurement guidance and ethical engagement frameworks</li>
+				</ul>
+			</article>
+			<article class="ind-card">
+				<div class="ind-card-head"><span class="ind-n">06</span><div><h3>Consulting &amp; Advisory Firms</h3><p class="ind-sub">Your DRC specialist partner</p></div></div>
+				<ul class="ind-list">
+					<li>On-ground analysis feeding your own work</li>
+					<li>Government facilitation within appropriate frameworks</li>
+					<li>White-label or acknowledged partnership, as you prefer</li>
+					<li>Senior-advisor delivery, not junior analysts</li>
+					<li>Subcontractor, partner or referral collaboration models</li>
+				</ul>
+			</article>
+		</div>
+	</div>
+</section>
+
+<section class="section" style="padding-top:0;">
+	<div class="wrap">
+		<div class="sec-head"><span class="kicker">Beyond the seven</span><h2>Other sectors we support.</h2></div>
+		<div class="ind-others">
+			<div class="ind-other"><h4>Agriculture</h4><p>$110M committed to agricultural development: agribusiness, rural development, supply-chain modernization and food-security initiatives.</p></div>
+			<div class="ind-other"><h4>Technology</h4><p>Geological mapping, traceability systems, digital infrastructure, fintech and e-government solutions supporting SPA implementation.</p></div>
+			<div class="ind-other"><h4>Transportation &amp; Logistics</h4><p>Corridor development, port operations, freight forwarding, warehousing and mineral-export logistics.</p></div>
+		</div>
+		<p class="ind-note">If your sector is not listed, <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">contact us</a>. We have supported diverse industries navigating the DRC's political landscape.</p>
+	</div>
+</section>
+
+<section class="section dark">
+	<div class="wrap">
+		<div class="m-contact">
+			<div class="lead">
+				<h2>Investing in one of these sectors?</h2>
+				<p>Every engagement opens with a thirty-minute diagnostic call, not a proposal. If we are not the right fit, we say so.</p>
+			</div>
+			<div class="acts">
+				<a class="btn-light" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Book a diagnostic call</a>
+				<a class="btn-outline" href="<?php echo esc_url( home_url( '/advisory/' ) ); ?>">See our services</a>
 			</div>
 		</div>
-	</section>
-
-	<!-- ═══ SECTORS GRID ══════════════════════════════════════ -->
-	<section class="industry-section section py-20 bg-cream dark:bg-navy-deep border-b border-brand-divider-light dark:border-brand-divider-dark" id="sectors">
-		<div class="container mx-auto px-6 md:px-8">
-			<div class="industry-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-				<?php foreach ( $sectors as $sector ) :
-					// Find the topic term for this sector
-					$topic_term = get_term_by( 'name', $sector['topic'], 'topic' );
-					$archive_url = $topic_term
-						? get_term_link( $topic_term, 'topic' )
-						: home_url( '/intelligence/' );
-					if ( is_wp_error( $archive_url ) ) $archive_url = home_url( '/intelligence/' );
-				?>
-					<a href="<?php echo esc_url( $archive_url ); ?>" class="industry-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-8 rounded-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between reveal">
-						<div>
-							<div class="industry-card-icon text-3xl text-brand-red mb-6">
-								<i class="fa-solid <?php echo esc_attr( $sector['icon'] ); ?>"></i>
-							</div>
-							<h3 class="text-xl font-sans font-bold text-brand-text-primary dark:text-white mb-4"><?php echo esc_html( $sector['title'] ); ?></h3>
-							<p class="text-sm text-brand-text-muted dark:text-cream/70 leading-relaxed mb-6"><?php echo esc_html( $sector['desc'] ); ?></p>
-							<div class="flex gap-1.5 flex-wrap my-2">
-								<?php foreach ( $sector['tags'] as $tag ) : ?>
-									<span class="font-sans text-[10px] font-bold uppercase tracking-wider text-brand-red dark:text-brand-red-light bg-brand-red/5 border border-brand-red/10 px-2 py-0.5 rounded-sm">
-										<?php echo esc_html( $tag ); ?>
-									</span>
-								<?php endforeach; ?>
-							</div>
-						</div>
-						<div class="industry-card-link font-sans font-bold text-xs text-brand-red hover:text-brand-red-light transition-colors duration-150 flex items-center gap-1.5 mt-6">
-							<?php esc_html_e( 'View Intelligence', 'ascendance' ); ?>
-							<i class="fa-solid fa-arrow-right"></i>
-						</div>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<!-- ═══ RECENT CROSS-SECTOR INTELLIGENCE ══════════════════ -->
-	<section class="section bg-navy-mid py-20 border-b border-brand-divider-dark">
-		<div class="container mx-auto px-6 md:px-8">
-			<div class="section-header mb-12">
-				<span class="section-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-3 block"><?php esc_html_e( 'Cross-Sector', 'ascendance' ); ?></span>
-				<h2 class="section-title text-3xl md:text-4xl font-sans font-bold text-white mb-4 reveal"><?php esc_html_e( 'Recent Intelligence Across Sectors', 'ascendance' ); ?></h2>
-			</div>
-			<div class="intel-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-				<?php
-				$cross_sector = new WP_Query( array(
-					'post_type'      => array( 'brief', 'dossier' ),
-					'posts_per_page' => 3,
-					'post_status'    => 'publish',
-					'orderby'        => 'date',
-					'order'          => 'DESC',
-				) );
-
-				if ( $cross_sector->have_posts() ) :
-					while ( $cross_sector->have_posts() ) :
-						$cross_sector->the_post();
-						get_template_part( 'template-parts/intelligence-card', null, array( 'post_id' => get_the_ID() ) );
-					endwhile;
-					wp_reset_postdata();
-				endif;
-				?>
-			</div>
-		</div>
-	</section>
-
-	<?php get_template_part( 'template-parts/cta-strip', null, array(
-		'heading'   => __( 'Intelligence Calibrated to Your Sector', 'ascendance' ),
-		'body'      => __( 'Use topic and region filters in the Intelligence Hub to surface exactly the analysis relevant to your decision context.', 'ascendance' ),
-		'btn_label' => __( 'Open Intelligence Hub', 'ascendance' ),
-		'btn_url'   => home_url( '/intelligence/' ),
-	) ); ?>
-
+	</div>
+</section>
 </main>
 
-<?php get_footer(); ?>
+<?php
+get_footer();

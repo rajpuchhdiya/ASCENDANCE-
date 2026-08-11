@@ -8,7 +8,7 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main">
+<main id="primary" class="as-page-wrap">
 
 	<?php
 	while ( have_posts() ) :
@@ -24,35 +24,33 @@ get_header();
 
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 			<!-- Page Hero Section -->
-			<section class="page-hero bg-navy-deep text-white py-16 md:py-24 border-b border-brand-divider-dark">
-				<div class="container mx-auto px-6 md:px-8">
-					<div class="page-hero-inner">
-						<p class="page-hero-eyebrow text-xs font-mono uppercase tracking-widest text-brand-red mb-4 block">// <?php echo esc_html( strtoupper( $event_type ) ); ?></p>
-						<h1 class="page-hero-title text-3xl md:text-5xl font-sans font-bold leading-tight mb-6"><?php the_title(); ?></h1>
-						<div class="page-hero-desc text-xs font-sans text-cream/70 flex gap-6 items-center flex-wrap mt-4 [&_i]:text-brand-red [&_i]:mr-1.5">
-							<span><i class="fa-regular fa-calendar"></i><?php echo esc_html( $event_date ); ?></span>
-							<span><i class="fa-solid fa-user-tie"></i><?php printf( __( 'Presenter: %s', 'ascendance' ), esc_html( $speaker ) ); ?></span>
-							<span><i class="fa-solid fa-location-dot"></i><?php echo esc_html( $event_location ); ?></span>
-						</div>
-					</div>
+			<section class="as-page-hero">
+				<div class="as-page-hero-inner">
+					<span class="as-page-eyebrow">// <?php echo esc_html( strtoupper( $event_type ) ); ?></span>
+					<h1 class="as-page-title"><?php the_title(); ?></h1>
+					<p class="as-page-desc" style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; opacity: 0.8; font-size: 14px;">
+						<span><i class="fa-regular fa-calendar" style="margin-right:4px;"></i><?php echo esc_html( $event_date ); ?></span>
+						<span><i class="fa-solid fa-user-tie" style="margin-right:4px;"></i><?php printf( __( 'Presenter: %s', 'ascendance' ), esc_html( $speaker ) ); ?></span>
+						<span><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i><?php echo esc_html( $event_location ); ?></span>
+					</p>
 				</div>
 			</section>
 
 			<!-- Content Wrapper -->
-			<div class="content-wrapper py-16 md:py-24 bg-cream dark:bg-navy-deep border-b border-brand-divider-light dark:border-brand-divider-dark">
-				<div class="container mx-auto px-6 md:px-8">
-					<div class="contact-grid grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12 items-start">
+			<section class="as-contact-section">
+				<div class="as-contact-wrap">
+					<div class="as-contact-grid">
 						
 						<!-- Main Event Description (Left Column) -->
-						<div class="main-content">
+						<div class="as-contact-form-card" style="border:none; box-shadow:none; padding:0; background:transparent;">
 							<?php if ( has_post_thumbnail() ) : ?>
-								<div class="post-featured-image mb-10 max-w-full overflow-hidden border border-brand-divider-light dark:border-brand-divider-dark rounded-sm">
-									<?php the_post_thumbnail( 'full' ); ?>
+								<div class="post-featured-image" style="margin-bottom:30px; border-radius:4px; overflow:hidden; border: 1px solid var(--border);">
+									<?php the_post_thumbnail( 'full', array( 'style' => 'width:100%; height:auto; display:block;' ) ); ?>
 								</div>
 							<?php endif; ?>
 
-							<div class="entry-content text-brand-text-primary dark:text-cream leading-relaxed mb-8">
-								<h2 class="text-lg font-sans font-bold text-brand-text-primary dark:text-white mb-6 border-b border-brand-divider-light dark:border-brand-divider-dark/20 pb-3">
+							<div class="entry-content">
+								<h2 style="font-family:var(--font-ui); font-size:24px; font-weight:700; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:12px;">
 									<?php esc_html_e( 'Briefing Overview', 'ascendance' ); ?>
 								</h2>
 								<?php
@@ -62,80 +60,87 @@ get_header();
 						</div>
 
 						<!-- Sidebar Event Info & RSVP (Right Column) -->
-						<aside class="contact-sidebar flex flex-col gap-8">
+						<aside class="as-contact-sidebar">
 							<!-- Event Details Box -->
-							<div class="terminal-card bg-white dark:bg-navy-mid border-l-[3px] border-l-brand-red border-y border-r border-brand-divider-light dark:border-brand-divider-dark p-6 rounded-sm shadow-sm">
-								<h3 class="text-xs font-sans font-bold uppercase tracking-wider text-brand-text-primary dark:text-white mb-6 border-b border-dashed border-brand-divider-light dark:border-brand-divider-dark/20 pb-3">
-									<?php esc_html_e( 'Event Registry Details', 'ascendance' ); ?>
-								</h3>
+							<div class="as-contact-card" style="border-left: 3px solid var(--red);">
+								<h3 class="as-contact-card-title"><?php esc_html_e( 'Event Registry Details', 'ascendance' ); ?></h3>
 								
-								<div class="flex flex-col gap-3.5 text-sm text-brand-text-muted dark:text-cream/70 line-height-1.5 font-sans">
-									<div class="border-b border-brand-divider-light dark:border-brand-divider-dark/10 pb-3 last:border-b-0 last:pb-0 flex flex-col gap-1">
-										<strong class="text-[10px] font-mono text-brand-text-primary dark:text-white uppercase tracking-wider"><?php esc_html_e( 'Schedule:', 'ascendance' ); ?></strong>
-										<span class="font-mono text-xs text-brand-text-primary dark:text-cream"><?php echo esc_html( $event_date ); ?></span>
+								<div class="as-contact-detail" style="align-items:flex-start;">
+									<div style="width:100%;">
+										<strong style="display:block; font-family:var(--font-ui); font-size:11px; text-transform:uppercase; color:var(--ink-2); margin-bottom:2px;"><?php esc_html_e( 'Schedule:', 'ascendance' ); ?></strong>
+										<span style="font-family:var(--font-ui); font-size:14px;"><?php echo esc_html( $event_date ); ?></span>
 									</div>
-									<div class="border-b border-brand-divider-light dark:border-brand-divider-dark/10 pb-3 last:border-b-0 last:pb-0 flex flex-col gap-1">
-										<strong class="text-[10px] font-mono text-brand-text-primary dark:text-white uppercase tracking-wider"><?php esc_html_e( 'Access Route:', 'ascendance' ); ?></strong>
-										<span class="text-brand-text-primary dark:text-cream"><?php echo esc_html( $event_location ); ?></span>
+								</div>
+								
+								<div class="as-contact-detail" style="align-items:flex-start; margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+									<div style="width:100%;">
+										<strong style="display:block; font-family:var(--font-ui); font-size:11px; text-transform:uppercase; color:var(--ink-2); margin-bottom:2px;"><?php esc_html_e( 'Access Route:', 'ascendance' ); ?></strong>
+										<span style="font-family:var(--font-ui); font-size:14px;"><?php echo esc_html( $event_location ); ?></span>
 									</div>
-									<div class="border-b border-brand-divider-light dark:border-brand-divider-dark/10 pb-3 last:border-b-0 last:pb-0 flex flex-col gap-1">
-										<strong class="text-[10px] font-mono text-brand-text-primary dark:text-white uppercase tracking-wider"><?php esc_html_e( 'Lead Speaker:', 'ascendance' ); ?></strong>
-										<span class="text-brand-text-primary dark:text-cream"><?php echo esc_html( $speaker ); ?></span>
+								</div>
+
+								<div class="as-contact-detail" style="align-items:flex-start; margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+									<div style="width:100%;">
+										<strong style="display:block; font-family:var(--font-ui); font-size:11px; text-transform:uppercase; color:var(--ink-2); margin-bottom:2px;"><?php esc_html_e( 'Lead Speaker:', 'ascendance' ); ?></strong>
+										<span style="font-family:var(--font-ui); font-size:14px;"><?php echo esc_html( $speaker ); ?></span>
 									</div>
-									<div class="border-b border-brand-divider-light dark:border-brand-divider-dark/10 pb-3 last:border-b-0 last:pb-0 flex flex-col gap-1">
-										<strong class="text-[10px] font-mono text-brand-text-primary dark:text-white uppercase tracking-wider"><?php esc_html_e( 'Session Type:', 'ascendance' ); ?></strong>
-										<span class="intel-card-type text-brand-red font-bold"><?php echo esc_html( $event_type ); ?></span>
+								</div>
+
+								<div class="as-contact-detail" style="align-items:flex-start; margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+									<div style="width:100%;">
+										<strong style="display:block; font-family:var(--font-ui); font-size:11px; text-transform:uppercase; color:var(--ink-2); margin-bottom:2px;"><?php esc_html_e( 'Session Type:', 'ascendance' ); ?></strong>
+										<span style="font-family:var(--font-ui); font-size:14px; font-weight:700; color:var(--red); text-transform:uppercase;"><?php echo esc_html( $event_type ); ?></span>
 									</div>
 								</div>
 								
 								<?php if ( ! empty( $registration_url ) ) : ?>
-									<div class="mt-6">
-										<a href="<?php echo esc_url( $registration_url ); ?>" class="btn btn-primary w-full flex items-center justify-center gap-2" target="_blank">
+									<div style="margin-top:24px;">
+										<a href="<?php echo esc_url( $registration_url ); ?>" class="as-btn primary" target="_blank" style="width:100%; justify-content:center; display:flex;">
 											<?php esc_html_e( 'Join Briefing Session', 'ascendance' ); ?>
-											<i class="fa-solid fa-arrow-up-right-from-square"></i>
 										</a>
 									</div>
 								<?php endif; ?>
 							</div>
 
 							<!-- RSVP / Request Invitation Box -->
-							<div class="contact-form-wrapper bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 rounded-sm shadow-sm" id="rsvp">
-								<h3 class="text-xs font-sans font-bold uppercase tracking-wider text-brand-text-primary dark:text-white mb-6 border-b border-dashed border-brand-divider-light dark:border-brand-divider-dark/20 pb-3"><?php esc_html_e( 'Request Invitation', 'ascendance' ); ?></h3>
+							<div class="as-contact-card">
+								<h3 class="as-contact-card-title"><?php esc_html_e( 'Request Invitation', 'ascendance' ); ?></h3>
 								
-								<form class="contact-form-native flex flex-col gap-4" id="event-single-rsvp-form">
-									<div class="form-group">
-										<label for="rsvp-name" class="block text-xs font-sans font-bold text-brand-text-muted dark:text-cream/60 mb-2"><?php esc_html_e( 'Full Name', 'ascendance' ); ?></label>
-										<input type="text" id="rsvp-name" name="name" class="w-full px-4 py-2.5 bg-white dark:bg-navy-deep border border-brand-divider-light dark:border-brand-divider-dark rounded-sm text-brand-text-primary dark:text-cream font-sans text-sm outline-none transition-all duration-150 focus:border-brand-red" placeholder="<?php esc_attr_e( 'Your name', 'ascendance' ); ?>" required>
+								<form id="event-single-rsvp-form" novalidate>
+									<div class="as-form-group" style="margin-bottom:15px;">
+										<label for="rsvp-name"><?php esc_html_e( 'Full Name', 'ascendance' ); ?></label>
+										<input type="text" id="rsvp-name" name="name" placeholder="<?php esc_attr_e( 'Your name', 'ascendance' ); ?>" required>
 									</div>
 									
-									<div class="form-group">
-										<label for="rsvp-email" class="block text-xs font-sans font-bold text-brand-text-muted dark:text-cream/60 mb-2"><?php esc_html_e( 'Email Address', 'ascendance' ); ?></label>
-										<input type="email" id="rsvp-email" name="email" class="w-full px-4 py-2.5 bg-white dark:bg-navy-deep border border-brand-divider-light dark:border-brand-divider-dark rounded-sm text-brand-text-primary dark:text-cream font-sans text-sm outline-none transition-all duration-150 focus:border-brand-red" placeholder="<?php esc_attr_e( 'you@organisation.com', 'ascendance' ); ?>" required>
+									<div class="as-form-group" style="margin-bottom:15px;">
+										<label for="rsvp-email"><?php esc_html_e( 'Email Address', 'ascendance' ); ?></label>
+										<input type="email" id="rsvp-email" name="email" placeholder="<?php esc_attr_e( 'you@organisation.com', 'ascendance' ); ?>" required>
 									</div>
 
-									<div class="form-group">
-										<label for="rsvp-org" class="block text-xs font-sans font-bold text-brand-text-muted dark:text-cream/60 mb-2"><?php esc_html_e( 'Organization / Firm', 'ascendance' ); ?></label>
-										<input type="text" id="rsvp-org" name="organisation" class="w-full px-4 py-2.5 bg-white dark:bg-navy-deep border border-brand-divider-light dark:border-brand-divider-dark rounded-sm text-brand-text-primary dark:text-cream font-sans text-sm outline-none transition-all duration-150 focus:border-brand-red" placeholder="<?php esc_attr_e( 'Company or entity', 'ascendance' ); ?>" required>
+									<div class="as-form-group" style="margin-bottom:15px;">
+										<label for="rsvp-org"><?php esc_html_e( 'Organization / Firm', 'ascendance' ); ?></label>
+										<input type="text" id="rsvp-org" name="organisation" placeholder="<?php esc_attr_e( 'Company or entity', 'ascendance' ); ?>" required>
 									</div>
 
 									<input type="hidden" name="event_session" value="<?php echo esc_attr( get_the_title() ); ?>">
 
-									<div class="form-group">
-										<label for="rsvp-note" class="block text-xs font-sans font-bold text-brand-text-muted dark:text-cream/60 mb-2"><?php esc_html_e( 'Access Inquiries & Questions', 'ascendance' ); ?></label>
-										<textarea id="rsvp-note" name="note" rows="3" class="w-full px-4 py-2.5 bg-white dark:bg-navy-deep border border-brand-divider-light dark:border-brand-divider-dark rounded-sm text-brand-text-primary dark:text-cream font-sans text-sm outline-none transition-all duration-150 focus:border-brand-red" placeholder="<?php esc_attr_e( 'Ask a question or request credentials check...', 'ascendance' ); ?>"></textarea>
+									<div class="as-form-group" style="margin-bottom:20px;">
+										<label for="rsvp-note"><?php esc_html_e( 'Access Inquiries & Questions', 'ascendance' ); ?></label>
+										<textarea id="rsvp-note" name="note" rows="3" placeholder="<?php esc_attr_e( 'Ask a question or request credentials check...', 'ascendance' ); ?>"></textarea>
 									</div>
+									
+									<div id="rsvp-form-msg" style="display:none; margin-bottom:15px; padding:12px; border-radius:4px; font-weight:500; font-size:14px; font-family:var(--font-ui);"></div>
 
-									<button type="submit" class="btn btn-primary w-full flex items-center justify-center gap-2" id="rsvp-submit-btn">
+									<button type="submit" class="as-btn primary" id="rsvp-submit-btn" style="width:100%; justify-content:center; display:flex;">
 										<?php esc_html_e( 'Submit RSVP Inquiry', 'ascendance' ); ?>
-										<i class="fa-solid fa-ticket"></i>
 									</button>
 								</form>
 							</div>
 
 							<!-- Security and Access Card -->
-							<div class="contact-info-card bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 rounded-sm shadow-sm">
-								<h4 class="text-[10px] font-sans font-bold uppercase tracking-widest text-brand-red mb-3"><?php esc_html_e( 'Credentials & Access Protocol', 'ascendance' ); ?></h4>
-								<p class="text-xs text-brand-text-muted dark:text-cream/60 leading-relaxed">
+							<div class="as-contact-card">
+								<h3 class="as-contact-card-title" style="color:var(--red); font-size:11px;"><?php esc_html_e( 'Credentials & Access Protocol', 'ascendance' ); ?></h3>
+								<p style="font-family:var(--font-ui); font-size:13px; line-height:1.5; color:var(--ink-2); margin:0;">
 									<?php esc_html_e( 'Roundtables and briefings are encrypted. Professional and Enterprise subscribers receive secure calendar credentials automatically. Free or Guest tier accounts require manual credential auditing before invitation approval.', 'ascendance' ); ?>
 								</p>
 							</div>
@@ -143,25 +148,56 @@ get_header();
 
 					</div>
 				</div>
-			</div>
+			</section>
 		</article>
 
 		<script>
-		jQuery(document).ready(function($) {
-			// Form submission simulation
-			$('#event-single-rsvp-form').submit(function(e) {
+		document.addEventListener('DOMContentLoaded', function() {
+			var form = document.getElementById('event-single-rsvp-form');
+			if (!form) return;
+			form.addEventListener('submit', function(e) {
 				e.preventDefault();
+				var btn = document.getElementById('rsvp-submit-btn');
+				var msgDiv = document.getElementById('rsvp-form-msg');
 				
-				const btn = $('#rsvp-submit-btn');
-				const originalHtml = btn.html();
+				var fd = new FormData(form);
+				fd.append('action', 'as_submit_rsvp');
 				
-				btn.attr('disabled', true).html('<i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Submitting...');
+				msgDiv.style.display = 'none';
+				btn.disabled = true;
+				btn.textContent = 'Submitting...';
 				
-				setTimeout(function() {
-					btn.attr('disabled', false).html(originalHtml);
-					alert('RSVP Submission Received!\nOur events desk will verify your credentials for "<?php echo esc_js( get_the_title() ); ?>" and send a secure briefing link to your email.');
-					$('#event-single-rsvp-form')[0].reset();
-				}, 1200);
+				fetch('<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>', {
+					method: 'POST',
+					body: fd
+				})
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					btn.disabled = false;
+					btn.textContent = 'Submit RSVP Inquiry';
+					msgDiv.style.display = 'block';
+					if (data.success) {
+						msgDiv.style.color = '#155724';
+						msgDiv.style.backgroundColor = '#d4edda';
+						msgDiv.style.border = '1px solid #c3e6cb';
+						msgDiv.textContent = 'RSVP Submission Received! Our events desk will verify your credentials and send a secure briefing link to your email shortly.';
+						form.reset();
+					} else {
+						msgDiv.style.color = '#721c24';
+						msgDiv.style.backgroundColor = '#f8d7da';
+						msgDiv.style.border = '1px solid #f5c6cb';
+						msgDiv.textContent = 'Error: ' + (data.data || 'Failed to submit.');
+					}
+				})
+				.catch(function(err) {
+					btn.disabled = false;
+					btn.textContent = 'Submit RSVP Inquiry';
+					msgDiv.style.display = 'block';
+					msgDiv.style.color = '#721c24';
+					msgDiv.style.backgroundColor = '#f8d7da';
+					msgDiv.style.border = '1px solid #f5c6cb';
+					msgDiv.textContent = 'An error occurred. Please try again.';
+				});
 			});
 		});
 		</script>

@@ -23,6 +23,9 @@ $tier_access = '';
 $impact      = '';
 
 if ( function_exists( 'get_field' ) ) {
+	if ( empty( $excerpt ) ) {
+		$excerpt = get_field( 'executive_summary', $post_id ) ?: get_field( 'analytical_claim', $post_id ) ?: get_field( 'subhead', $post_id ) ?: get_field( 'public_excerpt', $post_id ) ?: '';
+	}
 	$tier_access = get_field( 'tier_access', $post_id ) ?: '';
 	$impact      = get_field( 'impact_assessment', $post_id ) ?: '';
 } else {
@@ -30,23 +33,44 @@ if ( function_exists( 'get_field' ) ) {
 	$impact      = get_post_meta( $post_id, 'impact_assessment', true ) ?: '';
 }
 
-// Taxonomy terms for data attributes (for JS filtering)
-$topics  = wp_get_object_terms( $post_id, 'topic', array( 'fields' => 'slugs' ) );
-$regions = wp_get_object_terms( $post_id, 'region', array( 'fields' => 'slugs' ) );
-$topic_str  = is_array( $topics )  ? implode( ',', $topics )  : '';
-$region_str = is_array( $regions ) ? implode( ',', $regions ) : '';
+// Taxonomy terms for data attributes (for JS filtering) and display
+$topic_terms  = get_the_terms( $post_id, 'topic' );
+$region_terms = get_the_terms( $post_id, 'region' );
+
+$topic_str  = '';
+$region_str = '';
+
+if ( $topic_terms && ! is_wp_error( $topic_terms ) ) {
+	$topic_slugs = wp_list_pluck( $topic_terms, 'slug' );
+	$topic_str   = implode( ',', $topic_slugs );
+}
+
+if ( $region_terms && ! is_wp_error( $region_terms ) ) {
+	$region_slugs = wp_list_pluck( $region_terms, 'slug' );
+	$region_str   = implode( ',', $region_slugs );
+}
 ?>
 <a href="<?php echo esc_url( $permalink ); ?>"
-   class="intel-card reveal bg-white dark:bg-navy-mid border border-brand-divider-light dark:border-brand-divider-dark p-6 rounded-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-full"
+   class="intel-card"
    data-post-type="<?php echo esc_attr( $post_type ); ?>"
    data-topic="<?php echo esc_attr( $topic_str ); ?>"
    data-region="<?php echo esc_attr( $region_str ); ?>">
 
 	<div>
-		<div class="intel-card-badges flex flex-wrap gap-2 mb-4 items-center">
+		<div class="intel-card-badges">
 			<?php if ( $show_type ) : ?>
-				<span class="intel-card-type text-[10px] font-sans font-bold uppercase tracking-wider text-brand-red"><?php echo esc_html( ascendance_cpt_label( $post_type ) ); ?></span>
+				<span class="intel-card-type"><?php echo esc_html( ascendance_cpt_label( $post_type ) ); ?></span>
 			<?php endif; ?>
+
+			<?php 
+			if ( $topic_terms && ! is_wp_error( $topic_terms ) ) :
+				foreach ( $topic_terms as $term ) :
+			?>
+				<span class="intel-card-type intel-card-topic" style="color:var(--ink-2); font-weight:500; border-color:var(--hairline); padding-left:0; border:none; letter-spacing:0; text-transform:none;">&middot; <?php echo esc_html( $term->name ); ?></span>
+			<?php 
+				endforeach;
+			endif; 
+			?>
 
 			<?php if ( $tier_access ) : ?>
 				<?php echo ascendance_tier_badge( $tier_access ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -57,18 +81,17 @@ $region_str = is_array( $regions ) ? implode( ',', $regions ) : '';
 			<?php endif; ?>
 		</div>
 
-		<h3 class="intel-card-title text-base md:text-lg font-sans font-bold text-brand-text-primary dark:text-white mb-3 line-clamp-2 leading-snug"><?php echo esc_html( $title ); ?></h3>
+		<h3 class="intel-card-title"><?php echo esc_html( $title ); ?></h3>
 
 		<?php if ( $excerpt ) : ?>
-			<p class="intel-card-excerpt text-sm text-brand-text-muted dark:text-cream/70 leading-relaxed mb-4 line-clamp-3 font-serif"><?php echo esc_html( $excerpt ); ?></p>
+			<p class="intel-card-excerpt"><?php echo esc_html( wp_trim_words( $excerpt, 22 ) ); ?></p>
 		<?php endif; ?>
 	</div>
 
-	<div class="intel-card-footer border-t border-brand-divider-light dark:border-brand-divider-dark/10 pt-4 text-xs font-sans text-brand-text-muted dark:text-cream/50 mt-auto flex justify-between items-center w-full">
+	<div class="intel-card-footer">
 		<span class="intel-card-date"><?php echo esc_html( $date ); ?></span>
-		<span class="intel-card-cta font-bold text-brand-red hover:text-brand-red-light transition-colors duration-150 flex items-center gap-1">
-			<?php esc_html_e( 'Access', 'ascendance' ); ?>
-			<i class="fa-solid fa-arrow-right"></i>
+		<span class="intel-card-cta">
+			<?php esc_html_e( 'Access', 'ascendance' ); ?> &rarr;
 		</span>
 	</div>
 

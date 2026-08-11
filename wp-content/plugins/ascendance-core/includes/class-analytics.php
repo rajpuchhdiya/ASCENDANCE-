@@ -129,20 +129,103 @@ class Analytics {
             <!-- End Hotjar -->
             <?php
         }
+        
+        // F. Bing UET
+        $bing_uet_id = get_option( 'ascendance_bing_uet_id' );
+        if ( ! empty( $bing_uet_id ) ) {
+            ?>
+            <!-- Bing Universal Event Tracking (UET) -->
+            <script>(function(w,d,t,r,u){var f,g,e;w[u]=w[u]||[],f=function(){var o={ti:"<?php echo esc_js( $bing_uet_id ); ?>"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},g=d.createElement(t),g.src=r,g.async=1,g.onload=g.onreadystatechange=function(){var s=this.readyState;s&&"loaded"!==s&&"complete"!==s||(f(),g.onload=g.onreadystatechange=null)},e=d.getElementsByTagName(t)[0],e.parentNode.insertBefore(g,e)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script>
+            <!-- End Bing UET -->
+            <?php
+        }
+
+        // G. LinkedIn Insight
+        $linkedin_id = get_option( 'ascendance_linkedin_partner_id' );
+        if ( ! empty( $linkedin_id ) ) {
+            ?>
+            <!-- LinkedIn Insight Tag -->
+            <script type="text/javascript">
+            _linkedin_partner_id = "<?php echo esc_js( $linkedin_id ); ?>";
+            window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+            window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+            </script>
+            <script type="text/javascript">
+            (function(l) {
+            if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
+            window.lintrk.q=[]}
+            var s = document.getElementsByTagName("script")[0];
+            var b = document.createElement("script");
+            b.type = "text/javascript";b.async = true;
+            b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+            s.parentNode.insertBefore(b, s);})(window.lintrk);
+            </script>
+            <!-- End LinkedIn Insight Tag -->
+            <?php
+        }
+
+        // H. Twitter / X Pixel
+        $twitter_id = get_option( 'ascendance_twitter_pixel_id' );
+        if ( ! empty( $twitter_id ) ) {
+            ?>
+            <!-- Twitter/X Pixel -->
+            <script>
+            !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments)
+            },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+            a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+            twq('config','<?php echo esc_js( $twitter_id ); ?>');
+            </script>
+            <!-- End Twitter/X Pixel -->
+            <?php
+        }
+
+        // I. Pinterest Tag
+        $pinterest_id = get_option( 'ascendance_pinterest_tag_id' );
+        if ( ! empty( $pinterest_id ) ) {
+            ?>
+            <!-- Pinterest Tag -->
+            <script>
+            !function(e,n,t,r,i,o,p){if(!e[i]){e[i]=function(){e[i].queue.push(arguments)},e[i].queue=[],o=n.createElement(t),o.async=!0,o.src=r,p=n.getElementsByTagName(t)[0],p.parentNode.insertBefore(o,p)}}(window,document,"script","https://assets.pinterest.com/js/pinit.js","pintrk");
+            pintrk('load', '<?php echo esc_js( $pinterest_id ); ?>');
+            pintrk('page');
+            </script>
+            <!-- End Pinterest Tag -->
+            <?php
+        }
+
+        // J. TikTok Pixel
+        $tiktok_id = get_option( 'ascendance_tiktok_pixel_id' );
+        if ( ! empty( $tiktok_id ) ) {
+            ?>
+            <!-- TikTok Pixel -->
+            <script>
+            !function (w, d, t) {
+              w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+              ttq.load('<?php echo esc_js( $tiktok_id ); ?>');
+              ttq.page();
+            }(window, document, 'ttq');
+            </script>
+            <!-- End TikTok Pixel -->
+            <?php
+        }
     }
 
     /**
      * Track user logins by setting transient/cookie to trigger on next load
      */
     public function track_login( $user_login, $user ) {
-        setcookie( 'asc_track_login', '1', time() + 120, '/' );
+        if ( ! headers_sent() ) {
+            setcookie( 'asc_track_login', '1', time() + 120, '/' );
+        }
     }
 
     /**
      * Track user registrations by setting cookie
      */
     public function track_registration( $user_id ) {
-        setcookie( 'asc_track_register', '1', time() + 120, '/' );
+        if ( ! headers_sent() ) {
+            setcookie( 'asc_track_register', '1', time() + 120, '/' );
+        }
     }
 
     /**
@@ -308,6 +391,47 @@ class Analytics {
                                 'post_title': '<?php echo esc_js( get_the_title() ); ?>'
                             });
                         }
+                    });
+                })();
+            <?php endif; ?>
+
+            // I. Subscriber Reading Telemetry & Scroll Progress
+            <?php if ( is_user_logged_in() && is_singular( array( 'brief', 'dossier', 'update' ) ) ) : 
+                $telemetry_user_id = get_current_user_id();
+                $telemetry_post_id = get_the_ID();
+                if ( class_exists( 'Ascendance\Core\Member_Dashboard' ) ) {
+                    \Ascendance\Core\Member_Dashboard::get_instance()->track_reading_history( $telemetry_user_id, $telemetry_post_id, 0 );
+                }
+            ?>
+                (function() {
+                    const postId = <?php echo (int) $telemetry_post_id; ?>;
+                    const restUrl = '<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/user/reading-progress' ) ); ?>';
+                    const nonce = '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>';
+                    let lastReportedProgress = 0;
+                    let scrollTimeout = null;
+
+                    function updateProgress() {
+                        const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) - window.innerHeight;
+                        if (docHeight <= 0) return;
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        const progress = Math.min(100, Math.round((scrollTop / docHeight) * 100));
+
+                        if (progress - lastReportedProgress >= 15 || (progress >= 95 && lastReportedProgress < 95)) {
+                            lastReportedProgress = progress;
+                            fetch(restUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-WP-Nonce': nonce
+                                },
+                                body: JSON.stringify({ post_id: postId, progress: progress })
+                            }).catch(function(e){});
+                        }
+                    }
+
+                    window.addEventListener('scroll', function() {
+                        if (scrollTimeout) clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(updateProgress, 300);
                     });
                 })();
             <?php endif; ?>

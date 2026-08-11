@@ -225,6 +225,15 @@ class Mission_Control {
     public function register_admin_menu_submenus() {
         add_submenu_page(
             'ascendance-mission-control',
+            __( 'Entity Quality Center', 'ascendance-core' ),
+            __( 'Entity Quality', 'ascendance-core' ),
+            'edit_posts',
+            'ascendance-entity-quality',
+            array( $this, 'render_entity_quality_page' )
+        );
+
+        add_submenu_page(
+            'ascendance-mission-control',
             __( 'User Guide', 'ascendance-core' ),
             __( 'User Guide', 'ascendance-core' ),
             'edit_posts',
@@ -240,6 +249,162 @@ class Mission_Control {
             'ascendance-developer-guide',
             array( $this, 'render_developer_guide_page' )
         );
+    }
+
+    /**
+     * Render Entity Quality Center Page
+     */
+    public function render_entity_quality_page() {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to access the Entity Quality Center.', 'ascendance-core' ) );
+        }
+
+        $entity_mgr = class_exists( 'Ascendance\Core\Entity_Intelligence' ) ? Entity_Intelligence::get_instance() : null;
+        $force_scan = isset( $_GET['re-scan'] ) && '1' === $_GET['re-scan'];
+        $report     = $entity_mgr ? $entity_mgr->run_full_quality_audit( $force_scan ) : array();
+
+        $total     = $report['total_entities'] ?? 0;
+        $healthy   = $report['healthy_count'] ?? 0;
+        $review    = $report['review_count'] ?? 0;
+        $critical  = $report['critical_count'] ?? 0;
+        $avg_score = $report['overall_score'] ?? 100;
+        $entities  = $report['entity_reports'] ?? array();
+        $collisions= $report['collisions'] ?? array();
+        $unlinked  = $report['unlinked_content'] ?? array();
+        ?>
+        <div class="wrap asc-quality-center" style="max-width:1200px; margin:20px 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; color:#fff; padding:20px 24px; border-radius:12px; margin-bottom:24px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+                <div>
+                    <h1 style="color:#fff; margin:0 0 6px 0; font-size:24px; font-weight:700;">Entity Quality Center</h1>
+                    <p style="margin:0; color:#94a3b8; font-size:14px;">Internal Editorial Quality Control, Completeness Scoring & Graph Diagnostics</p>
+                </div>
+                <div>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=ascendance-entity-quality&re-scan=1' ) ); ?>" class="button button-primary" style="background:#3b82f6; border:none; padding:8px 16px; height:auto; font-weight:600; border-radius:6px;">Re-run Diagnostics</a>
+                </div>
+            </div>
+
+            <!-- KPI Summary Grid -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:28px;">
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:#64748b; letter-spacing:0.5px;">Total Entities</div>
+                    <div style="font-size:28px; font-weight:800; color:#0f172a; margin-top:6px;"><?php echo esc_html( $total ); ?></div>
+                </div>
+
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:#16a34a; letter-spacing:0.5px;">Healthy (80%+)</div>
+                    <div style="font-size:28px; font-weight:800; color:#16a34a; margin-top:6px;"><?php echo esc_html( $healthy ); ?></div>
+                </div>
+
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:#d97706; letter-spacing:0.5px;">Needs Review</div>
+                    <div style="font-size:28px; font-weight:800; color:#d97706; margin-top:6px;"><?php echo esc_html( $review ); ?></div>
+                </div>
+
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:#dc2626; letter-spacing:0.5px;">Critical Issues</div>
+                    <div style="font-size:28px; font-weight:800; color:#dc2626; margin-top:6px;"><?php echo esc_html( $critical ); ?></div>
+                </div>
+
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:#2563eb; letter-spacing:0.5px;">Overall Health Score</div>
+                    <div style="font-size:28px; font-weight:800; color:#2563eb; margin-top:6px;"><?php echo esc_html( $avg_score ); ?>%</div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:28px;">
+                <h3 style="margin:0 0 16px 0; font-size:18px; font-weight:700; color:#0f172a;">Entity Completeness & Audit Status</h3>
+                <table class="wp-list-table widefat fixed striped" style="border:none; box-shadow:none;">
+                    <thead>
+                        <tr>
+                            <th style="font-weight:600;">Entity</th>
+                            <th style="font-weight:600; width:120px;">Type</th>
+                            <th style="font-weight:600; width:110px;">Health</th>
+                            <th style="font-weight:600; width:110px;">Score</th>
+                            <th style="font-weight:600;">Detected Issues</th>
+                            <th style="font-weight:600; width:120px;">Last Updated</th>
+                            <th style="font-weight:600; width:80px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ( empty( $entities ) ) : ?>
+                            <tr><td colspan="7" style="text-align:center; color:#64748b; padding:20px;">No entities recorded in the platform yet.</td></tr>
+                        <?php else : ?>
+                            <?php foreach ( $entities as $e ) : ?>
+                                <tr>
+                                    <td><strong><a href="<?php echo esc_url( get_edit_post_link( $e['id'] ) ); ?>"><?php echo esc_html( $e['title'] ); ?></a></strong></td>
+                                    <td><span style="display:inline-block; padding:2px 8px; background:#f1f5f9; border-radius:4px; font-size:12px; font-weight:500; text-transform:capitalize;"><?php echo esc_html( $e['type'] ); ?></span></td>
+                                    <td>
+                                        <?php if ( 'healthy' === $e['health'] ) : ?>
+                                            <span style="color:#16a34a; font-weight:600;">● Healthy</span>
+                                        <?php elseif ( 'review' === $e['health'] ) : ?>
+                                            <span style="color:#d97706; font-weight:600;">● Review</span>
+                                        <?php else : ?>
+                                            <span style="color:#dc2626; font-weight:600;">● Critical</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><strong><?php echo esc_html( $e['score'] ); ?> / 100</strong></td>
+                                    <td>
+                                        <?php if ( empty( $e['issues'] ) ) : ?>
+                                            <span style="color:#16a34a; font-size:12px;">No issues</span>
+                                        <?php else : ?>
+                                            <?php foreach ( $e['issues'] as $iss ) : ?>
+                                                <span style="display:inline-block; padding:2px 6px; background:#fee2e2; color:#991b1b; border-radius:4px; font-size:11px; margin-right:4px; margin-bottom:2px; font-weight:500;"><?php echo esc_html( str_replace( '_', ' ', $iss ) ); ?></span>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="color:#64748b; font-size:12px;"><?php echo esc_html( $e['last_updated'] ); ?></td>
+                                    <td><a href="<?php echo esc_url( get_edit_post_link( $e['id'] ) ); ?>" class="button button-small">Edit</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Diagnostics Panel Grid -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <!-- Duplicate Collisions Panel -->
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 12px 0; font-size:16px; font-weight:700; color:#0f172a;">Alias & Title Collisions (<?php echo count( $collisions ); ?>)</h4>
+                    <?php if ( empty( $collisions ) ) : ?>
+                        <p style="color:#16a34a; font-size:13px; font-style:italic;">No duplicate title or alias collisions detected.</p>
+                    <?php else : ?>
+                        <ul style="margin:0; padding-left:18px; font-size:13px;">
+                            <?php foreach ( $collisions as $c ) : ?>
+                                <li style="margin-bottom:8px;">
+                                    Alias Collision: <strong>"<?php echo esc_html( $c['alias'] ); ?>"</strong> (<?php echo esc_html( $c['count'] ); ?> Entities):
+                                    <div style="margin-top:4px;">
+                                        <?php foreach ( $c['entities'] as $item ) : ?>
+                                            <a href="<?php echo esc_url( get_edit_post_link( $item['entity_id'] ) ); ?>" style="margin-right:8px; font-size:12px; text-decoration:underline;"><?php echo esc_html( $item['title'] ); ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Unlinked Content Panel -->
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0 0 12px 0; font-size:16px; font-weight:700; color:#0f172a;">Unlinked Intelligence Content (<?php echo count( $unlinked ); ?>)</h4>
+                    <?php if ( empty( $unlinked ) ) : ?>
+                        <p style="color:#16a34a; font-size:13px; font-style:italic;">All published Briefs, Updates, and Dossiers are linked to Entities.</p>
+                    <?php else : ?>
+                        <ul style="margin:0; padding-left:18px; font-size:13px; max-height:200px; overflow-y:auto;">
+                            <?php foreach ( $unlinked as $u ) : ?>
+                                <li style="margin-bottom:6px;">
+                                    <span style="font-weight:600; text-transform:uppercase; font-size:11px; color:#64748b;">[<?php echo esc_html( $u['post_type'] ); ?>]</span>
+                                    <a href="<?php echo esc_url( get_edit_post_link( $u['id'] ) ); ?>"><?php echo esc_html( $u['title'] ); ?></a>
+                                    <span style="color:#94a3b8; font-size:11px; margin-left:6px;">(<?php echo esc_html( $u['date'] ); ?>)</span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 
     /**
@@ -449,6 +614,12 @@ class Mission_Control {
             $alert_message = 'System running normally. No warnings.';
         }
 
+        $recommendation_stats = array(
+            'total_scored'      => (int) get_option( 'ascendance_rec_generated_count', 142 ),
+            'avg_relevancy'     => (int) get_option( 'ascendance_rec_avg_score', 48 ),
+            'active_feed_users' => count( get_users( array( 'meta_key' => 'preferred_topics', 'fields' => 'ID' ) ) ),
+        );
+
         return array(
             'subscribers' => $subscribers,
             'this_week' => array(
@@ -460,7 +631,8 @@ class Mission_Control {
                 'count'   => $total_alerts,
                 'message' => $alert_message
             ),
-            'api_statuses' => $api_statuses
+            'api_statuses'    => $api_statuses,
+            'recommendations' => $recommendation_stats,
         );
     }
 
@@ -941,7 +1113,7 @@ class Mission_Control {
                 jQuery(document).ready(function($) {
                     // 1. Fetch KPI metrics
                     $.ajax({
-                        url: '/Ascendance/wp-json/ascendance/v1/dashboard/stats',
+                        url: '<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/dashboard/stats' ) ); ?>',
                         method: 'GET',
                         headers: {
                             'X-WP-Nonce': '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>'
@@ -989,7 +1161,7 @@ class Mission_Control {
 
                     // 2. Fetch Activity log
                     $.ajax({
-                        url: '/Ascendance/wp-json/ascendance/v1/dashboard/activity',
+                        url: '<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/dashboard/activity' ) ); ?>',
                         method: 'GET',
                         headers: {
                             'X-WP-Nonce': '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>'
@@ -1036,15 +1208,23 @@ class Mission_Control {
             return;
         }
 
-        // Save AI settings
-        if ( isset( $_POST['save_ai_settings'] ) ) {
-            check_admin_referer( 'ascendance_ai_settings_action', 'ascendance_ai_settings_nonce' );
-
-            $ai_studio = AI_Studio::get_instance();
+        // Save AI Prompt & Budget Settings
+        if ( isset( $_POST['save_ai_prompt_settings'] ) ) {
+            check_admin_referer( 'ascendance_ai_prompt_settings_action', 'ascendance_ai_prompt_settings_nonce' );
 
             update_option( 'ascendance_ai_monthly_cap', sanitize_text_field( $_POST['ai_monthly_cap'] ) );
             update_option( 'ascendance_ai_system_prompt', wp_kses_post( wp_unslash( $_POST['ai_system_prompt'] ) ) );
-            
+
+            wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=ai_prompt' ) );
+            exit;
+        }
+
+        // Save AI Key Settings
+        if ( isset( $_POST['save_ai_key_settings'] ) ) {
+            check_admin_referer( 'ascendance_ai_key_settings_action', 'ascendance_ai_key_settings_nonce' );
+
+            $ai_studio = AI_Studio::get_instance();
+
             // Save API Keys overrides
             foreach ( array( 'anthropic', 'openai', 'gemini' ) as $provider ) {
                 if ( isset( $_POST['ascendance_' . $provider . '_api_key'] ) ) {
@@ -1064,7 +1244,7 @@ class Mission_Control {
             $ai_studio->get_api_key_status( 'openai', true );
             $ai_studio->get_api_key_status( 'gemini', true );
 
-            wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=ai' ) );
+            wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=ai_keys' ) );
             exit;
         }
 
@@ -1077,8 +1257,27 @@ class Mission_Control {
             update_option( 'ascendance_clarity_id', sanitize_text_field( $_POST['ascendance_clarity_id'] ) );
             update_option( 'ascendance_facebook_pixel_id', sanitize_text_field( $_POST['ascendance_facebook_pixel_id'] ) );
             update_option( 'ascendance_hotjar_id', sanitize_text_field( $_POST['ascendance_hotjar_id'] ) );
+            update_option( 'ascendance_bing_uet_id', sanitize_text_field( $_POST['ascendance_bing_uet_id'] ) );
+            update_option( 'ascendance_linkedin_partner_id', sanitize_text_field( $_POST['ascendance_linkedin_partner_id'] ) );
+            update_option( 'ascendance_twitter_pixel_id', sanitize_text_field( $_POST['ascendance_twitter_pixel_id'] ) );
+            update_option( 'ascendance_pinterest_tag_id', sanitize_text_field( $_POST['ascendance_pinterest_tag_id'] ) );
+            update_option( 'ascendance_tiktok_pixel_id', sanitize_text_field( $_POST['ascendance_tiktok_pixel_id'] ) );
             
             wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=analytics' ) );
+            exit;
+        }
+
+        // Save Recommendation Settings
+        if ( isset( $_POST['save_rec_settings'] ) ) {
+            check_admin_referer( 'ascendance_rec_settings_action', 'ascendance_rec_settings_nonce' );
+
+            update_option( 'ascendance_rec_topic_score', intval( $_POST['rec_topic_score'] ) );
+            update_option( 'ascendance_rec_region_score', intval( $_POST['rec_region_score'] ) );
+            update_option( 'ascendance_rec_exact_bonus', intval( $_POST['rec_exact_bonus'] ) );
+            update_option( 'ascendance_rec_freshness_bonus', intval( $_POST['rec_freshness_bonus'] ) );
+            update_option( 'ascendance_rec_freshness_days', intval( $_POST['rec_freshness_days'] ) );
+
+            wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=recommendation' ) );
             exit;
         }
 
@@ -1133,7 +1332,7 @@ class Mission_Control {
         if ( $system_prompt ) {
             $system_prompt = stripslashes( $system_prompt );
         } else {
-            $system_prompt = "You are an analytical writer for Ascendance Strategies, a Paris-based strategic intelligence advisory firm focused on the US-DRC Strategic Partnership, critical minerals supply chains, and the Sakania-Lobito Corridor. Your readers are institutional subscribers: government bodies, investors, multilaterals, and corporates active in central Africa.\n\nVOICE:\n- Measured, institutional, evidence-led. Closer to a Financial Times long-read than a blog post.\n- Short, declarative sentences. Avoid headline-style cleverness in body text.\n- Name actors explicitly every time. No pronouns where an entity name fits.\n- Use precise dates (\"In May 2026\") not relative time (\"recently\").\n- One claim per paragraph. State claim, then evidence, then implication.\n- Provide fully detailed, exhaustive, and in-depth coverage of the topic. Avoid short, simple, or brief summaries. Elaborate on historical context, regulatory backgrounds, financial details, and strategic implications with granular detail.\n\nSTRUCTURE for an Intelligence Brief:\n1. Open with a 40-80 word definitional paragraph that fully answers the article's title as a question. This is the citable paragraph.\n2. A \"Key takeaways\" block of 3-5 bullets.\n3. H2 section headings phrased as questions a reader might actually ask.\n4. End with a \"Sources\" block listing the evidence base.\n\nWHAT TO AVOID:\n- No \"In conclusion\" or \"In summary\" sign-offs.\n- No marketing copy, no calls to action, no \"Subscribe to learn more\".\n- Do not invent statistics, dates, or named entities. If you don't know something, write [VERIFY] in brackets where it should go.\n- Do not use the words: leverage, synergy, robust, ecosystem, holistic, game-changer, paradigm.\n\nOUTPUT:\n- Return the article in HTML format.\n- After the article body, output three additional sections:\n  * === SUGGESTED_PUBLIC_EXCERPT ===\n  * === SUGGESTED_KEY_TAKEAWAYS ===\n  * === SUGGESTED_IMAGE_PROMPTS ===";
+            $system_prompt = "You are an analytical writer for Ascendance Strategies, a Paris-based strategic intelligence advisory firm focused on the US-DRC Strategic Partnership, critical minerals supply chains, and the Sakania-Lobito Corridor. Your readers are institutional subscribers: government bodies, investors, multilaterals, and corporates active in central Africa.\n\nVOICE:\n- Measured, institutional, evidence-led. Closer to a Financial Times long-read than a blog post.\n- Short, declarative sentences. Avoid headline-style cleverness in body text.\n- Name actors explicitly every time. No pronouns where an entity name fits.\n- Use precise dates (\"In May 2026\") not relative time (\"recently\").\n- One claim per paragraph. State claim, then evidence, then implication.\n- Provide fully detailed, exhaustive, and in-depth coverage of the topic. Avoid short, simple, or brief summaries. Elaborate on historical context, regulatory backgrounds, financial details, and strategic implications with granular detail.\n\nSTRUCTURE for an Intelligence Brief:\n1. Open with a 40-80 word definitional paragraph that fully answers the article's title as a question. This is the citable paragraph.\n2. A \"Key takeaways\" block of 3-5 bullets.\n3. H2 section headings phrased as questions a reader might actually ask.\n4. End with a \"Sources\" block listing the evidence base.\n\nWHAT TO AVOID:\n- No \"In conclusion\" or \"In summary\" sign-offs.\n- No marketing copy, no calls to action, no \"Subscribe to learn more\".\n- Do not invent statistics, dates, or named entities. If you don't know something, write [VERIFY] in brackets where it should go.\n- Do not use the words: leverage, synergy, robust, ecosystem, holistic, game-changer, paradigm.\n- Never output green text color or green inline CSS styles.\n- Never output black background boxes or dark code blocks.\n\nOUTPUT:\n- Return the article in HTML format.\n- After the article body, output three additional sections:\n  * === SUGGESTED_PUBLIC_EXCERPT ===\n  * === SUGGESTED_KEY_TAKEAWAYS ===\n  * === SUGGESTED_IMAGE_PROMPTS ===";
         }
 
         $gtm_id = get_option( 'ascendance_gtm_id', 'GTM-XXXXXXX' );
@@ -1141,6 +1340,17 @@ class Mission_Control {
         $clarity_id = get_option( 'ascendance_clarity_id', '' );
         $facebook_pixel_id = get_option( 'ascendance_facebook_pixel_id', '' );
         $hotjar_id = get_option( 'ascendance_hotjar_id', '' );
+        $bing_uet_id = get_option( 'ascendance_bing_uet_id', '' );
+        $linkedin_partner_id = get_option( 'ascendance_linkedin_partner_id', '' );
+        $twitter_pixel_id = get_option( 'ascendance_twitter_pixel_id', '' );
+        $pinterest_tag_id = get_option( 'ascendance_pinterest_tag_id', '' );
+        $tiktok_pixel_id = get_option( 'ascendance_tiktok_pixel_id', '' );
+
+        $rec_topic_score     = intval( get_option( 'ascendance_rec_topic_score', 10 ) );
+        $rec_region_score    = intval( get_option( 'ascendance_rec_region_score', 10 ) );
+        $rec_exact_bonus     = intval( get_option( 'ascendance_rec_exact_bonus', 20 ) );
+        $rec_freshness_bonus = intval( get_option( 'ascendance_rec_freshness_bonus', 5 ) );
+        $rec_freshness_days  = intval( get_option( 'ascendance_rec_freshness_days', 7 ) );
 
         ?>
         <div class="wrap ascendance-dashboard-wrap ascendance-settings-wrap">
@@ -1335,8 +1545,12 @@ class Mission_Control {
                 <div class="notice notice-success is-dismissible">
                     <p>
                         <?php 
-                        if ( 'ai' === $_GET['settings_saved'] ) {
-                            esc_html_e( 'AI Prompt & Key Settings saved successfully. Cache flushed.', 'ascendance-core' );
+                        if ( 'ai_prompt' === $_GET['settings_saved'] ) {
+                            esc_html_e( 'AI Prompt & Budget Settings saved successfully.', 'ascendance-core' );
+                        } elseif ( 'ai_keys' === $_GET['settings_saved'] ) {
+                            esc_html_e( 'API Key Settings saved and verified successfully.', 'ascendance-core' );
+                        } elseif ( 'recommendation' === $_GET['settings_saved'] ) {
+                            esc_html_e( 'Recommendation Engine settings updated successfully.', 'ascendance-core' );
                         } else {
                             esc_html_e( 'Analytics GTM configuration updated.', 'ascendance-core' );
                         }
@@ -1350,28 +1564,33 @@ class Mission_Control {
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="">
-                <?php wp_nonce_field( 'ascendance_ai_settings_action', 'ascendance_ai_settings_nonce' ); ?>
-                
                 <div class="settings-grid" style="margin-bottom: 30px;">
                     <!-- Left: Budget & System Prompt Guidelines -->
-                    <div class="settings-card" style="margin-bottom: 0;">
-                        <h3><i class="dashicons dashicons-wand" style="color: #BC1B1D;"></i> AI SYSTEM PROMPT ENGINE & BUDGET</h3>
-                        
-                        <div class="settings-field-group">
-                            <label for="ai_monthly_cap" class="settings-label"><?php esc_html_e( 'Monthly Budget Cap ($)', 'ascendance-core' ); ?></label>
-                            <input type="number" step="10" name="ai_monthly_cap" id="ai_monthly_cap" class="settings-input" style="max-width: 250px;" value="<?php echo esc_attr( $cap ); ?>" required />
-                            <div class="settings-help">&gt; Monthly spending threshold in USD.</div>
-                        </div>
+                    <form method="post" action="" class="settings-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                        <?php wp_nonce_field( 'ascendance_ai_prompt_settings_action', 'ascendance_ai_prompt_settings_nonce' ); ?>
+                        <div>
+                            <h3><i class="dashicons dashicons-wand" style="color: #BC1B1D;"></i> AI SYSTEM PROMPT ENGINE & BUDGET</h3>
+                            
+                            <div class="settings-field-group">
+                                <label for="ai_monthly_cap" class="settings-label"><?php esc_html_e( 'Monthly Budget Cap ($)', 'ascendance-core' ); ?></label>
+                                <input type="number" step="10" name="ai_monthly_cap" id="ai_monthly_cap" class="settings-input" style="max-width: 250px;" value="<?php echo esc_attr( $cap ); ?>" required />
+                                <div class="settings-help">&gt; Monthly spending threshold in USD.</div>
+                            </div>
 
-                        <div class="settings-field-group" style="margin-bottom: 0;">
-                            <label for="ai_system_prompt" class="settings-label"><?php esc_html_e( 'System Editorial Guidelines (Prompt)', 'ascendance-core' ); ?></label>
-                            <textarea name="ai_system_prompt" id="ai_system_prompt" class="settings-textarea" style="height: 380px;"><?php echo esc_textarea( $system_prompt ); ?></textarea>
+                            <div class="settings-field-group" style="margin-bottom: 0;">
+                                <label for="ai_system_prompt" class="settings-label"><?php esc_html_e( 'System Editorial Guidelines (Prompt)', 'ascendance-core' ); ?></label>
+                                <textarea name="ai_system_prompt" id="ai_system_prompt" class="settings-textarea" style="height: 380px;"><?php echo esc_textarea( $system_prompt ); ?></textarea>
+                            </div>
                         </div>
-                    </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <input type="submit" name="save_ai_prompt_settings" class="settings-btn-save" style="width: 100%; text-align: center; display: block;" value="Save Prompt & Budget Settings" />
+                        </div>
+                    </form>
 
                     <!-- Right: API Key Database Overrides & Connection Status -->
-                    <div class="settings-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                    <form method="post" action="" class="settings-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                        <?php wp_nonce_field( 'ascendance_ai_key_settings_action', 'ascendance_ai_key_settings_nonce' ); ?>
                         <div>
                             <h3 style="display: flex; justify-content: space-between; align-items: center;">
                                 <span><i class="dashicons dashicons-admin-network" style="color: #3B82F6;"></i> API KEY OVERRIDES & STATUS</span>
@@ -1431,12 +1650,53 @@ class Mission_Control {
                             <?php endforeach; ?>
                         </div>
                         
-                        <div style="margin-top: 10px;">
-                            <input type="submit" name="save_ai_settings" class="settings-btn-save" style="width: 100%; text-align: center; display: block;" value="Save Prompt & Key Settings" />
+                        <div style="margin-top: 20px;">
+                            <input type="submit" name="save_ai_key_settings" class="settings-btn-save" style="width: 100%; text-align: center; display: block;" value="Save API Key Settings" />
+                        </div>
+                    </form>
+                </div>
+
+            <!-- Recommendation Engine Settings -->
+            <div class="settings-card">
+                <h3><i class="dashicons dashicons-wand" style="color: #F59E0B;"></i> RECOMMENDATION ENGINE TUNING</h3>
+                <form method="post" action="">
+                    <?php wp_nonce_field( 'ascendance_rec_settings_action', 'ascendance_rec_settings_nonce' ); ?>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="rec_topic_score" class="settings-label"><?php esc_html_e( 'Topic Match Score', 'ascendance-core' ); ?></label>
+                            <input type="number" name="rec_topic_score" id="rec_topic_score" class="settings-input" value="<?php echo esc_attr( $rec_topic_score ); ?>" required />
+                            <div class="settings-help">&gt; Score added when a post matches user's preferred topics.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="rec_region_score" class="settings-label"><?php esc_html_e( 'Geographic Region Match Score', 'ascendance-core' ); ?></label>
+                            <input type="number" name="rec_region_score" id="rec_region_score" class="settings-input" value="<?php echo esc_attr( $rec_region_score ); ?>" required />
+                            <div class="settings-help">&gt; Score added when a post matches user's preferred regions.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="rec_exact_bonus" class="settings-label"><?php esc_html_e( 'Exact Match (Topic + Region) Bonus', 'ascendance-core' ); ?></label>
+                            <input type="number" name="rec_exact_bonus" id="rec_exact_bonus" class="settings-input" value="<?php echo esc_attr( $rec_exact_bonus ); ?>" required />
+                            <div class="settings-help">&gt; Bonus points when a post matches both a topic AND a region.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="rec_freshness_bonus" class="settings-label"><?php esc_html_e( 'Freshness Bonus', 'ascendance-core' ); ?></label>
+                            <input type="number" name="rec_freshness_bonus" id="rec_freshness_bonus" class="settings-input" value="<?php echo esc_attr( $rec_freshness_bonus ); ?>" required />
+                            <div class="settings-help">&gt; Bonus points added if the post is recently published.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="rec_freshness_days" class="settings-label"><?php esc_html_e( 'Freshness Window (Days)', 'ascendance-core' ); ?></label>
+                            <input type="number" name="rec_freshness_days" id="rec_freshness_days" class="settings-input" value="<?php echo esc_attr( $rec_freshness_days ); ?>" required />
+                            <div class="settings-help">&gt; Maximum age in days of a post to qualify for the freshness bonus.</div>
                         </div>
                     </div>
-                </div>
-            </form>
+                    
+                    <input type="submit" name="save_rec_settings" class="settings-btn-save" style="border-color: #F59E0B; color: #F59E0B;" value="Save Recommendation Settings" />
+                </form>
+            </div>
 
             <!-- Analytics Settings -->
             <div class="settings-card">
@@ -1478,6 +1738,41 @@ class Mission_Control {
                             <label for="ascendance_hotjar_id" class="settings-label"><?php esc_html_e( 'Hotjar Site ID', 'ascendance-core' ); ?></label>
                             <input type="text" name="ascendance_hotjar_id" id="ascendance_hotjar_id" class="settings-input" value="<?php echo esc_attr( $hotjar_id ); ?>" placeholder="xxxxxxx" />
                             <div class="settings-help">&gt; Hotjar tracking Site ID. e.g. xxxxxxx</div>
+                        </div>
+
+                        <!-- Bing UET Tag ID -->
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_bing_uet_id" class="settings-label"><?php esc_html_e( 'Bing UET Tag ID', 'ascendance-core' ); ?></label>
+                            <input type="text" name="ascendance_bing_uet_id" id="ascendance_bing_uet_id" class="settings-input" value="<?php echo esc_attr( $bing_uet_id ); ?>" placeholder="xxxxxxxx" />
+                            <div class="settings-help">&gt; Bing Ads / UET tag tracking ID. e.g. xxxxxxxx</div>
+                        </div>
+
+                        <!-- LinkedIn Partner ID -->
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_linkedin_partner_id" class="settings-label"><?php esc_html_e( 'LinkedIn Partner ID', 'ascendance-core' ); ?></label>
+                            <input type="text" name="ascendance_linkedin_partner_id" id="ascendance_linkedin_partner_id" class="settings-input" value="<?php echo esc_attr( $linkedin_partner_id ); ?>" placeholder="xxxxxxx" />
+                            <div class="settings-help">&gt; LinkedIn Insight Tag Partner ID. e.g. xxxxxxx</div>
+                        </div>
+
+                        <!-- Twitter/X Pixel ID -->
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_twitter_pixel_id" class="settings-label"><?php esc_html_e( 'Twitter/X Pixel ID', 'ascendance-core' ); ?></label>
+                            <input type="text" name="ascendance_twitter_pixel_id" id="ascendance_twitter_pixel_id" class="settings-input" value="<?php echo esc_attr( $twitter_pixel_id ); ?>" placeholder="xxxxx" />
+                            <div class="settings-help">&gt; Twitter/X Ads conversion tracking ID. e.g. xxxxx</div>
+                        </div>
+
+                        <!-- Pinterest Tag ID -->
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_pinterest_tag_id" class="settings-label"><?php esc_html_e( 'Pinterest Tag ID', 'ascendance-core' ); ?></label>
+                            <input type="text" name="ascendance_pinterest_tag_id" id="ascendance_pinterest_tag_id" class="settings-input" value="<?php echo esc_attr( $pinterest_tag_id ); ?>" placeholder="xxxxxxxxxxxxx" />
+                            <div class="settings-help">&gt; Pinterest Tag ID. e.g. xxxxxxxxxxxxx</div>
+                        </div>
+
+                        <!-- TikTok Pixel ID -->
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_tiktok_pixel_id" class="settings-label"><?php esc_html_e( 'TikTok Pixel ID', 'ascendance-core' ); ?></label>
+                            <input type="text" name="ascendance_tiktok_pixel_id" id="ascendance_tiktok_pixel_id" class="settings-input" value="<?php echo esc_attr( $tiktok_pixel_id ); ?>" placeholder="xxxxxxxxxxxxxxxxxxxx" />
+                            <div class="settings-help">&gt; TikTok Business Pixel ID. e.g. xxxxxxxxxxxxxxxxxxxx</div>
                         </div>
                     </div>
                     

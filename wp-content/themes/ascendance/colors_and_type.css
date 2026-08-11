@@ -1,0 +1,774 @@
+/* ============================================================
+   ASCENDANCE STRATEGIES - Foundations
+   Color + Type tokens. Import this file anywhere in the system.
+   ============================================================ */
+
+/* Self-hosted WOFF2 font declarations with font-display: swap (no render-blocking @import chains) */
+@font-face {
+  font-family: 'Cooper Hewitt';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/cooper-hewitt-medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/noto-serif-variable.woff2') format('woff2');
+}
+
+:root {
+  /* -------- Brand fonts --------
+     Wordmark : Cooper Hewitt - the LOGO only: "ASCENDANCE STRATEGIES" caps, letter-spaced, red
+     Display  : Zilla Slab    - slab-serif headlines & kickers
+     Body     : Spectral      - old-style serif for article prose
+     UI       : Archivo       - grotesque sans for nav, labels, metadata, buttons */
+  --font-wordmark:'Cooper Hewitt', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Zilla Slab', 'Roboto Slab', Georgia, serif;
+  --font-body:    'Spectral', Georgia, 'Times New Roman', serif;
+  --font-ui:      'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  /* ============================================================
+     COLOR - warm-neutral base, single sharp crimson-red accent
+     ============================================================ */
+
+  /* Neutrals (warm) */
+  --paper:      #faf8f3;  /* page background */
+  --paper-2:    #f3efe6;  /* bands, footer, inset panels */
+  --card:       #ffffff;  /* article cards / surfaces */
+  --ink:        #1f1c18;  /* headlines, primary text */
+  --ink-2:      #4a463f;  /* body prose */
+  --ink-3:      #837c70;  /* metadata, captions, muted */
+  --ink-4:      #b4ac9d;  /* disabled, faint labels */
+  --hairline:   #e4ddd0;  /* thin dividers on paper */
+  --hairline-2: #d4ccbc;  /* slightly stronger rule */
+
+  /* Accent - "Red" (sharp contemporary crimson - New Yorker register,
+     deliberately NOT claret/old-world and NOT orange). Single brand color. */
+  --red:      #BC1B1D;  /* primary accent - kickers, links, CTA */
+  --red-deep: #9b1719;  /* hover / gradient end / pressed */
+  --red-soft: #d8595b;  /* faint accent (rare) */
+  --red-wash: #fbe6e6;  /* tinted background behind accent chips */
+  --red-fill: #BC1B1D;  /* white-on-red fills; pinned, never lifted on dark */
+  --red-fill-deep: #9b1719;
+
+  /* Ink-on-dark inversion (dark header / footer variant) */
+  --ink-surface:   #211d18;  /* dark surface */
+  --ink-surface-2: #2c2823;
+  --on-ink:        #f3efe6;  /* text on dark */
+  --on-ink-muted:  #a89f90;
+  --on-ink-rule:   rgba(243,239,230,0.14);
+
+  /* Status / utility (used sparingly) */
+  --success:#3f6b4a;
+
+  /* ============================================================
+     TYPE SCALE  (editorial, 1.0 rem = 16px base UI)
+     ============================================================ */
+  --fs-kicker:   12px;   /* country / category kicker */
+  --fs-meta:     13px;   /* metadata row */
+  --fs-ui:       14px;   /* nav, buttons */
+  --fs-body:     17px;   /* article prose */
+  --fs-body-lg:  19px;   /* lead paragraph */
+  --fs-h6:       18px;
+  --fs-h5:       21px;
+  --fs-h4:       25px;
+  --fs-h3:       31px;
+  --fs-h2:       40px;
+  --fs-h1:       54px;   /* hero headline */
+  --fs-display:  72px;   /* marketing display */
+
+  /* Spacing scale (4pt) */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+
+  /* Radii - editorial = mostly square; small radius on UI controls only */
+  --r-sm: 3px;
+  --r-md: 6px;
+
+  /* Elevation - restrained, warm-tinted */
+  --shadow-1: 0 1px 2px rgba(31,28,24,0.06);
+  --shadow-2: 0 2px 8px rgba(31,28,24,0.08);
+  --shadow-3: 0 10px 30px rgba(31,28,24,0.12);
+
+  --maxw: 1240px;       /* content column max-width */
+}
+
+/* Dark Theme Token Overrides */
+:root[data-theme="dark"], html[data-theme="dark"] {
+  --paper: #12100d;
+  --paper-2: #191612;
+  --card: #1f1b16;
+  --ink: #f5f1e8;
+  --ink-2: #d6cebf;
+  --ink-3: #9e9585;
+  --ink-4: #665f54;
+  --hairline: rgba(245,241,232,0.12);
+  --hairline-2: rgba(245,241,232,0.22);
+  --red-fill: #BC1B1D;  /* pinned: white text must keep contrast */
+  --red-fill-deep: #a3191b;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES - apply via .as-prose / utility classes
+   ============================================================ */
+
+.as-kicker {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: var(--fs-kicker);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--red);
+  line-height: 1;
+}
+/* article-level kicker (country | topic) - slab variant, like the reference */
+.as-kicker-slab {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.005em;
+  color: var(--red);
+  line-height: 1.05;
+}
+
+.as-h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h1); line-height: 1.04; letter-spacing: -0.01em; color: var(--ink); }
+.as-h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h2); line-height: 1.06; letter-spacing: -0.005em; color: var(--ink); }
+.as-h3 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); line-height: 1.12; color: var(--ink); }
+.as-h4 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.18; color: var(--ink); }
+.as-h5 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h5); line-height: 1.22; color: var(--ink); }
+
+/* Headline used on cards - slab, tight */
+.as-headline { font-family: var(--font-display); font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -0.003em; }
+
+.as-lead { font-family: var(--font-body); font-size: var(--fs-body-lg); line-height: 1.5; color: var(--ink-2); }
+.as-body { font-family: var(--font-body); font-size: var(--fs-body); line-height: 1.62; color: var(--ink-2); }
+.as-body p { margin: 0 0 0.9em; }
+
+.as-meta {
+  font-family: var(--font-ui);
+  font-size: var(--fs-meta);
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* Subscriber / access tag - "Abonné" equivalent */
+.as-access {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: var(--fs-meta);
+  color: var(--red);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   LOGO LOCKUP - AS monogram (boxed initials) + wordmark + tagline
+   Markup:
+     <a class="as-lockup">                 (add .on-dark on dark surfaces)
+       <span class="ll-row"><i class="ll-box ll-a">A</i><i class="ll-word">SCENDANCE</i></span>
+       <span class="ll-row"><i class="ll-box ll-s">S</i><i class="ll-word">TRATEGIES</i></span>
+       <i class="ll-tag">The Art of Strategic Positioning</i>
+     </a>
+   Scale the whole lockup by setting --ll (wordmark cap size) on .as-lockup.
+   ============================================================ */
+.as-lockup{display:inline-flex;flex-direction:column;gap:3px;text-decoration:none;line-height:1;--ll:22px;}
+.ll-row{display:flex;align-items:stretch;}
+.ll-box{width:var(--ll);height:var(--ll);background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-wordmark);font-weight:700;font-size:calc(var(--ll)*0.72);line-height:1;font-style:normal;}
+.ll-s{background:var(--ink);}
+.ll-word{font-family:var(--font-wordmark);font-weight:700;font-size:var(--ll);letter-spacing:0.005em;color:var(--ink);height:var(--ll);display:flex;align-items:center;padding-left:calc(var(--ll)*0.05);font-style:normal;}
+.ll-tag{font-family:var(--font-ui);font-weight:600;font-size:calc(var(--ll)*0.275);letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-3);margin-top:calc(var(--ll)*0.2);white-space:nowrap;align-self:stretch;text-align:center;font-style:normal;}
+.as-lockup.on-dark .ll-word{color:var(--on-ink);}
+.as-lockup.on-dark .ll-s{background:var(--on-ink);color:var(--ink);}
+.as-lockup.on-dark .ll-tag{color:var(--on-ink-muted);}
+
+/* ============================================================
+   MEGA MENU SYSTEM - Responsive Dropdowns
+   ============================================================ */
+.as-nav-item {
+  position: relative;
+  display: inline-block;
+}
+
+.as-nav-item > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 13px 14px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.as-nav-item:hover > a,
+.as-nav-item:focus-within > a {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+.as-nav-item .as-chev {
+  width: 7px;
+  height: 7px;
+  border-right: 1.75px solid currentColor;
+  border-bottom: 1.75px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  margin-top: -2px;
+  display: inline-block;
+}
+
+.as-nav-item:hover .as-chev,
+.as-nav-item:focus-within .as-chev {
+  transform: rotate(-135deg);
+  margin-top: 3px;
+}
+.as-megamenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 560px;
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--red);
+  box-shadow: 0 16px 36px rgba(31, 28, 24, 0.14);
+  padding: 24px 28px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+  border-radius: var(--r-sm);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  text-align: left !important;
+}
+
+:root[data-theme="dark"] .as-megamenu {
+  background: var(--ink-surface-2);
+  border-color: var(--on-ink-rule);
+  border-top-color: var(--red);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+}
+
+.as-nav-item:hover .as-megamenu,
+.as-nav-item:focus-within .as-megamenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.as-mega-col {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 12px;
+  text-align: left !important;
+  width: 100%;
+}
+
+.as-mega-col h4 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 4px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+  width: 100%;
+  text-align: left !important;
+}
+
+:root[data-theme="dark"] .as-mega-col h4 {
+  border-bottom-color: var(--on-ink-rule);
+}
+
+.as-mega-link {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  padding: 12px 18px !important;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  border-left: 3px solid transparent !important;
+  transition: all 0.15s ease;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box !important;
+}
+
+.as-mega-link:hover {
+  background: var(--paper-2);
+  border-left-color: var(--red) !important;
+}
+
+:root[data-theme="dark"] .as-mega-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: var(--red);
+}
+
+.as-mega-link strong {
+  display: block !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14.5px;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 3px;
+  text-align: left !important;
+  align-self: flex-start !important;
+  width: 100%;
+}
+
+:root[data-theme="dark"] .as-mega-link strong {
+  color: var(--on-ink);
+}
+
+.as-mega-link span {
+  display: block !important;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-3);
+  text-align: left !important;
+  align-self: flex-start !important;
+  width: 100%;
+}
+
+:root[data-theme="dark"] .as-mega-link span {
+  color: var(--on-ink-muted);
+}
+
+
+/* ============================================================
+   DATA TERMINAL & REFERENCE REGISTERS STYLES
+   ============================================================ */
+.thead {
+  background: #0F1E35;
+  border-top: 3px solid var(--red);
+  border-bottom: 1px solid #2A3A55;
+  padding: 20px 40px;
+}
+.thead-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.thead-title {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #E04B4B;
+}
+.thead-meta {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: #556677;
+  letter-spacing: 0.06em;
+}
+.thead-meta b {
+  color: #8899BB;
+  font-weight: 500;
+}
+
+.hero-strip {
+  padding: 40px 40px 34px;
+  border-bottom: 1px solid #2A3A55;
+  background: #0F1E35;
+}
+.hero-strip-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.eyebrow-term {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: block;
+}
+.hero-title-term {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.hero-sub-term {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #8899BB;
+  margin-top: 14px;
+  max-width: 620px;
+  line-height: 1.7;
+}
+.hero-meta-term {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #556677;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #2A3A55;
+}
+
+/* Register Tables */
+.reg-table {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.reg-row {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-left: 4px solid var(--red);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: var(--r-sm);
+  transition: box-shadow 0.15s ease;
+}
+:root[data-theme="dark"] .reg-row {
+  background: var(--ink-surface-2);
+  border-color: var(--on-ink-rule);
+  border-left-color: var(--red);
+}
+.reg-row:hover {
+  box-shadow: var(--shadow-2);
+}
+.reg-main h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+}
+:root[data-theme="dark"] .reg-main h3 {
+  color: var(--on-ink);
+}
+.reg-main p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink-2);
+  margin: 0 0 12px 0;
+  line-height: 1.55;
+}
+:root[data-theme="dark"] .reg-main p {
+  color: var(--on-ink-muted);
+}
+.cat-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cat-tag {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  border-radius: 2px;
+}
+:root[data-theme="dark"] .cat-tag {
+  background: rgba(255,255,255,0.08);
+  color: var(--on-ink);
+}
+.reg-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.reg-state {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.reg-state.s-live {
+  background: var(--red-wash);
+  color: var(--red);
+}
+.reg-state.s-quarterly {
+  background: #fdf3d8;
+  color: #8a6d24;
+}
+.reg-entries {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+:root[data-theme="dark"] .reg-entries {
+  color: var(--on-ink);
+}
+.reg-updated {
+  color: var(--ink-3);
+}
+
+/* Dossier Grid */
+.dos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+.dos-card {
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--red);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: var(--r-sm);
+}
+:root[data-theme="dark"] .dos-card {
+  background: var(--ink-surface-2);
+  border-color: var(--on-ink-rule);
+  border-top-color: var(--red);
+}
+.dos-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.dos-status {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red);
+}
+.dos-flag {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.dos-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+:root[data-theme="dark"] .dos-title {
+  color: var(--on-ink);
+}
+.dos-summary {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink-2);
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+}
+:root[data-theme="dark"] .dos-summary {
+  color: var(--on-ink-muted);
+}
+.dos-foot {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+}
+:root[data-theme="dark"] .dos-foot {
+  border-top-color: var(--on-ink-rule);
+}
+
+
+/* ============================================================
+   DARK THEME  - applied via <html data-theme="dark">.
+   Warm-dark, not cold: keeps the editorial register at night.
+   Committed registers (Editorial hub, Data Terminal glossary) are
+   intentionally exempt - they own their own ground.
+   ============================================================ */
+:root[data-theme="dark"]{
+  --paper:      #17140f;
+  --paper-2:    #201c16;
+  --card:       #221e17;
+  --ink:        #f3eee4;
+  --ink-2:      #cec7b8;
+  --ink-3:      #98917f;
+  --ink-4:      #6b6454;
+  --hairline:   #322c23;
+  --hairline-2: #423b30;
+
+  --red:      #e0524f;  /* lifted for contrast on dark */
+  --red-deep: #ef6e6a;
+  --red-soft: #a83a38;
+  --red-wash: #3a201e;
+
+  --ink-surface:   #100d09;
+  --ink-surface-2: #1a1610;
+  --on-ink:        #f3eee4;
+  --on-ink-muted:  #9a9280;
+  --on-ink-rule:   rgba(243,238,228,0.12);
+
+  --success:#6cbf88;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-2: 0 2px 10px rgba(0,0,0,0.5);
+  --shadow-3: 0 10px 34px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   ARTICLE PROSE OVERRIDES: REMOVE GREEN TEXT & FIX BLACK BOXES
+   ============================================================ */
+
+/* 1. Force Remove Green Text Colors in Front-End Article Output */
+.as-prose [style*="color: green"],
+.as-prose [style*="color:green"],
+.as-prose [style*="color: #00ff"],
+.as-prose [style*="color:#00ff"],
+.as-prose [style*="color: #10b981"],
+.as-prose [style*="color:#10b981"],
+.as-prose [style*="color: #22c55e"],
+.as-prose [style*="color:#22c55e"],
+.as-prose [style*="color: #16a34a"],
+.as-prose [style*="color:#16a34a"],
+.as-prose [style*="color: #008000"],
+.as-prose [style*="color:#008000"],
+.as-prose [style*="color: rgb(0,"],
+.as-prose [style*="color: rgb(16,"],
+.as-prose [style*="color: rgb(34,"],
+.as-prose .has-green-color,
+.as-prose .has-light-green-cyan-color,
+.as-prose ins,
+.as-prose mark,
+.main-body-content [style*="color: green"],
+.main-body-content [style*="color:green"],
+.main-body-content [style*="color: #00ff"],
+.main-body-content [style*="color:#00ff"],
+.main-body-content [style*="color: #10b981"],
+.main-body-content [style*="color:#10b981"],
+.main-body-content [style*="color: #22c55e"],
+.main-body-content [style*="color:#22c55e"],
+.main-body-content .has-green-color,
+.main-body-content ins,
+.main-body-content mark {
+    color: var(--ink-2, #2c3e50) !important;
+    background-color: transparent !important;
+}
+
+/* 2. Redesign Code Blocks, Pre, Blockquotes & Dark Callout Boxes */
+.as-prose pre,
+.as-prose code,
+.as-prose blockquote,
+.as-prose .wp-block-code,
+.as-prose .wp-block-quote,
+.as-prose .wp-block-preformatted,
+.as-prose [style*="background: black"],
+.as-prose [style*="background:black"],
+.as-prose [style*="background: #000"],
+.as-prose [style*="background:#000"],
+.as-prose [style*="background: #111"],
+.as-prose [style*="background:#111"],
+.as-prose [style*="background: #1e1e1e"],
+.as-prose [style*="background:#1e1e1e"],
+.as-prose [style*="background-color: black"],
+.as-prose [style*="background-color: #000"],
+.as-prose [style*="background-color:#000"],
+.main-body-content pre,
+.main-body-content code,
+.main-body-content blockquote,
+.main-body-content .wp-block-code,
+.main-body-content .wp-block-quote,
+.main-body-content [style*="background: black"],
+.main-body-content [style*="background: #000"] {
+    background-color: var(--paper-2, #f5f4ef) !important;
+    background: var(--paper-2, #f5f4ef) !important;
+    color: var(--ink, #0a1628) !important;
+    border: 1px solid var(--hairline-2, rgba(10, 22, 40, 0.08)) !important;
+    border-left: 4px solid var(--red, #bc1b1d) !important;
+    border-radius: 4px !important;
+    padding: 18px 24px !important;
+    margin: 24px 0 !important;
+    box-shadow: 0 4px 14px rgba(10, 22, 40, 0.03) !important;
+    font-family: var(--font-body, "Spectral", serif) !important;
+    font-size: 16.5px !important;
+    line-height: 1.65 !important;
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+
+.as-prose code,
+.main-body-content code {
+    padding: 3px 8px !important;
+    margin: 0 2px !important;
+    display: inline-block !important;
+    border-left-width: 1px !important;
+    font-family: var(--font-ui, "Archivo", sans-serif) !important;
+    font-size: 14px !important;
+    background-color: var(--paper-2, #f5f4ef) !important;
+    color: var(--ink, #0a1628) !important;
+    border-radius: 3px !important;
+}
+
+.as-prose blockquote,
+.as-prose .wp-block-quote,
+.main-body-content blockquote {
+    font-family: var(--font-display, "Zilla Slab", serif) !important;
+    font-style: italic !important;
+    font-size: 20px !important;
+    line-height: 1.5 !important;
+    color: var(--ink, #0a1628) !important;
+    background: var(--paper-2, #f5f4ef) !important;
+    border-left: 4px solid var(--red, #bc1b1d) !important;
+}
+
+.as-prose blockquote cite,
+.as-prose .wp-block-quote cite,
+.main-body-content blockquote cite {
+    display: block !important;
+    font-family: var(--font-ui, "Archivo", sans-serif) !important;
+    font-style: normal !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: var(--red, #bc1b1d) !important;
+    margin-top: 12px !important;
+}
+

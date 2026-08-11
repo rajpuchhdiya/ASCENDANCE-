@@ -20,6 +20,9 @@
  * 15.  Responsive
  */
 
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/cooper-hewitt@5.2.5/600.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/cooper-hewitt@5.2.5/700.css');
+
 /* ──────────────────────────────────────────────────────────────
    1. SITE HEADER EXTENSIONS
 ────────────────────────────────────────────────────────────── */
@@ -1254,7 +1257,7 @@ html:not(.dark) .mega-menu-intel-card:hover .mega-menu-intel-card-title {
 .intel-card {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--color-divider-dark);
-    border-left: 3px solid var(--color-red);
+    border-top: 3px solid var(--color-red);
     border-radius: var(--radius-sm);
     padding: var(--space-6);
     display: flex;
@@ -2390,6 +2393,11 @@ margin: 0 !important;
 .register-editorial .aeo-lead-citation {
     color: var(--color-navy-deep);
 }
+html[data-theme="dark"] .register-editorial .aeo-lead-citation,
+html.dark-theme .register-editorial .aeo-lead-citation,
+html.dark .register-editorial .aeo-lead-citation {
+    color: var(--color-cream) !important;
+}
 
 /* ──────────────────────────────────────────────────────────────
    18. PREMIUM SINGLE TEMPLATE LAYOUTS
@@ -3173,7 +3181,7 @@ margin: 0 !important;
 }
 .archive-card-topics .topics-label {
     font-weight: var(--weight-bold);
-    color: var(--color-navy-deep);
+    color: var(--text-primary);
     margin-right: 4px;
 }
 .archive-card-topics a {
@@ -3183,6 +3191,13 @@ margin: 0 !important;
 }
 .archive-card-topics a:hover {
     color: var(--color-navy-deep) !important;
+}
+
+/* Dark mode overrides for topics row */
+html[data-theme="dark"] .archive-card-topics .topics-label,
+html.dark-theme .archive-card-topics .topics-label,
+html.dark .archive-card-topics .topics-label {
+    color: #f0ede8 !important;
 }
 
 .archive-card-footer a {
@@ -3206,6 +3221,12 @@ margin: 0 !important;
     gap: 0.5rem;
     margin-top: var(--space-12);
 }
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
 .page-numbers {
     display: inline-flex;
     align-items: center;
@@ -3221,6 +3242,11 @@ margin: 0 !important;
     border: 1px solid var(--color-divider-dark);
     text-decoration: none;
     transition: all var(--transition-fast);
+}
+.page-numbers.prev,
+.page-numbers.next {
+    width: auto;
+    padding: 0 12px;
 }
 .page-numbers:hover {
     color: var(--color-white);
@@ -4286,7 +4312,8 @@ html[data-theme="light"] .hero-stats {
 /* C. Card Adaptations for Light Mode */
 html[data-theme="light"] .intel-card {
     background: var(--color-white) !important;
-    border-color: var(--color-divider-light) !important;
+    border: 1px solid var(--color-divider-light) !important;
+    border-top: 3px solid var(--color-red) !important;
 }
 
 html[data-theme="light"] .intel-card:hover {
@@ -5383,5 +5410,543 @@ html[data-theme="dark"] .editorial-tags-row a {
 html[data-theme="dark"] .editorial-tags-row a:hover {
     color: var(--color-white) !important;
 }
+
+/* PMPro CSS Accessibility Overrides for Light & Dark Themes */
+.pmpro_membership_levels th {
+    color: var(--text-secondary) !important;
+}
+.pmpro_membership_levels td {
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+#pmpro_form,
+.pmpro_checkout,
+.pmpro_account_box {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+.pmpro_checkout h2 {
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+.pmpro_checkout label {
+    color: var(--text-secondary) !important;
+}
+.pmpro_checkout input[type="text"],
+.pmpro_checkout input[type="email"],
+.pmpro_checkout input[type="password"],
+.pmpro_checkout select,
+.pmpro_checkout textarea {
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--input-text) !important;
+}
+.pmpro_account_box h3 {
+    color: var(--text-primary) !important;
+    border-bottom: 1px dashed var(--border-color) !important;
+}
+
+/* Premium Paid Memberships Pro Invoice Card Styling */
+.pmpro_card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    padding: 32px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+    margin-bottom: 24px !important;
+}
+
+/* Card Title (Order Number) */
+.pmpro_card_title {
+    font-family: var(--font-heading) !important;
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 24px !important;
+    margin-top: 0 !important;
+}
+
+/* Print/Save PDF Button (Header button) */
+.pmpro_card_actions {
+    float: right !important;
+    margin-bottom: 0 !important;
+}
+
+.pmpro_card_actions button.pmpro_btn-print,
+.pmpro_card_actions .pmpro_btn-print {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    font-family: var(--font-heading) !important;
+    border-radius: 2px !important;
+    cursor: pointer !important;
+    transition: all var(--transition-fast) ease !important;
+}
+
+.pmpro_card_actions button.pmpro_btn-print:hover,
+.pmpro_card_actions .pmpro_btn-print:hover {
+    border-color: var(--color-red-light) !important;
+    background: rgba(224, 75, 75, 0.08) !important;
+    color: var(--color-white) !important;
+    box-shadow: 0 0 10px rgba(188, 27, 29, 0.15) !important;
+}
+
+/* Paid Tag */
+.pmpro_tag-success,
+.pmpro_tag {
+    background-color: rgba(39, 174, 96, 0.1) !important;
+    border: 1px solid rgba(39, 174, 96, 0.2) !important;
+    color: var(--color-success, #27ae60) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding: 4px 10px !important;
+    border-radius: 2px !important;
+    display: inline-block !important;
+    line-height: 1 !important;
+}
+
+/* Meta Data Grid (Order Date, Pay to, Bill to, etc.) */
+#pmpro_order_single-meta ul.pmpro_cols-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 32px 0 !important;
+}
+
+@media (max-width: 600px) {
+    #pmpro_order_single-meta ul.pmpro_cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+}
+
+#pmpro_order_single-meta .pmpro_list_item {
+    font-family: var(--font-body) !important;
+    font-size: 1rem !important;
+    color: var(--text-primary) !important;
+    line-height: 1.6 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
+
+#pmpro_order_single-meta .pmpro_list_item_label {
+    font-family: var(--font-heading) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: var(--text-secondary) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+}
+
+/* Payment description amount highlight */
+#pmpro_order_single-items h3 {
+    font-family: var(--font-heading) !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    margin-top: 0 !important;
+    margin-bottom: 16px !important;
+}
+
+/* PMPro Invoice Table */
+.pmpro_card .pmpro_table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 16px !important;
+    background: transparent !important;
+}
+
+.pmpro_card .pmpro_table th {
+    font-family: var(--font-heading) !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--text-secondary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+    padding: 12px 16px !important;
+    text-align: left !important;
+    background: transparent !important;
+}
+
+.pmpro_card .pmpro_table td {
+    font-family: var(--font-heading) !important;
+    font-size: 0.9rem !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 16px !important;
+    text-align: left !important;
+    background: transparent !important;
+}
+
+.pmpro_card .pmpro_table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.01) !important;
+}
+
+.pmpro_card .pmpro_table tfoot td {
+    font-family: var(--font-heading) !important;
+    font-size: 0.9rem !important;
+    padding: 12px 16px !important;
+    border-bottom: none !important;
+    background: transparent !important;
+}
+
+
+.pmpro_card .pmpro_table tfoot tr:first-child td {
+    padding-top: 20px !important;
+}
+
+.pmpro_card .pmpro_table tfoot tr:last-child td {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    border-top: 1px dashed var(--border-color) !important;
+    padding-top: 16px !important;
+}
+
+/* General PMPro page text color accessibility fixes (e.g. Confirmation page text) */
+.pmpro,
+.pmpro p,
+.pmpro_section,
+.pmpro_section p,
+.pmpro_confirmation,
+.pmpro_confirmation p,
+.pmpro_checkout_text,
+.pmpro_checkout_text p,
+#pmpro_confirmation_table,
+#pmpro_confirmation_table td,
+#pmpro_confirmation_table th {
+    color: var(--text-primary) !important;
+}
+
+/* Print Stylesheet: prints ONLY the invoice card, hiding headers, footers, sidebars, and admin bars */
+@media print {
+    /* Force theme variables to Light Mode for printing, even if website is in Dark Mode */
+    :root,
+    html,
+    html[data-theme="dark"],
+    html.dark-theme,
+    html.dark {
+        --surface-bg: #ffffff !important;
+        --surface-card: #ffffff !important;
+        --surface-text: #000000 !important;
+        --surface-text-muted: #555555 !important;
+        --surface-border: #e8e4dc !important;
+        --surface-accent: #bc1b1d !important;
+        
+        --bg-main: #ffffff !important;
+        --bg-card: #ffffff !important;
+        --text-primary: #000000 !important;
+        --text-secondary: #555555 !important;
+        --text-muted: #555555 !important;
+        --border-color: #e8e4dc !important;
+        
+        --color-navy-deep: #ffffff !important;
+        --color-cream: #ffffff !important;
+        --color-white: #ffffff !important;
+        --color-divider-light: #e8e4dc !important;
+        --color-divider-dark: #e8e4dc !important;
+    }
+
+    #wpadminbar,
+    .site-header,
+    .breadcrumbs-container,
+    .page-hero,
+    .site-footer,
+    .pmpro_card_actions,
+    .pmpro_actions_nav,
+    .back-to-login-link,
+    a {
+        display: none !important;
+    }
+
+    body, 
+    html, 
+    #page, 
+    .site-main, 
+    .content-wrapper, 
+    .main-content, 
+    .entry-content, 
+    .pmpro, 
+    .pmpro_section,
+    .bg-navy,
+    .bg-navy-deep,
+    .bg-navy-mid {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .pmpro_card {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 20px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .pmpro_card,
+    .pmpro_card *,
+    .pmpro_card p,
+    .pmpro_card td,
+    .pmpro_card th,
+    .pmpro_card span,
+    .pmpro_card strong,
+    .pmpro_card li,
+    .pmpro_card h2,
+    .pmpro_card h3 {
+        color: #000000 !important;
+    }
+
+    .pmpro_table,
+    #pmpro_confirmation_table {
+        border: 1px solid #ddd !important;
+        width: 100% !important;
+    }
+
+    .pmpro_table td,
+    .pmpro_table th {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+    }
+}
+
+/* --- Dossier Article Layout (Namespaced) --- */
+
+.as-dossier-layout {
+  --d-red: #BC1B1D; --d-red-deep: #8E1416;
+  --d-navy: #0F1E35; --d-navy-deep: #0A1628;
+  --d-cream: #F7F4EF; --d-paper: #FFFFFF;
+  --d-ink: #1A1A2E; --d-stone: #56514B; --d-muted: #6B6B7A;
+  --d-rule: #E8E4DC;
+  --d-serif: "Noto Serif", "Iowan Old Style", Georgia, serif;
+  --d-sans: "Cooper Hewitt", "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --d-mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
+  
+  background: var(--d-cream) !important;
+  color: var(--d-ink) !important;
+  font-family: var(--d-serif) !important;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 28px 90px !important;
+}
+.as-dossier-layout.wrap {
+  padding: 40px 28px 90px !important;
+  max-width: 680px !important;
+  margin: 0 auto !important;
+}
+html.dark .as-dossier-layout,
+html[data-theme="dark"] .as-dossier-layout {
+  --d-navy: #f3eee4; --d-navy-deep: #17140f;
+  --d-cream: #17140f; --d-paper: #221e17;
+  --d-ink: #f3eee4; --d-stone: #cec7b8; --d-muted: #98917f;
+  --d-rule: #322c23;
+}
+
+.as-dossier-layout .fm { background: var(--d-navy-deep); color: #C8D0DC; border-left: 3px solid var(--d-red); padding: 20px 24px; margin: 34px 0 0; font-family: var(--d-mono); font-size: 11.5px; line-height: 1.85; }
+.as-dossier-layout .fm b { color: var(--d-red); font-weight: 600; letter-spacing: .06em; }
+.as-dossier-layout .fm a { color: #C8D0DC; }
+.as-dossier-layout .eyebrow { font-family: var(--d-sans); font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--d-red); margin: 44px 0 10px; }
+.as-dossier-layout h1 { font-family: var(--d-serif); font-weight: 400; font-size: 44px; line-height: 1.14; letter-spacing: -.015em; margin: 0 0 16px; color: var(--d-navy); }
+html.dark .as-dossier-layout h1 { color: var(--d-ink); }
+.as-dossier-layout .standfirst { font-size: 20px; line-height: 1.55; color: var(--d-stone); font-style: italic; margin: 0 0 26px; }
+.as-dossier-layout .byline { font-family: var(--d-mono); font-size: 11.5px; color: var(--d-muted); border-top: 1px solid var(--d-rule); border-bottom: 1px solid var(--d-rule); padding: 11px 0; margin-bottom: 38px; display: flex; gap: 18px; flex-wrap: wrap; }
+.as-dossier-layout p { margin: 0 0 18px; font-size: 17.5px; }
+.as-dossier-layout .lede,
+.as-dossier-layout .as-dossier-content > p:first-of-type { font-size: 19px; }
+.as-dossier-layout .lede::first-letter,
+.as-dossier-layout .as-dossier-content > p:first-of-type::first-letter { float: left; font-size: 64px; line-height: .84; padding: 6px 10px 0 0; color: var(--d-red); font-weight: 400; }
+.as-dossier-layout h2 { font-family: var(--d-serif); font-weight: 400; font-size: 27px; line-height: 1.25; color: var(--d-navy); margin: 52px 0 4px; padding-left: 16px; border-left: 3px solid var(--d-red); }
+html.dark .as-dossier-layout h2 { color: var(--d-ink); }
+.as-dossier-layout h2 .num { color: var(--d-red); font-family: var(--d-mono); font-size: 15px; display: block; margin-bottom: 4px; letter-spacing: .08em; }
+.as-dossier-layout h3 { font-family: var(--d-sans); font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--d-navy); margin: 30px 0 8px; }
+html.dark .as-dossier-layout h3 { color: var(--d-ink); }
+.as-dossier-layout .pull { border-left: 3px solid var(--d-red); background: var(--d-paper); padding: 20px 24px; margin: 28px 0; font-size: 18.5px; line-height: 1.5; color: var(--d-navy); }
+html.dark .as-dossier-layout .pull { color: var(--d-ink); }
+.as-dossier-layout .note { background: var(--d-paper); border: 1px solid var(--d-rule); border-left: 3px solid var(--d-red); padding: 16px 20px; margin: 24px 0; font-size: 15.5px; color: var(--d-stone); }
+.as-dossier-layout .note b { color: var(--d-navy); }
+html.dark .as-dossier-layout .note b { color: var(--d-ink); }
+.as-dossier-layout .meta { font-family: var(--d-mono); font-size: 11.5px; color: var(--d-stone); border-top: 1px solid var(--d-rule); padding-top: 9px; margin: 6px 0 0; display: flex; gap: 14px; flex-wrap: wrap; }
+.as-dossier-layout .chip { display: inline-block; font-family: var(--d-sans); font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--d-rule); background: var(--d-paper); color: var(--d-stone); border-radius: 2px; }
+.as-dossier-layout .chip.hi { border-color: var(--d-red); color: var(--d-red); }
+.as-dossier-layout .chip.med { border-color: #B08A2E; color: #8A6D24; }
+.as-dossier-layout .chip.low { border-color: var(--d-muted); color: var(--d-muted); }
+.as-dossier-layout ul { padding-left: 20px; margin: 0 0 18px; }
+.as-dossier-layout li { margin-bottom: 9px; font-size: 17px; }
+.as-dossier-layout li::marker { color: var(--d-red); }
+.as-dossier-layout .gate { margin: 46px 0; border-top: 2px solid var(--d-red); background: var(--d-paper); padding: 24px 26px; }
+.as-dossier-layout .gate .g-label { font-family: var(--d-sans); font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--d-red); margin-bottom: 8px; }
+.as-dossier-layout .gate p { font-size: 16px; color: var(--d-stone); margin: 0 0 6px; }
+.as-dossier-layout .gate .tier { font-family: var(--d-mono); font-size: 12px; color: var(--d-navy); margin-top: 12px; }
+html.dark .as-dossier-layout .gate .tier { color: var(--d-ink); }
+.as-dossier-layout .xlink { display: block; background: var(--d-navy-deep); color: #E8ECF2; text-decoration: none; padding: 22px 26px; margin: 40px 0; border-left: 3px solid var(--d-red); }
+.as-dossier-layout .xlink .k { font-family: var(--d-sans); font-size: 10.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--d-red); }
+.as-dossier-layout .xlink .t { font-family: var(--d-serif); font-size: 21px; margin: 6px 0 4px; }
+.as-dossier-layout .xlink .d { font-family: var(--d-mono); font-size: 11.5px; color: #9FB0C4; }
+.as-dossier-layout table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 14.5px; }
+.as-dossier-layout th { background: var(--d-navy); color: var(--d-cream); font-family: var(--d-sans); font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; text-align: left; padding: 9px 12px; }
+.as-dossier-layout td { padding: 9px 12px; border-bottom: 1px solid var(--d-rule); vertical-align: top; }
+.as-dossier-layout tbody tr:nth-child(odd) { background: var(--d-paper); }
+.as-dossier-layout td:first-child { border-left: 3px solid var(--d-red); font-weight: 600; color: var(--d-navy); }
+html.dark .as-dossier-layout td:first-child { color: var(--d-ink); }
+.as-dossier-layout .advisory { background: var(--d-paper); border: 1px solid var(--d-rule); border-left: 3px solid var(--d-red); border-radius: 2px; padding: 22px 24px; margin: 40px 0; }
+.as-dossier-layout .advisory .g-label { font-family: var(--d-sans); font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--d-red); margin-bottom: 8px; }
+.as-dossier-layout .advisory p { font-size: 15.5px; color: var(--d-stone); margin: 0 0 14px; }
+.as-dossier-layout .advisory a.cta { display: inline-block; font-family: var(--d-sans); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--d-red); padding: 10px 20px; border-radius: 2px; text-decoration: none; }
+.as-dossier-layout .advisory a.cta:hover { background: var(--d-red-deep); }
+.as-dossier-layout .signoff { margin: 64px 0 0; padding-top: 26px; border-top: 1px solid var(--d-rule); text-align: center; font-style: italic; color: var(--d-red); letter-spacing: .04em; font-size: 16px; }
+
+/* ============================================================
+   ARTICLE PROSE OVERRIDES: REMOVE GREEN TEXT & FIX BLACK BOXES
+   ============================================================ */
+
+/* 1. Force Remove Green Text Colors in Front-End Article Output */
+.as-prose [style*="color: green"],
+.as-prose [style*="color:green"],
+.as-prose [style*="color: #00ff"],
+.as-prose [style*="color:#00ff"],
+.as-prose [style*="color: #10b981"],
+.as-prose [style*="color:#10b981"],
+.as-prose [style*="color: #22c55e"],
+.as-prose [style*="color:#22c55e"],
+.as-prose [style*="color: #16a34a"],
+.as-prose [style*="color:#16a34a"],
+.as-prose [style*="color: #008000"],
+.as-prose [style*="color:#008000"],
+.as-prose [style*="color: rgb(0,"],
+.as-prose [style*="color: rgb(16,"],
+.as-prose [style*="color: rgb(34,"],
+.as-prose .has-green-color,
+.as-prose .has-light-green-cyan-color,
+.as-prose ins,
+.as-prose mark,
+.main-body-content [style*="color: green"],
+.main-body-content [style*="color:green"],
+.main-body-content [style*="color: #00ff"],
+.main-body-content [style*="color:#00ff"],
+.main-body-content [style*="color: #10b981"],
+.main-body-content [style*="color:#10b981"],
+.main-body-content [style*="color: #22c55e"],
+.main-body-content [style*="color:#22c55e"],
+.main-body-content .has-green-color,
+.main-body-content ins,
+.main-body-content mark {
+    color: var(--ink-2, #2c3e50) !important;
+    background-color: transparent !important;
+}
+
+/* 2. Redesign Code Blocks, Pre, Blockquotes & Dark Callout Boxes */
+.as-prose pre,
+.as-prose code,
+.as-prose blockquote,
+.as-prose .wp-block-code,
+.as-prose .wp-block-quote,
+.as-prose .wp-block-preformatted,
+.as-prose [style*="background: black"],
+.as-prose [style*="background:black"],
+.as-prose [style*="background: #000"],
+.as-prose [style*="background:#000"],
+.as-prose [style*="background: #111"],
+.as-prose [style*="background:#111"],
+.as-prose [style*="background: #1e1e1e"],
+.as-prose [style*="background:#1e1e1e"],
+.as-prose [style*="background-color: black"],
+.as-prose [style*="background-color: #000"],
+.as-prose [style*="background-color:#000"],
+.main-body-content pre,
+.main-body-content code,
+.main-body-content blockquote,
+.main-body-content .wp-block-code,
+.main-body-content .wp-block-quote,
+.main-body-content [style*="background: black"],
+.main-body-content [style*="background: #000"] {
+    background-color: var(--paper-2, #f5f4ef) !important;
+    background: var(--paper-2, #f5f4ef) !important;
+    color: var(--ink, #0a1628) !important;
+    border: 1px solid var(--hairline-2, rgba(10, 22, 40, 0.08)) !important;
+    border-left: 4px solid var(--red, #bc1b1d) !important;
+    border-radius: 4px !important;
+    padding: 18px 24px !important;
+    margin: 24px 0 !important;
+    box-shadow: 0 4px 14px rgba(10, 22, 40, 0.03) !important;
+    font-family: var(--font-body, "Spectral", serif) !important;
+    font-size: 16.5px !important;
+    line-height: 1.65 !important;
+    overflow-x: auto !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+}
+
+.as-prose code,
+.main-body-content code {
+    padding: 3px 8px !important;
+    margin: 0 2px !important;
+    display: inline-block !important;
+    border-left-width: 1px !important;
+    font-family: var(--font-ui, "Archivo", sans-serif) !important;
+    font-size: 14px !important;
+    background-color: var(--paper-2, #f5f4ef) !important;
+    color: var(--ink, #0a1628) !important;
+    border-radius: 3px !important;
+}
+
+.as-prose blockquote,
+.as-prose .wp-block-quote,
+.main-body-content blockquote {
+    font-family: var(--font-display, "Zilla Slab", serif) !important;
+    font-style: italic !important;
+    font-size: 20px !important;
+    line-height: 1.5 !important;
+    color: var(--ink, #0a1628) !important;
+    background: var(--paper-2, #f5f4ef) !important;
+    border-left: 4px solid var(--red, #bc1b1d) !important;
+}
+
+.as-prose blockquote cite,
+.as-prose .wp-block-quote cite,
+.main-body-content blockquote cite {
+    display: block !important;
+    font-family: var(--font-ui, "Archivo", sans-serif) !important;
+    font-style: normal !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: var(--red, #bc1b1d) !important;
+    margin-top: 12px !important;
+}
+
+
+
 
 

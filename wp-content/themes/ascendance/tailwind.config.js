@@ -4,7 +4,8 @@ export default {
     "./*.php",
     "./template-parts/**/*.php",
     "./assets/js/**/*.js",
-    "./assets/css/**/*.css"
+    "./assets/css/**/*.css",
+    "../../plugins/ascendance-core/**/*.php"
   ],
   darkMode: 'class',
   theme: {

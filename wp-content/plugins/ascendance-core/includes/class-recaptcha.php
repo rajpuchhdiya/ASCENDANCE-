@@ -80,14 +80,14 @@ class ReCaptcha {
         // Clamp threshold to valid range.
         $this->threshold  = max( 0.0, min( 1.0, $this->threshold ) );
 
-        // Determine activation: must have both keys configured.
-        // reCAPTCHA v3 works on localhost too (Google whitelists it by default).
-        $this->active = ( ! empty( $this->site_key ) && ! empty( $this->secret_key ) );
+        // Determine activation: must have both keys configured and NOT be local environment.
+        $is_local     = ( defined( 'WP_ENVIRONMENT_TYPE' ) && 'local' === WP_ENVIRONMENT_TYPE );
+        $this->active = ( ! $is_local && ! empty( $this->site_key ) && ! empty( $this->secret_key ) );
 
         if ( ! $this->active ) {
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                 error_log(
-                    '[Ascendance/ReCaptcha] Inactive — RECAPTCHA_SITE_KEY or RECAPTCHA_SECRET_KEY not configured in .env.'
+                    '[Ascendance/ReCaptcha] Inactive — RECAPTCHA_SITE_KEY or RECAPTCHA_SECRET_KEY not configured in .env, or WP_ENVIRONMENT_TYPE is local.'
                 );
             }
             return;
@@ -95,6 +95,7 @@ class ReCaptcha {
 
         // ── JS / Token injection ──────────────────────────────────────────────
         add_action( 'login_enqueue_scripts', [ $this, 'enqueue_recaptcha_js' ] );
+        add_action( 'wp_enqueue_scripts',    [ $this, 'maybe_enqueue_recaptcha_js_frontend' ] );
         add_action( 'login_form',            [ $this, 'inject_token_field_login' ] );
         add_action( 'register_form',         [ $this, 'inject_token_field_register' ] );
         add_action( 'lostpassword_form',     [ $this, 'inject_token_field_lostpassword' ] );
@@ -158,6 +159,17 @@ class ReCaptcha {
     }
 
     /**
+     * Enqueues the reCAPTCHA v3 JS on front-end custom page templates.
+     *
+     * @return void
+     */
+    public function maybe_enqueue_recaptcha_js_frontend(): void {
+        if ( is_page_template( 'page-login.php' ) ) {
+            $this->enqueue_recaptcha_js();
+        }
+    }
+
+    /**
      * Injects a hidden token field + sets the data-recaptcha-action on the login form.
      * Uses output buffering to wrap the form-open tag since WordPress doesn't expose it.
      *
@@ -169,6 +181,7 @@ class ReCaptcha {
     public function inject_token_field_login(): void {
         $this->emit_token_field( 'login' );
         $this->emit_form_attribute_script( 'loginform', 'login' );
+        $this->emit_form_attribute_script( 'ascendance-loginform', 'login' );
     }
 
     /**

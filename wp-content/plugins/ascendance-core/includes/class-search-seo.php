@@ -35,6 +35,7 @@ class Search_SEO {
     private function __construct() {
         // Custom Weighted Search logic
         add_filter( 'posts_clauses', array( $this, 'custom_weighted_search' ), 10, 2 );
+        add_filter( 'posts_search', array( $this, 'custom_search_where' ), 10, 2 );
 
         // Restrict frontend search to intelligence post types
         add_action( 'pre_get_posts', array( $this, 'restrict_search_post_types' ) );
@@ -47,13 +48,39 @@ class Search_SEO {
     }
 
     /**
-     * Restrict search results to Briefs, Dossiers, and Updates CPTs on the frontend
+     * Expand search SQL WHERE clause to match Entity official_name and alternate_names postmeta
+     */
+    public function custom_search_where( $search, $query ) {
+        if ( is_admin() || ! $query->is_search() ) {
+            return $search;
+        }
+        global $wpdb;
+        $search_term = $query->get( 's' );
+        if ( empty( $search_term ) ) {
+            return $search;
+        }
+        $term = esc_sql( $wpdb->esc_like( $search_term ) );
+
+        if ( ! empty( $search ) ) {
+            $search .= " OR EXISTS (
+                SELECT 1 FROM {$wpdb->postmeta} pm_s
+                WHERE pm_s.post_id = {$wpdb->posts}.ID
+                AND pm_s.meta_key IN ('official_name', 'alternate_names')
+                AND pm_s.meta_value LIKE '%{$term}%'
+            )";
+        }
+
+        return $search;
+    }
+
+    /**
+     * Restrict search results to Briefs, Dossiers, Updates, and Entities on the frontend
      */
     public function restrict_search_post_types( $query ) {
         if ( is_admin() || ! $query->is_search() || ! $query->is_main_query() ) {
             return $query;
         }
-        $query->set( 'post_type', array( 'brief', 'dossier', 'update' ) );
+        $query->set( 'post_type', array( 'brief', 'dossier', 'update', 'entity' ) );
         return $query;
     }
 
@@ -61,7 +88,7 @@ class Search_SEO {
      * 1. Custom database-level search weighting query filter
      */
     public function custom_weighted_search( $clauses, $query ) {
-        if ( is_admin() || ! $query->is_search() || ! $query->is_main_query() ) {
+        if ( is_admin() || ! $query->is_search() ) {
             return $clauses;
         }
 
@@ -73,7 +100,7 @@ class Search_SEO {
 
         $term = esc_sql( $wpdb->esc_like( $search_term ) );
         
-        // Weighting: Title = 10, Excerpt (Dek) = 7, Content = 3
+        // Weighting: Title = 10, Excerpt (Dek) = 7, Content = 3, Entity Meta (Official Name / Aliases) = 12
         $relevance = "
             (CASE
                 WHEN {$wpdb->posts}.post_title LIKE '%{$term}%' THEN 10
@@ -86,7 +113,13 @@ class Search_SEO {
             (CASE
                 WHEN {$wpdb->posts}.post_content LIKE '%{$term}%' THEN 3
                 ELSE 0
-            END)
+            END) +
+            (CASE WHEN EXISTS (
+                SELECT 1 FROM {$wpdb->postmeta} pm_meta
+                WHERE pm_meta.post_id = {$wpdb->posts}.ID
+                AND pm_meta.meta_key IN ('official_name', 'alternate_names')
+                AND pm_meta.meta_value LIKE '%{$term}%'
+            ) THEN 12 ELSE 0 END)
         ";
 
         if ( ! isset( $clauses['fields'] ) ) {
@@ -101,12 +134,49 @@ class Search_SEO {
     /**
      * 2. Inject structured JSON-LD data for Google Schema / E-E-A-T credentials
      */
-    public function inject_custom_schema() {
-        if ( ! is_singular( array( 'brief', 'dossier' ) ) ) {
+    public function inject_custom_schema( $target_post_id = 0 ) {
+        $curr_post = $target_post_id ? get_post( $target_post_id ) : get_post();
+        if ( ! $curr_post ) {
             return;
         }
 
-        $post_id = get_the_ID();
+        if ( 'entity' === $curr_post->post_type || is_singular( 'entity' ) ) {
+            $post_id   = $curr_post->ID;
+            $terms     = wp_get_post_terms( $post_id, 'entity_type', array( 'fields' => 'slugs' ) );
+            $type_slug = ( ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0] : 'company';
+
+            $schema_type = 'Organization';
+            if ( 'person' === $type_slug ) {
+                $schema_type = 'Person';
+            } elseif ( in_array( $type_slug, array( 'mining-project', 'infrastructure-project', 'strategic-initiative' ), true ) ) {
+                $schema_type = 'Project';
+            }
+
+            $aliases_str = get_post_meta( $post_id, 'alternate_names', true );
+            $aliases_arr = ! empty( $aliases_str ) ? array_filter( array_map( 'trim', explode( "\n", $aliases_str ) ) ) : array();
+
+            $entity_schema = array(
+                '@context'      => 'https://schema.org',
+                '@type'         => $schema_type,
+                'name'          => get_the_title( $post_id ),
+                'legalName'     => get_post_meta( $post_id, 'official_name', true ) ?: get_the_title( $post_id ),
+                'description'   => get_post_meta( $post_id, 'short_description', true ) ?: wp_strip_all_tags( get_the_excerpt( $post_id ) ),
+                'url'           => get_post_meta( $post_id, 'website', true ) ?: get_permalink( $post_id ),
+            );
+            if ( ! empty( $aliases_arr ) ) {
+                $entity_schema['alternateName'] = array_values( $aliases_arr );
+            }
+
+            echo "\n" . '<!-- Ascendance Custom Entity JSON-LD Schema -->' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode( $entity_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
+            return;
+        }
+
+        if ( ! in_array( $curr_post->post_type, array( 'brief', 'dossier' ), true ) && ! is_singular( array( 'brief', 'dossier' ) ) ) {
+            return;
+        }
+
+        $post_id = $curr_post->ID;
         $author_name = get_the_author_meta( 'display_name' );
         $pub_date = get_the_date( 'c' );
         $mod_date = get_the_modified_date( 'c' );
@@ -128,14 +198,17 @@ class Search_SEO {
             'author'           => array(
                 '@type'    => 'Person',
                 'name'     => $author_name,
-                'jobTitle' => 'Lead Intelligence Analyst'
+                // Dynamic: reads WP Biographical Info for each author, then falls back to the
+                // global default set in Mission Control → Settings → Platform Settings.
+                'jobTitle' => $this->get_author_job_title( get_the_author_meta( 'ID' ) ),
             ),
             'publisher'        => array(
                 '@type' => 'Organization',
                 'name'  => get_bloginfo( 'name' ),
                 'logo'  => array(
                     '@type' => 'ImageObject',
-                    'url'   => site_url( '/wp-content/themes/ascendance/assets/images/logo.png' )
+                    // Dynamic: uses WP Custom Logo first, then the URL set in Platform Settings.
+                    'url'   => $this->get_seo_logo_url(),
                 )
             ),
             'description'         => $excerpt,
@@ -259,5 +332,56 @@ class Search_SEO {
             'body'    => wp_json_encode( $body ),
             'timeout' => 5,
         ) );
+    }
+
+    /**
+     * Returns the SEO logo URL.
+     * Priority: WP Custom Logo → ascendance_seo_logo_url option → empty string.
+     *
+     * @return string
+     */
+    private function get_seo_logo_url(): string {
+        // 1. Try WordPress native Custom Logo (set via Appearance → Customize → Site Identity)
+        $custom_logo_id = get_theme_mod( 'custom_logo' );
+        if ( $custom_logo_id ) {
+            $logo_data = wp_get_attachment_image_src( $custom_logo_id, 'full' );
+            if ( ! empty( $logo_data[0] ) ) {
+                return esc_url( $logo_data[0] );
+            }
+        }
+
+        // 2. Fall back to URL saved in Mission Control → Settings → Platform Settings
+        $saved_url = get_option( 'ascendance_seo_logo_url', '' );
+        if ( ! empty( $saved_url ) ) {
+            return esc_url( $saved_url );
+        }
+
+        return '';
+    }
+
+    /**
+     * Returns the job title for a given author.
+     * Priority: WP user "description" (Biographical Info) → ascendance_author_job_title option → 'Intelligence Analyst'.
+     *
+     * @param int $author_id WP user ID.
+     * @return string
+     */
+    private function get_author_job_title( $author_id ): string {
+        $author_id = (int) $author_id;
+        if ( ! empty( $author_id ) ) {
+            // 1. Per-author: WP Admin → Users → Edit → Biographical Info (first line used as title)
+            $bio = get_user_meta( $author_id, 'description', true );
+            if ( ! empty( $bio ) ) {
+                $first_line = strtok( strip_tags( $bio ), "\n" );
+                if ( strlen( $first_line ) <= 80 ) {
+                    return sanitize_text_field( $first_line );
+                }
+            }
+        }
+
+        // 2. Global fallback: Mission Control → Settings → Platform Settings
+        return sanitize_text_field(
+            get_option( 'ascendance_author_job_title', 'Intelligence Analyst' )
+        );
     }
 }

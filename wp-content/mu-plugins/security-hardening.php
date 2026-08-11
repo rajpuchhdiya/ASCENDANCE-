@@ -11,46 +11,25 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Abort if called directly
 }
 
-// 1) Security headers
+// 1) Security headers — skip framing restrictions on WP admin/customizer context
 add_action( 'send_headers', function() {
     header_remove( 'X-Powered-By' );
-    header( 'X-Frame-Options: DENY' );
     header( 'X-Content-Type-Options: nosniff' );
     header( 'Referrer-Policy: no-referrer-when-downgrade' );
     header( 'Permissions-Policy: geolocation=(), microphone=(), camera=()' );
     header( "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload" );
-    header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; frame-ancestors 'none';" );
+
+    // Allow framing within same origin — needed for WP Customizer preview iframe
+    // Do NOT set DENY or frame-ancestors 'none' as it breaks the Customizer
+    if ( ! is_admin() && ! isset( $_GET['customize_changeset_uuid'] ) ) {
+        header( 'X-Frame-Options: SAMEORIGIN' );
+        header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; frame-ancestors 'self';" );
+    }
 } );
 
-// 2) Hidden login / relocate
-// Set `WP_RELOCATE_LOGIN` in .env to a custom slug like '/admin-login-9f3j2'
-$relocate = getenv( 'WP_RELOCATE_LOGIN' );
-if ( $relocate ) {
-    $relocate = '/' . ltrim( $relocate, '/' );
-
-    // If request URI equals the relocate slug, serve wp-login.php
-    add_action( 'init', function() use ( $relocate ) {
-        $request = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-        if ( rtrim( $request, '/' ) === rtrim( $relocate, '/' ) ) {
-            require_once ABSPATH . 'wp-login.php';
-            exit;
-        }
-    } );
-
-    // Block direct access to /wp-login.php unless coming from the relocate slug
-    add_action( 'login_init', function() use ( $relocate ) {
-        $referer = isset( $_SERVER['HTTP_REFERER'] ) ? wp_parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) : '';
-        $request = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-        if ( false !== stripos( $request, 'wp-login.php' ) || false !== stripos( $request, 'wp-admin' ) ) {
-            if ( rtrim( $referer, '/' ) !== rtrim( $relocate, '/' ) && ! isset( $_GET['redirect_to'] ) ) {
-                status_header( 404 );
-                nocache_headers();
-                echo '404 Not Found';
-                exit;
-            }
-        }
-    } );
-}
+// 2) Hidden login / relocate — REMOVED
+// This was a custom hide-login implementation.
+// Use a dedicated plugin (e.g. WPS Hide Login) to configure this instead.
 
 // 3) hCaptcha server-side check for logins (optional)
 $hcaptcha_secret = getenv( 'HCAPTCHA_SECRET' );
