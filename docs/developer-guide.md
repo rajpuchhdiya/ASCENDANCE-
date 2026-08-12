@@ -1,5 +1,5 @@
 # Ascendance — Developer Guide
-Date: 2026-07-13
+Date: 2026-07-15 (updated — plugin stack updated)
 
 Purpose: technical onboarding for developers working on Ascendance. Covers code structure, setup, key components, and common tasks.
 
@@ -44,14 +44,17 @@ cp .env.example .env
   - `RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `RECAPTCHA_THRESHOLD` — reCAPTCHA v3 keys. See §14.
 
 5. Key plugin classes
-- `class-cpt-taxonomy.php` — CPT and taxonomy registration.
+- `class-cpt-taxonomy.php` — CPT and taxonomy registration (Brief, Update, Dossier + topic/region/tier/intelligence_tag).
 - `class-acf-fields.php` — programmatic ACF registration (mirrors `acf-json`).
 - `class-paywall.php` — server-side paywall gating and REST gate helpers.
-- `class-stripe-billing.php` — PMPro & Stripe overrides and billing portal redirect.
-- `class-newsletter.php` — Brevo integration and PMPro sync.
-- `class-search-seo.php` — weighted search and JSON-LD schema generation.
+- `class-stripe-billing.php` — Custom Stripe billing: checkout session creation, webhook handling, billing portal redirect.
+- `class-newsletter.php` — Brevo integration: subscriber sync, weekly digest trigger, per-topic notifications.
+- `class-search-seo.php` — weighted search and JSON-LD schema generation (NewsArticle, AnalysisNewsArticle, FAQPage, Report).
 - `class-ai-studio.php` — AI Studio: admin UI, REST endpoints, usage logging, Gutenberg SEO sidebar.
-- `class-login-security.php` — Hidden login URL (WPS Hide Login equivalent). See §13.
+- `class-mission-control.php` — Mission Control dashboard: widgets, subscriber stats, AI usage, activity log.
+- `class-image-optimizer.php` — WebP/image helper integrating with EWWW Image Optimizer.
+- `class-analytics.php` — GTM/GA4 integration with Complianz consent gating.
+- `class-login-security.php` — Hidden login URL (works alongside WPS Hide Login plugin). See §13.
 - `class-recaptcha.php` — Google reCAPTCHA v3 invisible bot protection. See §14.
 
 6. AI Studio details
@@ -79,9 +82,12 @@ define('WP_DEBUG_DISPLAY', false);
 ```
 - Check `wp-content/debug.log` for traces.
 
-10. Stripe webhooks and PMPro
-- PMPro bundles Stripe webhook handling; verify webhook endpoints in PMPro settings and test with the Stripe CLI.
-- Ensure idempotency handling for custom webhook logic if you implement separate controllers.
+10. Stripe Webhooks
+- Stripe webhook handling is implemented in `class-stripe-billing.php` via a custom REST endpoint: `POST /wp-json/ascendance/v1/stripe/webhook`.
+- Seven events handled: `checkout.session.completed`, `customer.subscription.created/updated/deleted`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.trial_will_end`.
+- **Idempotency is mandatory** — the handler checks `wp_ascendance_ai_usage` table for duplicate event IDs before processing.
+- Test webhooks locally with Stripe CLI: `stripe listen --forward-to localhost/Ascendance/wp-json/ascendance/v1/stripe/webhook`
+- Set `STRIPE_WEBHOOK_SECRET` in `.env` — Stripe signs webhook payloads and we verify the signature.
 
 11. CI / Deployment
 - Add GitHub Actions to run `composer install --no-dev`, build theme assets, and run static checks.
@@ -173,16 +179,36 @@ The class renders a standard reCAPTCHA badge (bottom-right) automatically.
 16. Contacts and knowledge base
 - Use `docs/` for runbooks. Add troubleshooting notes to `docs/editor-manual.md` and `docs/security.md` when you discover environment-specific steps.
 
-17. Local quick commands
+17. Caching (W3 Total Cache)
+- W3 Total Cache is the caching plugin (replaced WP Super Cache — spec Section 2.2).
+- On local dev: **disable page cache** (W3TC → General Settings → Page Cache → Off) — caching during development causes confusing stale-content issues.
+- On staging/production: enable Page Cache (Disk: Enhanced) + Browser Cache + Minify.
+- See `docs/w3-total-cache-config.md` for full settings reference.
+- Flush cache via: Performance → Dashboard → Empty All Caches, or `wp w3-total-cache flush all`.
+
+18. Image Optimization (EWWW Image Optimizer)
+- EWWW handles compression and WebP conversion — no external API, unlimited images.
+- `class-image-optimizer.php` integrates with EWWW hooks to trigger optimization on upload.
+- On local dev: EWWW can remain active — WebP generation works locally.
+- Verify WebP delivery with Chrome DevTools → Network → Content-Type: image/webp.
+- See `docs/webp-verification.md` for full verification steps.
+
+19. Local quick commands
 ```bash
 # Run theme build watch during front-end development
 cd wp-content/themes/ascendance && npm run dev
 
 # Use the Stripe CLI to forward webhooks to local site
-stripe listen --forward-to localhost:8080/Ascendance/wp-json/pmpro/v1/stripe-webhook
+stripe listen --forward-to localhost/Ascendance/wp-json/ascendance/v1/stripe/webhook
 
-# Flush rewrite rules after changing WP_LOGIN_SLUG (alternative to Permalinks screen)
+# Flush W3 Total Cache
+wp w3-total-cache flush all
+
+# Flush rewrite rules after changing WP_LOGIN_SLUG
 wp rewrite flush --hard
+
+# Run seed content SQL on local database
+Get-Content scripts/seed-content.sql | & "C:/XAMPP/mysql/bin/mysql.exe" -u root ascendance
 ```
 
 Questions or missing items? Open an issue describing the change and I'll draft the needed runbook or code change.

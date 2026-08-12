@@ -1,20 +1,20 @@
-=== Paid Memberships Pro - Content Restriction, User Registration, & Paid Subscriptions ===
+=== Paid Memberships Pro ===
 Contributors: strangerstudios, kimannwall, andrewza, dlparker1005, paidmembershipspro
 Tags: memberships, member, community, user profile, user registration
 Requires at least: 5.2
-Tested up to: 6.6.2
-Requires PHP: 5.6
-Stable tag: 3.2.2
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 3.8.4
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Build a membership site that grows with you: user registration, member profiles, 28 protected content types, free or paid subscriptions.
+The Trusted Membership Platform That Grows with You
 
 == Description ==
 
-### The most trusted way to build a membership site on WordPress.
+### The Trusted Membership Platform That Grows with You
 
-Paid Memberships Pro is a complete solution to secure your content and create a seamless membership experience on WordPress. 
+Paid Memberships Pro is a complete solution to secure your content and create a seamless membership experience.
 
 With over 28 ways to protect content, advanced membership management, and built-in recurring payment gateways, we provide you with everything you need to create an efficient and user-friendly membership site.
 
@@ -27,9 +27,9 @@ PMPro supports any kind of member-focused business or organization. With over 12
 * [Blog & News](https://www.paidmembershipspro.com/blog-news/)
 * [Communities](https://www.paidmembershipspro.com/communities/)
 * [Courses & Coaching](https://www.paidmembershipspro.com/courses/)
-* [Directory & Listings](https://www.paidmembershipspro.com/add-ons/member-directory/)
+* [Directory & Listings](https://www.paidmembershipspro.com/member-directories/)
 * [Paid Newsletters](https://www.paidmembershipspro.com/paid-newsletters/)
-* [Podcasting](https://www.paidmembershipspro.com/membership-site-podcasting-benefits/)
+* [Podcasting](https://www.paidmembershipspro.com/podcasting/)
 * [Private Video](https://www.paidmembershipspro.com/private-videos/)
 
 You can also browse [Case Studies for successful membership sites that are using PMPro](https://www.paidmembershipspro.com/category/case-study/) to get paid for their content and reach their personal or business goals with 100% open source software.
@@ -58,7 +58,7 @@ You can also browse [Case Studies for successful membership sites that are using
 
 ### Built-in Ecommerce & Recurring Payments Features
 
-All of our payment gateways are included in the plugin. Choose from [Stripe](https://www.paidmembershipspro.com/gateway/stripe/), [PayPal](https://www.paidmembershipspro.com/gateway/paypal/), [Authorize.net](https://www.paidmembershipspro.com/gateway/authorize-net/), or [Braintree](https://www.paidmembershipspro.com/gateway/braintree/). You can offer multiple gateway options at checkout including [PayPal Express](https://www.paidmembershipspro.com/add-ons/pmpro-add-paypal-express-option-checkout/) or [manual and offline payments, like Bank Transfer, Check, and Venmo](https://www.paidmembershipspro.com/add-ons/pmpro-pay-by-check-add-on/).
+All of our payment gateways are included in the plugin. Choose from [Stripe](https://www.paidmembershipspro.com/gateway/stripe/) or [PayPal](https://www.paidmembershipspro.com/gateway/paypal/). You can offer multiple gateway options at checkout including [PayPal Express](https://www.paidmembershipspro.com/add-ons/pmpro-add-paypal-express-option-checkout/) or [manual and offline payments, like Bank Transfer, Check, and Venmo](https://www.paidmembershipspro.com/add-ons/pmpro-pay-by-check-add-on/).
 
 * **Flexible Pricing:** Configure free, one-time payment, or recurring subscription levels
 * **Multiple Gateways:** Integrate with Stripe, PayPal, and more
@@ -93,14 +93,14 @@ Extend functionality with affiliates, page builders, themes, and landing pages.
 
 * **Page Builder Compatibility:** Gutenberg Block Editor, Full Site Editing, Elementor, Divi, Beaver Builder, Oxygen Builder, SiteOrigin
 * **Integrate With Popular Platforms:** WooCommerce, BuddyPress/BuddyBoss, Mailchimp, Zapier
-* **Use With Your Favorite LMS:** LifterLMS, LearnDash, Sensei LMS, and Tutor LMS
+* **Use With Your Favorite LMS:** LifterLMS, LearnDash, and Tutor LMS
 
 > _"Recommended to anyone from beginner to experienced coders. I tried MemberMouse and MemberPress and they both lacked critical features that I wanted for my member site. PMPro has all the features I need (Social Login, ability to gift, multiple membership levels, works with BuddyPress) and more. I can easily customize to make it look great too. If I have questions, which is often since I am a beginner in WordPress and know nothing about coding, they are quick to respond and always find a way for me to do exactly what I want. Super happy. Would recommend to anyone from beginner to experienced coders!"_
-> _**@efsluys** via WordPress.org 5-star Review_
+> _**@efsluys** 5-star Review_
 
 ### Documentation, Support, Localization
 
-Access free support here on WordPress.org or reach out on our [contact form](https://www.paidmembershipspro.com/contact/). Refer to our information on [premium support](https://www.paidmembershipspro.com/support/) if you would like more help.
+Reach out on our [contact form](https://www.paidmembershipspro.com/contact/) for sales inquiries. Refer to our information on [other ways to get support](https://www.paidmembershipspro.com/support/) if you would like more help.
 
 Our website has extensive [documentation](https://www.paidmembershipspro.com/documentation/) to assist you in building your membership site.
 
@@ -109,10 +109,10 @@ We also offer unique content hubs, which explore the 8 most popular membership s
 ### Developer Friendly
 Open source, REST API support, extensive hooks, and tools for easy customization.
 
-Our website offers over 340 examples on how to use our action and filter hooks to customize your membership site.
+Our website offers over 310 examples on how to use our action and filter hooks to customize your membership site.
 
 ### Free WordPress Theme
-Our official theme, [Memberlite](https://wordpress.org/themes/memberlite/), is built specifically for membership sites. Memberlite has deep integration with Paid Memberships Pro to offer advanced features for logged-in/out users and works alongside your favorite page builders, like the Block Editor and Elementor.
+Our official theme, [Memberlite](https://www.paidmembershipspro.com/themes/memberlite), is built specifically for membership sites. Memberlite has deep integration with Paid Memberships Pro to offer advanced features for logged-in/out users and works alongside your favorite page builders, like the Block Editor and Elementor.
 
 ### Popular Add Ons
 
@@ -122,7 +122,6 @@ Extend the features of your membership site or integrate with third-party servic
 * [Manage Affiliates](https://www.paidmembershipspro.com/managing-affiliates-with-paid-memberships-pro/) with Add Ons or use a popular third-party systems like [AffiliateWP](https://www.paidmembershipspro.com/using-affiliatewp-with-paid-memberships-pro/)
 * Let members [log in or join with their social media profiles](https://www.paidmembershipspro.com/add-ons/social-login-add-on/)
 * Design your site [using popular Page Builders](https://www.paidmembershipspro.com/using-page-builders-for-membership-site/) like Elementor, Page Builder by SiteOrigin, Beaver Builder, and Divi. We offer 15 core membership blocks for the WordPress Block Editor (Gutenberg)
-* [Optional WooCommerce Integration](https://www.paidmembershipspro.com/add-ons/pmpro-woocommerce/) to offer members-only discounts in your shop or sell membership as a product (WooCommerce is not required. Recurring payments and gateway integration is built into PMPro)
 * Create a [sales landing page with banners to run a sitewide or flash sale](https://sitewidesales.com)
 * [Offer members-only events](https://www.paidmembershipspro.com/add-ons/events-for-members-only/) with Events Manager, The Events Calendar, and Sugar Calendar
 
@@ -130,7 +129,11 @@ Extend the features of your membership site or integrate with third-party servic
 
 ### Paid Memberships Pro is a free membership plugin for WordPress
 
-Our plugin is 100% GPL and available from the WordPress repository or on our site at [www.paidmembershipspro.com](https://www.paidmembershipspro.com). The full version of the plugin is offered with no restrictions or additional licenses required. Developers should get involved at [our GitHub page](https://github.com/strangerstudios/paid-memberships-pro/).
+Our plugin is 100% GPL and can be downloaded at [www.paidmembershipspro.com/documentation/download/](https://www.paidmembershipspro.com/documentation/download/).
+
+The full version of the plugin is offered with no restrictions or additional licenses required.
+
+Developers should get involved at [our GitHub page](https://github.com/strangerstudios/paid-memberships-pro/).
 
 ### Compare PMPro to Other Membership Plugins and Platforms
 Are you comparing Paid Memberships Pro with another membership plugin or third-party platform? We have a series of [product comparison guides](https://www.paidmembershipspro.com/category/product-comparison/) that will help you see the distinct features of PMPro as compared to other options, including:
@@ -147,9 +150,7 @@ Are you comparing Paid Memberships Pro with another membership plugin or third-p
 == Installation ==
 
 = Download, Install and Activate! =
-1. Go to Plugins > Add New to find and install Paid Memberships Pro.
-2. Or, download the latest version of the plugin, then go to Plugins > Add New and click the "Upload Plugin" button to upload your .zip file.
-3. Activate the plugin.
+Visit [https://www.paidmembershipspro.com/documentation/download/](https://www.paidmembershipspro.com/documentation/download/) for the full plugin download and instructions on how to install Paid Memberships Pro in your WordPress site.
 
 = Use the Setup Wizard to Complete Initial Setup =
 After activation, you will be taken through a brief setup wizard to configure the plugin.
@@ -164,6 +165,12 @@ Refer to our [Initial Setup Tutorial](https://www.paidmembershipspro.com/documen
 * [Add Ons](https://www.paidmembershipspro.com/add-ons/)
 
 == Frequently Asked Questions ==
+
+= Should I use WordPress or a hosted SaaS platform for memberships? =
+Both WordPress and SaaS (Software as a Service) platforms, like Kajabi or Podia, have their strengths, but they represent two very different approaches. Read our guide to determine which is best for you: [WordPress vs SaaS For Membership Sites: Real Costs, Pros & Cons, and Who Actually Wins](https://www.paidmembershipspro.com/wordpress-vs-saas/).
+
+= What is the best WordPress membership plugin? = 
+We published a guide on the [4 best WordPress membership plugins](https://www.paidmembershipspro.com/best-wordpress-membership-plugins-compared/). You can read this guide to help you decide if Paid Memberships Pro is the right solution for you.
 
 = Do I need to know any coding to use this plugin? =
 No, Paid Memberships Pro does not require any coding knowledge. The plugin is designed to meet all levels of WordPress experience. At the same time, our plugin is very developer-friendly and extendible.
@@ -189,10 +196,10 @@ Our [Multisite Membership Add On](https://www.paidmembershipspro.com/add-ons/pmp
 If you would like more help using PMPro on a network install, [reach our via our contact page](https://www.paidmembershipspro.com/contact/).
 
 = I need help installing, configuring, or customizing Paid Memberships Pro. =
-Please visit [our support site](https://www.paidmembershipspro.com/support) for more documentation and our support forums.
+Please visit [our support site](https://www.paidmembershipspro.com/support/) for more documentation and ways to get support.
 
 = I found a bug in Paid Memberships Pro. =
-Please post it in the [WordPress support forum](https://wordpress.org/support/plugin/paid-memberships-pro/) and we'll fix it right away. Thanks for helping.
+Please reach out using our [contact form](https://www.paidmembershipspro.com/contact/) and we'll fix it right away. Thanks for helping.
 
 = Does PMPro Support X? =
 Not sure? You can find out by doing a bit a research.
@@ -200,153 +207,305 @@ Not sure? You can find out by doing a bit a research.
 1. [Check our compatibility page](https://www.paidmembershipspro.com/documentation/compatibility/).
 2. [Check our Add Ons](https://www.paidmembershipspro.com/add-ons/).
 3. [Do a search on our site](https://www.paidmembershipspro.com/).
-4. [Ask in the forums here](https://wordpress.org/support/plugin/paid-memberships-pro/).
-
-== Screenshots ==
-
-1. Membership levels or Pricing page to showcase your subscription plans.
-2. Set up the membership levels that best fit your business, whether they are Free, Paid, or Subscriptions (Annual, Monthly, Weekly, Daily). Offer Custom Trial Periods (Free Trial, Custom-length Trial, 'Introductory' Pricing)
-3. Use the CRM-like Edit Member dashboard to give admins a deeper view of a single member's profile information, memberships, subscriptions, orders, and more.
-4. Membership Account page, display all sections or show specific sections using shortcode attributes.
-5. Optimized Membership Checkout page that blends seamlessly into your WordPress site. Fields captured at checkout can be modified with other Add Ons.
-6. Easy to use Membership Access Settings by Page, Post, or Category. Use block settings or shortcodes to display restricted content inline. Developer-friendly hooks to restrict access any way you need.
-7. Members are WordPress Users. PMPro provides a unique interface to view a single member's history, filter and search all Members or export your Members List.
-8. Offer Membership Discounts with specific price rules (restricted by level, unique pricing for each level, # of uses, expiration date.)
-9. Filterable Sales Revenue Reports (reports also included for Visits, Views, Logins, Signups, Cancellations, and other Membership Stats).
-10. Advanced settings for updating non-member messages, optionally show excerpts or filter content, use reCAPTCHA, and a Terms of Service checkbox.
+4. [Ask using our contact form](https://www.paidmembershipspro.com/contact/)
 
 == Changelog ==
-= 3.2.2 - 2024-10-12 =
-* ENHANCEMENT: Added screen reader text to identify an empty header row on levels table output. #3161 (@kimcoleman)
-* BUG FIX: Fixed issue where some third party gateways were no longer cancelling subscriptions at the gateway when cancelled locally in WP/PMPro. If you were using a gateway that is not included with the core PMPro plugin, please double check all recent cancellations to make sure they were sync'd to your gateway. If not, you will have to cancel those subscriptions at the gateway manually. #3164 (@ideadude)
+= 3.8.4 - 2026-08-06 =
+* ENHANCEMENT: Added new `--pmpro--btn--border-radius`, `--pmpro--btn--top-bottom-padding`, and `--pmpro--btn--left-right-padding` CSS variables so that button styles can be customized separately from other elements that share the base variables. #3747 (@RachelRVasquez)
+* BUG FIX: Fixed an issue where Stripe Checkout orders paid with delayed notification payment methods such as SEPA Direct Debit could be completed without their subscription and payment transaction IDs, which prevented membership cancellations from being sent to Stripe. An upgrade script now recovers the missing IDs for previously affected orders. #3745 (@dparker1005)
+* BUG FIX: Fixed an issue where a user field could be shown at checkout even though its field group was hidden from checkout if the field overrode the group's profile visibility setting. #3744 (@dparker1005)
+* BUG FIX: Fixed an issue where duplicate recurring scheduled tasks, such as those inherited from a cloned or migrated database, would run simultaneously indefinitely. Duplicate chains are now cancelled automatically, keeping the earliest scheduled task. #3746 (@dalemugford)
 
-= 3.2.1 - 2024-10-08 =
-* ENHANCEMENT: Improved the print styles for frontend pages. #3158 (@kimcoleman)
-* BUG FIX: Fixed an issue where payments would not complete when Stripe 3DS was triggered. #3157 (@dparker1005)
-* BUG FIX: Fixed an issue where "file" user fields would not allow uploads if the file restrictions setting was empty. #3156 (@andrewlimaza)
-* BUG FIX: Fixed a deprecation warning when using Stripe Checkout. #3160 (@dparker1005)
-* BUG FIX: Fixed an issue where the "street2" billing address field may not be saved for Stripe payments. (@dparker1005)
+= 3.8.3 - 2026-07-30 =
+* ENHANCEMENT: Site Health now detects the PMPro SMTP Add On as the site's email sending service when a connector is configured. #3729 (@dparker1005)
+* ENHANCEMENT: Added translator comments to localized strings containing placeholders so translators have context for each variable. #3730 (@jahidhasan018)
+* ENHANCEMENT: The discount code lookup in `PMPro_Discount_Code::save()` now uses `$wpdb->prepare()`. #3734 (@andrewlimaza)
+* BUG FIX: Multi-value user fields (multiselect, select2, and grouped checkboxes) now display correctly when their values were imported from a CSV file as a comma-separated string. #3742 (@flintfromthebasement)
+* BUG FIX: Fixed a fatal error that could occur when returning from an offsite gateway if the checkout data was missing from the order meta. #3741 (@dparker1005)
+* BUG FIX: Fixed PMPro core and Add Ons never auto-updating in the background because the update hooks were only registered on `admin_init`, which does not fire during WP-Cron where automatic updates run. #3738 (@dalemugford)
+* BUG FIX: Set `new_version` on `no_update` entries so up-to-date Add Ons no longer trigger an undefined property warning in WP-CLI and other consumers of the plugin update transient. #3738 (@dalemugford)
+* BUG FIX: The bulk user delete confirmation screen now counts membership history for every selected user instead of only the first. #3733 (@jahidhasan018)
+* BUG FIX: The level group selection message is no longer shown on the Membership Levels page for groups that contain only one level. #3731 (@jahidhasan018)
 
-= 3.2 - 2024-10-02 =
-* FEATURE: Users will now receive a notification email when they have an upcoming subscription payment. #3109 (@dparker1005)
-* FEATURE: Added integration with Cloudflare Turnstile. #3123 (@andrewlimaza)
-* ENHANCEMENT: The business address for the website can now be set on the Advanced Settings page and will be shown on invoices. #3134 (@MaximilianoRicoTabo)
-* ENHANCEMENT: Added a table view on the Email Templates settings page. #3128 (@kimcoleman)
-* ENHANCEMENT: Added the Checkbox Group user field type. #3126 (@andrewlimaza)
-* ENHANCEMENT: A default value can now be set for user fields that do not allow multiselect or file uploads. #3132 (@andrewlimaza)
-* ENHANCEMENT: Allowed file types and maximum file sizes can now be set for "File" user fields. #3133 (@andrewlimaza)
-* ENHANCEMENT: Added three new filters at checkout to allow checks at different parts of the checkout process: `pmpro_checkout_checks`, `pmpro_checkout_user_creation_checks`, and `pmpro_checkout_order_creation_checks`. #3137 (@dparker1005)
-* ENHANCEMENT: Now creating a user at checkout even when order creation checks fail. #3137 (@dparker1005)
-* ENHANCEMENT: Memberships on the Membership Account page will now be shown in the order set on the Membership Levels settings page. #3112 (@kimcoleman)
-* ENHANCEMENT: Updated the wording around "legacy keys" and "restricted keys" for the Stripe gateway. #3151 (@dparker1005)
-* BUG FIX/ENHANCEMENT: Street2 billing address lines are now stored separately in the MemberOrder object. #3122 (@dparker1005)
-* BUG FIX: Fixed an issue where payment fields on the update billing page might be wrapped in nested cards. #3143 (@kimcoleman)
-* REFACTOR: Abstracted all "Terms of Service" logic into a single file. #3119 (@dparker1005)
-* REFACTOR: Abstracted all reCAPTCHA logic into a single file. #3105 (@dparker1005)
-* REFACTOR: Cleaned up the checkout preheader flow including deprecating the `pmpro_build_order_for_checkout()` function in favor of inline logic. #3129 (@dparker1005)
-* REFACTOR: Updated the PayPal Express integration to run checkout logic in its `process()` method instead of on actions that are being deprecated. #3116 (@dparker1005)
-* REFACTOR: Updated the Stripe  integration to send users to Stripe Checkout in the `process()` method instead of during the `pmpro_checkout_before_change_membership_level` hook. #3104 (@dparker1005)
-* DEPRECATED: Marking the Authorize.net gateway integration as deprecated. Websites that are already using Authorize.net can continue using that gateway, but new sites will not be shown Authorize.net as a gateway option. #3150 (@dparker1005)
-* DEPRECATED: PayPal Express will no longer automatically be enabled as a second payment option when using the deprecated Website Payments Pro gateway. This functionality can be restored by using the Add PayPal Express Add On. #3114 (@dparker1005)
-* DEPRECATED: Marked the following filters at checkout as deprecated: `pmpro_checkout_oldemail`, `pmpro_new_user`, `pmpro_require_billing`, and `pmpro_checkout_confirmed`. #3137 (@dparker1005)
-* DEPRECATED: Now throwing deprecation warnings for dynamic order properties that were previously used at by gateways at checkout. #3122 (@dparker1005)
-* DEPRECATED: Marked the `getGatewaySubscriptionStatus()`, `getGatewayTransactionStatus()`, and `confirm()` MemberOrder methods as deprecated. #3129, #3116 (@dparker1005)
-* DEPRECATED: Removed sample code from methods in the `PMProGateway` class and marked sample helper methods as deprecated. #3129 (@dparker1005)
+= 3.8.2 - 2026-07-13 =
+* SECURITY: Restored sanitization of user field values on save, which had been inactive since v3.4. #3726 (@dparker1005)
+* SECURITY: The Authorize.net Silent Post handler now requires Authorize.net API credentials to be configured on the site. #3724 (@dparker1005)
+* BUG FIX: Read-only user fields are no longer saved on form submission and are now escaped when displayed. This also fixes read-only checkbox and select field values being erased on profile update. #3726 (@dparker1005)
+* BUG FIX: Fixed broken CSV exports when an exported value contained a quotation mark. #3716 (@dwanjuki)
+* BUG FIX: Fixed checkout failures that could occur when the matching Stripe price had been archived in the Stripe dashboard. #3717 (@flintfromthebasement)
+* BUG FIX: Fixed an issue where users with the `pmpro_reports` capability could not view email content in the Email Log popup. #3718 (@dwanjuki)
 
-= 3.1.4 - 2024-09-18 =
-* ENHANCEMENT: Improved the wording of the Stripe webhook checker message that displayed when there are event types that have not yet been triggered in Stripe. #3115 (@dparker1005)
-* BUG FIX/ENHANCEMENT: Improved the validation of IP addresses before they are returned by the `pmpro_get_ip()` function. #3113 (@andrewlimaza)
-* BUG FIX/ENHANCEMENT: `pmpro_set_curent_user()` is now only called in the `pmpro_clear_level_cache_for_user()` function if we are clearing the cache for the current user. #3127 (@mircobabini)
-* BUG FIX/ENHANCEMENT: Localized the billing periods for subscription cost text strings. #3140 (@kimcoleman)
-* BUG FIX: Fixed an issue where an empty "Account Information" box might appear at checkout if using the `pmpro_skip_account_fields` filter to skip the account fields for new users. #3135 (@kimcoleman)
-* BUG FIX: Fixed the background color for input fields on the login form. #3124 (@kimcoleman)
-* BUG FIX: Fixed an issue where the `code_id` may not reflect the discount code ID that was used at checkout. #3138 (@dparker1005)
-* BUG FIX: Fixed an issue where incorrect data may be returned when calling `getDiscountCode()` on a blank MemberOrder object. #3120 (@dparker1005)
-* BUG FIX: Fixed PHP errors on the Visits, Views, and Logins report page when the usermeta values that are retrieved are not in the correct format. #3139 (@kimcoleman)
+= 3.8.1 - 2026-06-29 =
+* ENHANCEMENT: Added a new `style` attribute to the `[pmpro_checkout_button]` shortcode to render it as a link or a button, and improved its styling. #3708 (@kimcoleman)
+* ENHANCEMENT: Improved the HTML validity and accessibility of frontend forms and pages, including fixing duplicate `id` attributes and invalid fieldset/legend markup. #3707 (@kimcoleman)
+* ENHANCEMENT: Added a new `pmpro_restrictable_taxonomies` filter, allowing Add Ons to register custom taxonomies whose terms can be restricted by membership level from the term edit screen. #3704 (@kimcoleman)
+* BUG FIX: Fixed a fatal error on the Membership Billing page when a subscription's gateway object could not be loaded. #3706 (@kimcoleman)
+* BUG FIX: Fixed the Members List CSV export so the exporting admin is no longer incorrectly included when exporting filtered or searched results. #3711 (@andrewlimaza)
+* BUG FIX: Fixed a 404 error when viewing email log details in the modal on sites using Plain permalinks. #3712 (@dwanjuki)
+* BUG FIX: Fixed select fields overflowing the viewport on small screens. #3705 (@kimcoleman)
+* BUG FIX: Saving a membership level no longer clears term restrictions, such as tag restrictions, that were set from the term edit screen. #3704 (@kimcoleman)
+* BUG FIX: Restricted posts are now correctly hidden from searches and archives when a term's ID and term taxonomy ID differ. #3704 (@kimcoleman)
 
-= 3.1.3 - 2024-08-06 =
-* ENHANCEMENT: Improved the appearance of input fields on dark-background themes. #3111 (@kimcoleman)
-* ENHANCEMENT: Improved the appearance of dropdown arrow icons. #3111 (@kimcoleman)
-* ENHANCEMENT: Added an icon for the upcoming Localized Pricing Add On. #3110 (@kimcoleman)
-* BUG FIX: Fixed an issue where new subscriptions might be immediately cancelled after checkout when re-purchasing a level that the user already had. #3107 (@dparker1005)
-* BUG FIX: Fixed an issue where Braintree billing updates would fail due to the `CardType` JavaScript not being present in the update billing form. #3108 (@dparker1005)
+= 3.8 - 2026-06-15 =
+* FEATURE: Upgraded the email template editor to the standard WordPress visual/text editor with built-in Liquid syntax autocomplete for variables, tags, and filters. #3695 (@dparker1005)
+* FEATURE: Added a new `[pmpro_membership_level]` shortcode for displaying membership level details. #3087 (@kimcoleman)
+* ENHANCEMENT: Added Divi 5 compatibility for PMPro module-level restrictions and no-access message handling. #3620 (@JarrydLong)
+* ENHANCEMENT: Added a new `level_group_id` email template variable to every email template class that exposes `membership_id`. #3684 (@kimcoleman)
+* ENHANCEMENT: Allowed shortcodes in the account page message. #3682 (@kimcoleman)
+* ENHANCEMENT: Removed the misleading "Advanced Settings" hint from the no-access message controls. #3699 (@dparker1005)
+* ENHANCEMENT: Clarified the user field meta key hint on the user field settings page. #3698 (@kimwhite)
+* ENHANCEMENT: Added an Add On icon for the MemberPress Migration Toolkit. (@kimcoleman)
+* BUG FIX/ENHANCEMENT: Now hiding the recurring trial settings on membership level and discount code edit pages when the active gateway doesn't support recurring trials. #3628 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Added a fallback for email logging when SMTP plugins (e.g. Gravity SMTP) bypass the `wp_mail_succeeded` and `wp_mail_failed` actions. #3697 (@andrewlimaza)
+* BUG FIX: Cleaned up orphaned membership level relationships when a level is deleted. #3693 (@dparker1005)
+* BUG FIX: No longer shows the membership confirmation message when the order has not been confirmed. #3682 (@kimcoleman)
+* BUG FIX: Fixed a fatal error on the Membership Billing page for logged-out requests. #3694 (@flintfromthebasement)
+* BUG FIX: Fixed the Orders list table appearing blank on mobile by setting the order code as the default primary column. #3696 (@dparker1005)
+* BUG FIX: Cleared stale card information when a recovered Stripe payment uses a non-card payment method. #3703 (@dparker1005)
+* REFACTOR: Removed unused `pmpro_userfields_get_group` and `pmpro_userfields_get_field` AJAX handlers. #3672 (@dparker1005)
+* DEPRECATED: Deprecated the credit card expiring email template. #3688 (@dparker1005)
+* DEPRECATED: The Membership Billing page no longer writes `pmpro_b*` user meta on save, and the email field has been removed from that page. #3668 (@dparker1005)
 
-= 3.1.2 - 2024-08-02 =
-* ENHANCEMENT: Added an admin notice on PMPro settings pages when using Stripe without a webhook set up. #3103 (@dparker1005)
-* ENHANCEMENT: Added a new filter `pmpro_stripe_card_element_style` to allow developers to customize the Stripe card element style. #3099 (@kimcoleman)
-* ENHANCEMENT: Improved the styling of bulleted lists. #3095 (@kimcoleman)
-* BUG FIX: Fixed an issue where Braintree checkouts would fail due to the `CardType` field not being present in the payment form. #3102 (@JarrydLong)
-* BUG FIX: Fixed an issue where billing updates could fail for some gateways. #3102, #3106 (@JarrydLong, @dparker1005)
-* BUG FIX: Fixed PHP errors when showing a "no access" message and there is not a levels page or checkout page set. #3096 (@kimcoleman)
-* BUG FIX: Fixed an issue where checkouts would fail when using the Stripe payment request button and reCAPTCHA v3. #3094 (@dparker1005)
-* REFACTOR: Updated doc block for the `pmpro_set_expiration_date()` function to allow `null` as a valid value for the `$enddate` parameter. #3098 (@ZebulanStanphill)
+= 3.7.4 - 2026-05-28 =
+* BUG FIX/ENHANCEMENT: Skip the `pmpro_visit` cookie when `WP_CACHE` is active so page caches like Surge, Cloudflare, Varnish, and WP Super Cache aren't bypassed on anonymous front-end requests. Added a new `pmpro_set_visit_cookie` filter to override the default behavior. #3690 (@flintfromthebasement)
+* BUG FIX: Fixed Stripe recurring orders silently saving `tax = 0` after the Stripe API version bump by deriving tax from `invoice->total_excluding_tax` instead of the deprecated `invoice->tax`. #3685 (@dwanjuki)
+* BUG FIX: Fixed Site Health reporting a false-positive Action Scheduler library conflict on Windows hosts by normalizing the library path before the conflict check. #3687 (@dparker1005)
+* BUG FIX: Fixed button icons no longer being inline in the WordPress 7.0 admin and the "Show" label floating to the right of the levels dropdown on the Members List screen. #3689 (@RachelRVasquez)
 
-= 3.1.1 - 2024-07-29 =
-* ENHANCEMENT: Added autocomplete functionality for name and billing fields on the checkout page. #3081 (@andrewlimaza)
-* ENHANCEMENT: Improved the field structure and styling for checkbox and radio user fields. #3077 (@kimcoleman)
-* ENHANCEMENT: Added a new hook `pmpro_lost_password_before_submit_button`. #3090 (@dioliviers, @dparker1005)
-* BUG FIX/ENHANCEMENT: The current panel on the Member Edit page is now included in the form action instead of as a hidden input. #3092 (@mircobabini)
-* BUG FIX/ENHANCEMENT: Improved the LifterLMS streamline option to prevent LifterLMS from modifying the login form links on the PMPro login page. #3089 (@kimcoleman)
-* BUG FIX: Fixed an issue where fields may overlap on the checkout page when viewing on a mobile device. #3078 (@kimcoleman)
-* BUG FIX: Fixed an issue where pages could not be saved when they contain the "Confirmation Page" block. #3085 (@dparker1005)
-* BUG FIX: Fixed an issue where the billing address fields were always shown on the Update Billing page, even when disabled. #3082 (@dparker1005)
-* BUG FIX: Fixed an issue where some required fields did not display a "required" asterisk or the `aria-required` attribute. #3076 (@kimcoleman)
-* BUG FIX: Fixed the styling for fields with errors after submitting the checkout form. #3076 (@kimcoleman)
-* BUG FIX: Fixed an issue where the default expiration date when adding a new membership level via the Edit Member page would be calculated based on the current UTC time. #3093 (@mircobabini)
-* BUG FIX: Fixed an issue where free orders would not process correctly when the default gateway was set to PayPal Standard or 2Checkout. #3091 (@dparker1005)
-* BUG FIX: Fixed an issue where some HTML elements were missing class names. #3080 (@mircobabini)
-* BUG FIX: Fixed the alignment of the action links on the "lost password" form. #3084 (@kimcoleman)
-* BUG FIX: Fixed an issue where content added to the login form via hooks might be given flex alignment. #3083 (@kimcoleman)
-* BUG FIX: Fixed an issue where requesting a subscription date as a timestamp would always return in the UTC timezone regardless of if `$local_time` was set to `true`. #3069 (@mircobabini)
-* BUG FIX: Fixed a typo of "Akismet" on the PMPro Security settings page. #3081 (@andrewlimaza)
-* BUG FIX: Fixed the alignment of the "search" field on the Add Ons dashboard page. #3079 (@kimcoleman)
+= 3.7.3 - 2026-05-14 =
+* SECURITY: Added a nonce check to the Update Billing Information page to prevent CSRF, and tightened the gate so enforcement only skips on sites explicitly opted into a pre-3.7.3 custom billing template. The billing template version has been bumped to 3.7.3. #3671 (@dparker1005)
+* SECURITY: Tightened the checkout page nonce enforcement gate so it only skips on sites explicitly opted into a pre-3.0 custom checkout template, closing a gap where sites with a pre-3.0 custom `checkout.php` in their theme could bypass nonce checks without opting in. #3674 (@dparker1005)
+* ENHANCEMENT: Added new action hooks to the subscriptions panel of the Edit Member screen and the single subscription view. #3666 (@kimcoleman)
+* ENHANCEMENT: Added nonce checks to read-only admin AJAX handlers (`pmpro_orders_print_view`, `pmpro_get_order_json`, `login_report_csv`, `sales_report_csv`, `membership_stats_csv`) for consistency with other admin AJAX endpoints. #3673 (@dparker1005)
+* ENHANCEMENT: Added the new `pmpro_use_advisory_locks` filter as a system-wide escape hatch to disable MySQL advisory locking on hosts where persistent MySQL sessions or other environment quirks cause stuck locks. #3649 (@dparker1005)
+* ENHANCEMENT: Replaced the vague "Stripe dashboard settings" wording with a direct link to the Stripe Radar rules page in the billing address field description. #3677 (@dparker1005)
+* BUG FIX: Prevented concurrent Stripe webhook deliveries from racing on the same order by introducing a MySQL advisory lock around webhook processing. This fixes cases where "at least once" Stripe delivery from multiple infrastructure nodes could create duplicate membership rows or cancel a freshly-created subscription. #3649 (@dparker1005)
+* BUG FIX: Fixed the Old Members CSV export to exclude users who currently have any active membership, matching the logic already used by the expired and cancelled filters. #3680 (@dwanjuki)
+* BUG FIX: Fixed a PHP warning and a missing payment transaction ID when Stripe checkout sessions complete asynchronously (e.g. Bank Transfer), where the PaymentIntent has no `latest_charge` at completion time. #3655 (@dwanjuki)
+* BUG FIX: Honored the configured currency decimals in `pmpro_get_price_info()`'s `amount_string` so zero-decimal currencies (JPY, KRW, VND, UAH, ALL) no longer produce strings like "25.00" that PayPal billing rejects. Also fixed `pmpro_get_currency()` so it actually honors the `$currency` parameter it advertises. #3676 (@dparker1005)
+* BUG FIX: Allowed updating billing for subscriptions without a successful order on file, so manually-linked subscriptions in the admin no longer redirect users away from the billing page. #3667 (@dparker1005)
+* BUG FIX: Fixed the Restricted Files protection self-test reporting "Unable to determine" on sites with no member uploads, by writing a non-dotfile marker (`pmpro-protection-test.txt`) alongside the existing `.htaccess`. #3675 (@dalemugford)
 
-= 3.1 - 2024-07-17 =
-* FEATURE: Added a new "Design" tab to the Memberships > Settings page with multiple frontend style variations to choose from. #3003 (@kimcoleman)
-* FEATURE: Added a new "Security" tab to the Memberships > Settings page. #2999 (@MaximilianoRicoTabo)
-* ENHANCEMENT: Updated the styling of frontend pages. #3003 (@kimcoleman)
-* ENHANCEMENT: Improved the logic around how "no access" messages are generated and added filters to customize these messages. #3003 (@kimcoleman)
-* ENHANCEMENT: Standardized CSS selectors to make theming a PMPro site more straightforward. #3003 (@kimcoleman)
-* ENHANCEMENT: Added an "Edit Customer in Stripe" button to the "View Subscription" page for Stripe subscriptions. #2987 (@dparker1005)
-* ENHANCEMENT: Set Stripe Checkout to be the default Stripe payment flow on new websites. #3006 (@dparker1005)
-* ENHANCEMENT: Updated the "Check out with PayPal" button so that it is more accessible and can be translated. #3026 (@kimcoleman)
-* ENHANCEMENT: Updated the billing failure email to link directly to the "update billing information" page for the corresponding subscription. #3032 (@MaximilianoRicoTabo)
-* ENHANCEMENT: Updated the term "Invoice" to "Order" in most places throughout the plugin. #2982 (@kimcoleman)
-* ENHANCEMENT: Added filters for updating how the total, subtotal, and tax are displayed for an order. #3009 (@dparker1005)
-* ENHANCEMENT: Added a new filter `pmpro_subscription_cost_text` for updating how the subscription cost is displayed. #3021 (@dparker1005)
-* ENHANCEMENT: Added new filter `pmpro_dashboard_meta_boxes` to allow developers to hide dashboard widgets and add their very own widgets to the PMPro dashboard area. #3019 (@andrewlimaza)
-* ENHANCEMENT: Now detecting Add Ons with incorrect folder names in site health. #2069 (@mircobabini)
-* BUG FIX/ENHANCEMENT: Email headers and footers are now added after email body filters are run. #2000 (@mircobabini)
-* BUG FIX/ENHANCEMENT: Added an error message on the Edit Member page when an order refund fails. #3015 (@dparker1005)
-* BUG FIX/ENHANCEMENT: Moved the "Edit Customer in Stripe" button on the Edit Member page to the "User Info" tab. #2987 (@MaximilianoRicoTabo)
-* BUG FIX/ENHANCEMENT: Added a fallback to get the site URL from the database should the SERVER_NAME parameter not be available in certain cases like using WP-CLI and some other instances. #2996 (@andrewlimaza)
-* BUG FIX/ENHANCEMENT: Now including email template variables for the expired level ID and level name on the membership expired email template. #2954 (@MaximilianoRicoTabo)
-* BUG FIX/ENHANCEMENT: When using PMPro Lifter Streamline mode, now making sure that Lifter does not reserve the `/membership/` slug. #2927 (@MaximilianoRicoTabo)
-* BUG FIX/ENHANCEMENT: Enabled localization for certain strings throughout the plugin. #3005 (@DAnn2012)
-* BUG FIX/ENHANCEMENT: Updated the "Login Name" setting for Authorize.net to "API Login ID" to match the Authorize.net documentation. #3058 (@dparker1005)
-* BUG FIX: Fixed an issue where the payment transaction ID would not be saved for an order while purchasing a subscription via Stripe Checkout. #3025 (@dparker1005)
-* BUG FIX: Fixed an issue on some hosting setups where subscriptions would not be successfully inserted into the database. #3002 (@dparker1005)
-* BUG FIX: Fixed an issue where the "Content Visibility" block editor settings could break some core WordPress blocks. #3014 (@MaximilianoRicoTabo)
-* BUG FIX: Fixed an issue where a user's membership might not be removed when a PayPal Express subscription is suspended due to payment failure. #3016 (@dparker1005)
-* BUG FIX: Fixed a broken link to the PMPro Approvals documentation page when creating a new membership level. #3001 (@dparker1005)
-* BUG FIX: Fixed an issue where testing the "cancel on next payment date" email template might fail. #2984 (@MaximilianoRicoTabo)
-* BUG FIX: Fixed an issue where a PHP warning might be shown when dynamically adding the membership level body CSS class. #3013 (@andrewlimaza)
-* BUG FIX: Fixed an issue where the "From Name" email setting could add slashes before escaped characters when saved. #3050 (@andrewlimaza)
-* BUG FIX: Fixed an issue where the "View With" admin bar dropdown might not work correctly when using Firefox. #2953 (@MaximilianoRicoTabo)
-* BUG FIX: Fixed an issue where there might not be a space between class names when creating a user field. #3046 (@kimcoleman)
-* BUG FIX: Fixed issues where user IDs over 4294967295 would not be correctly linked to their subscription. #3065 (@dparker1005)
-* BUG FIX: Fixed over-escaped HTML in the admin activity email. #2985 (@MaximilianoRicoTabo)
-* BUG FIX: Fixed some typos in the plugin. #3062 (@szepeviktor)
-* REFACTOR: Updated the checkout preheader to use the abstracted `pmpro_complete_checkout()` function. #2937 (@dparker1005)
-* REFACTOR: Removed duplicate code from PayPal gateway classes. #2932 (@dparker1005)
-* DEPRECATED: Removed the ability to customize no access messages for the RSS feed and the secondary option for logged out members. Filters should be used to customize these messages. #3003 (@kimcoleman)
-* DEPRECATED: Removed the "Update Billing Flow" option from the Stripe gateway settings. Billing information will now be updated on-site if using the on-site payment flow and off-site if payments are taken via Stripe Checkout. #3006 (@dparker1005)
-* DEPRECATED: Removed the `print.css` file from the plugin. These styles are now in `frontend.css`. #2940 (@dparker1005)
-* DEPRECATED: Deprecated the `pmpro_longform_address` filter. Address fields will always be shown in longform format. #2990 (@kimcoleman)
-* DEPRECATED: Removed setting and display of SSL Seal Code option from database and frontend pages. #2991 (@kimcoleman)
-* DEPRECATED: No longer storing an option for accepted card types or allowing a card type select field in payment forms. #2989 (@kimcoleman)
-* DEPRECATED: Deprecated the billable invoice, credit card expiring, checkout express, checkout trial, and checkout free trial email templates along with their admin counterparts. #3032 (@MaximilianoRicoTabo)
-* DEPRECATED: Removed the setup.sql file from the plugin. #3068 (@dparker1005)
+= 3.7.2 - 2026-05-01 =
+* SECURITY: Tightened ownership check in the `/pmpro/v1/order` REST permission callback to bail early for anonymous requests, require a non-empty order ID, and use a strict integer comparison. #3643 (@flintfromthebasement)
+* SECURITY: Scoped the `/pmpro/v1/quick_search` users meta lookups to custom profile fields by skipping internal WP/plugin meta keys. Added the `pmpro_rest_api_quick_search_meta_key_blocklist` filter so sites can extend the blocklist. #3644 (@flintfromthebasement)
+* SECURITY: Fixed a non-functional capability guard in `PMPro_Field_Group::save_fields()` where a literal string comparison made the `current_user_can( 'edit_user' )` check unreachable. #3645 (@flintfromthebasement)
+* ENHANCEMENT: Reworked the Email Settings and Security Settings admin pages to detect the active email sending method and security provider, surface that information in Site Health, recognize PMPro Max as a provider, and remove the legacy built-in SendWP integration. #3656 (@kimcoleman)
+* ENHANCEMENT: Renamed the Builder and Plus Add Ons to Max throughout the admin and labeled all paid Add Ons under the new Premium license tier. #3650 (@dparker1005)
+* ENHANCEMENT: Added the new PayPal Gateway Add On to the Payment Gateway settings page, surfacing it as "Enabled (via Add On)" when active as a secondary gateway. #3657 (@dparker1005)
+* ENHANCEMENT: Added new filters for avatar upload location and render location to support multisite installations. #3648 (@kimcoleman)
+* ENHANCEMENT: Updated the Design Settings page link to a direct URL so tracking parameters work without a redirect. #3625 (@kimwhite)
+* ENHANCEMENT: Added/updated Add On icons including a new MailerLite icon for an upcoming Add On. #3627, #3652 (@kimcoleman)
+* BUG FIX/ENHANCEMENT: Fixed three bugs that caused member CSV export downloads to return 403/404: deferred export record cleanup until after the file is served, extended download token TTL to 7 days and hardened the URL builder when no token is available, and prevented zero-record exports from creating a ghost "complete" state. Introduced the `pmpro_restricted_file_served` action and buffered handler output to avoid corrupting the response. #3637 (@dalemugford)
+* BUG FIX: Fixed a deprecated `pmpro_changeMembershipLevel()` call when deleting a WP user. #3660 (@kimwhite)
+* BUG FIX: Fixed deprecation notices in `pmpro_cleanPhone()` when the phone value is `null`. #3654 (@dwanjuki)
+* BUG FIX: Fixed the All Levels member export producing duplicate rows and omitting members with higher user IDs in large exports. #3632 (@flintfromthebasement)
+* BUG FIX: Fixed the `checkbox_grouped` field input not receiving the correct CSS selectors. #3646 (@kimcoleman)
+* BUG FIX: Skipped content visibility controls for unsupported blocks in widget editors to prevent JS errors. #3653 (@dwanjuki)
+
+= 3.7.1 - 2026-03-25 =
+* BUG FIX: Fixed some admin pages not saving due to POST redirect in list table referer cleanup. #3624 (@kimcoleman)
+* BUG FIX: Fixed PHP 8.1 deprecation warnings in restricted files functions on Windows servers with misconfigured upload directories. #3623 (@flintfromthebasement)
+* DEPRECATED: Deprecated the PayPal Express gateway. PayPal is retiring the NVP/SOAP API that PayPal Express relies on. A new PayPal integration is coming soon. #3622 (@dparker1005)
+* DEPRECATED: Renamed the Website Payments Pro gateway slug from `paypal` to `paypalwpp` to free the `paypal` slug for the upcoming PayPal REST API Add On. #3622 (@dparker1005)
+
+= 3.7 - 2026-03-23 =
+* FEATURE: Added native profile picture (avatar) support, allowing members to upload custom avatars managed entirely within PMPro instead of relying on Gravatar. #3597 (@ideadude)
+* FEATURE: Added a Quick Search feature for navigating Memberships admin pages. #3563 (@dparker1005)
+* FEATURE: Added Liquid-style template rendering for email bodies with support for variables, filters, and conditionals. #3584 (@dparker1005)
+* FEATURE: Added email logging for all emails sent by PMPro. The new `pmpro_should_log_email` filter can be used to enable email logging for non-PMPro emails as well. #3573, #3581 (@dparker1005)
+* ENHANCEMENT: Added sidebar filter panels for the orders and subscriptions admin pages with support for level, status, date range, discount code, gateway, and total filters. #3602 (@dparker1005)
+* ENHANCEMENT: Added To, CC, and BCC settings to the Email Templates editor. #3588 (@kimcoleman)
+* ENHANCEMENT: Members and orders CSV exports now use Action Scheduler for improved reliability on large datasets. #3543 (@dalemugford)
+* ENHANCEMENT: Added optional Action Scheduler support for deferrable webhook events. #3589 (@dparker1005)
+* ENHANCEMENT: Added Site Health critical issue notification when plugins are using incorrect folder names. #3553 (@andrewlimaza)
+* ENHANCEMENT: Added a restricted directory check to detect and report issues with the protected files directory. #3557 (@dalemugford)
+* ENHANCEMENT: Improved support for reCAPTCHA v3 with score validation, defaulting to 0.5 and customizable via the `pmpro_recaptcha_v3_min_score` filter. #3564 (@andrewlimaza)
+* ENHANCEMENT: Adjusted the Update Billing page to no longer automatically redirect away to the account page. #3566 (@andrewlimaza)
+* ENHANCEMENT: Updated the Subscriptions admin screens to match the orders admin screens for view, edit, and link styling. #3568 (@kimcoleman)
+* ENHANCEMENT: Removed use of the deprecated `SQL_CALC_FOUND_ROWS` modifier across all queries. #3571 (@dparker1005)
+* ENHANCEMENT: Consolidated membership signup and cancellation queries for improved performance on dashboard reports. #3574 (@dparker1005)
+* ENHANCEMENT: Now caching the Members Per Level report for improved dashboard performance. #3580 (@dparker1005)
+* ENHANCEMENT: Added `membership_id` as a default column in the Members List CSV export. #3604 (@andrewlimaza)
+* ENHANCEMENT: Now supporting `light-dark` values for contextual message CSS custom properties. #3606 (@kimcoleman)
+* ENHANCEMENT: Added PMPro icon to the admin menu and updated the top menu bar to use an icon with screen reader text. #3607 (@kimcoleman)
+* BUG FIX/ENHANCEMENT: Updated the checkout form submit handler to improve reliability of payment processing. #3545 (@dwanjuki)
+* BUG FIX/ENHANCEMENT: Updated the capability check for viewing admin user fields to use `pmpro_edit_members`. #3561 (@dparker1005)
+* BUG FIX: Fixed dependencies for the content visibility block component to prevent enqueue issues. #3538 (@dparker1005)
+* BUG FIX: Fixed a default height prop warning in block editor components. #3540 (@dwanjuki)
+* BUG FIX: Fixed a console warning in WordPress 6.3+ by moving block asset enqueuing to the `enqueue_block_assets` hook. #3549 (@andrewlimaza)
+* BUG FIX: Fixed slashed level names displaying with backslashes in the setup wizard. #3617 (@dparker1005)
+* REFACTOR: Refactored the Stripe webhook handler into a new `PMPro_Stripe_Webhook_Handler` class. #3589 (@dparker1005)
+* REFACTOR: Removed unused test scripts. #3600 (@dparker1005)
+* DEPRECATED: Marked the Subscription Check Add On as deprecated on the Add Ons page. #3601 (@dwanjuki)
+* DEPRECATED: Reading webhook status via `pmpro_doing_webhook()` is now deprecated. Use `pmpro_doing_webhook( $gateway, true )` for write mode only. #3603 (@dparker1005)
+* DEPRECATED: The `pmpro_before_members_list_csv_export` and `pmpro_after_members_list_csv_export` actions are deprecated and no longer fired. #3543 (@dalemugford)
+* DEPRECATED: Removed bundled core translation files to reduce the shipped plugin package size. #3605 (@dparker1005)
+
+= 3.6.6 - 2026-03-13 =
+* SECURITY: Added capability and nonce checks to Stripe webhook AJAX management endpoints. #3615 (@dparker1005)
+* SECURITY: Added shared-secret token validation for the deprecated Authorize.net ARB Silent Posts integration with a configurable `pmpro_authnet_silent_post_token` option in gateway settings. #3598 (@dparker1005)
+* BUG FIX: Fixed an operator precedence bug causing corechart.js to load on all report pages. #3609 (@flintfromthebasement)
+* BUG FIX: Fixed an "Attempt to read property ID on null" warning in display post states. #3599 (@dwanjuki)
+
+= 3.6.5 - 2026-02-26 =
+* SECURITY: Gated the unverified Stripe webhook event fallback behind a new `pmpro_stripe_webhook_allow_unverified_post_event` filter, which defaults to `false`. #3592 (@dparker1005)
+* ENHANCEMENT: Updated links to the Member Directory and Podcasting Use Case landing pages and hubs. #3593 (@kimcoleman)
+* ENHANCEMENT: Added a new `pmpro_memberships_widget_periods` filter to allow customizing the time periods shown in the Memberships Report widget. (@kimcoleman)
+* ENHANCEMENT: Added a new icon for the PMPro Kit Add On. #3575 (@kimcoleman)
+* ENHANCEMENT: Now clearing the object cache when user fields are created, updated, or deleted to ensure changes show immediately when using persistent object caching. #3565 (@dalemugford)
+* ENHANCEMENT: Updated the WP Fusion Lite integration through v3.47.6. #3583 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Now ignoring PayPal error code 11556 when cancelling a subscription that is already inactive to avoid unnecessary admin notifications. #3572 (@dparker1005)
+* BUG FIX: Fixed an issue where the field group description was not showing due to an incorrect variable reference. #3591 (@mircobabini)
+* BUG FIX: Fixed an issue where failed Stripe recurring payment orders were missing card info and billing address data. #3590 (@dparker1005)
+* BUG FIX: Fixed an issue where the membership level billing amount could be recalculated incorrectly when processing checkout via webhook, potentially losing discount code pricing. #3585 (@dparker1005)
+* BUG FIX: Fixed an issue where the timestamp for new orders created in the admin could default to 1970 when the site timezone is not UTC. #3582 (@dparker1005)
+* BUG FIX: Resolved PHP 8.5+ deprecation warnings for non-canonical cast names. #3560 (@dwanjuki)
+
+= 3.6.4 - 2026-01-08 =
+* ENHANCEMENT: Adding a new `!!order_url!!` email template variable to checkout email templates. #3555 (@kimcoleman)
+* ENHANCEMENT: Now limiting failed payment emails to be sent a maximum of once daily per subscription. #3552 (@dparker1005)
+* ENHANCEMENT: Now cleaning up library conflict records that are older than 7 days. #3554 (@dalemugford)
+* BUG FIX/ENHANCEMENT: Discount codes now expire at the end of the date set as the "Expiration Date" instead of at the start of that date. #3559 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Now ignoring Stripe `charge.failed` webhook events for subscriptions that have already been cancelled in Stripe which could interfere with processing the subsequent `customer.subscription.deleted` webhook event. #3556 (@dparker1005)
+
+= 3.6.3 - 2025-12-15 =
+* SECURITY: No longer prepopulating the password field on the checkout page after a failed checkout attempt. #3551 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Updated membership actions to run more frequently to improve support for hourly memberships. #3547 (@andrewlimaza)
+* BUG FIX/ENHANCEMENT: Improved the styling for nested `.pmpro_card` elements. #3539 (@kimcoleman)
+* BUG FIX: Fixed the HTML structure when displaying image-type file fields to improve appearance. #3537 (@kimcoleman)
+* BUG FIX: Corrected the links shown for the Stripe Tax setting. #3546 (@dwanjuki)
+
+= 3.6.2 - 2025-11-20 =
+* ENHANCEMENT: Stripe subscriptions will no longer be created with an application fee or will have the fee immediately removed when the initial payment is complete. Application fees will then be added per-invoice during the `invoice.created` webhook to ensure that fees are only charged when PMPro is actively managing the subscription. #3535 (@dparker1005)
+* ENHANCEMENT: Updated the Stripe webhook handler to remove application fees from existing subscriptions over time during the `invoice.upcoming` webhook event. This helps to ensure that websites that have stopped using Stripe Connect will not be charged the 2% application fee. #3535 (@dparker1005)
+* ENHANCEMENT: Updated the PayPal IPN handler to use the `add_order_note()` method when adding the IPN ID to an order. #3534 (@dparker1005)
+* BUG FIX: Restored fallback logic for pulling billing addresses from Stripe customer objects and previous PMPro orders when a Stripe recurring payment is received without a billing address set on the payment method. #3533 (@dparker1005)
+* BUG FIX: Fixed an issue where correcting data in fields with validation errors did not clear the error border from the input. #3531 (@andrewlimaza)
+* BUG FIX: Fixed an issue where the Edit Member sidebar may not show the correct user field panels after changing a user's membership level. #3532 (@dparker1005)
+
+= 3.6.1 - 2025-11-12 =
+* ENHANCEMENT: Now showing TOS Consent information on the admin "View Order" page. #3520 (@kimcoleman)
+* ENHANCEMENT: Added a new helper method `add_order_note()` to the MemberOrder class. #3524 (@dparker1005)
+* ENHANCEMENT: Added icons for WP Activity Log and WP Fusion Lite. #3521 (@andrewlimaza)
+* BUG FIX/ENHANCEMENT: Now updating the next payment date for subscriptions when there is a failed payment. #3526 (@dparker1005)
+* BUG FIX: Fixed an issue where post restrictions could not be removed when using the classic editor. #3530 (@dparker1005)
+* BUG FIX: Fixed an issue where page contents would not load in the Beaver Builder editor if the post is restricted. #3529 (@dparker1005)
+* BUG FIX: Fixed an issue where plus characters in usernames may be converted into spaces when shown in login page error messages. #3519 (@andrewlimaza)
+* BUG FIX: Fixed a deprecation warning when installing Add Ons from the Membership > Add Ons screen. #3525 (@andrewlimaza)
+
+= 3.6 - 2025-10-21 =
+* FEATURE: Added compatibility with WP Fusion Lite. #3461 (@jarrydlong)
+* ENHANCEMENT: Added a new admin “view order” page before the “edit” step. #3467 (@kimcoleman)
+* ENHANCEMENT: Now saving orders in `pending` status when a Stripe or PayPal recurring payment fails. #3491 (@dparker1005)
+* ENHANCEMENT: Now updating the email address for customers in Stripe when the corresponding user is updated in WordPress. #3454 (@dparker1005)
+* ENHANCEMENT: General improvements to the Add Ons page including filters for active and inactive Add Ons. #3488 (@dalemugford)
+* ENHANCEMENT: Now automatically adjusting the content-disposition header for restricted files based on the file type. #3473 (@andrewlimaza)
+* ENHANCEMENT: Added a new filter `pmpro_restricted_file_content_disposition` to dynamically adjust the content-disposition header for restricted files. #3473 (@andrewlimaza)
+* ENHANCEMENT: Added a new filter `pmpro_order_action_links` to allow modifying the action links when viewing an order on the frontend. #3465 (@dparker1005)
+* ENHANCEMENT: Added a new action `pmpro_after_updating_post_level_restrictions` to run code after the level restrictions for a post is updated. #3462 (@dparker1005)
+* ENHANCEMENT: Now repairing membership-based course enrollments when LifterLMS courses are saved while streamline is enabled. #3462 (@dparker1005)
+* ENHANCEMENT: Now removing membership-related LifterLMS engagement triggers when streamline is enabled. #3439 (@kimcoleman)
+* ENHANCEMENT: Updated Stripe API version to 2025-09-30.clover. #3459 (@dparker1005)
+* ENHANCEMENT: Improved styling of “file” type user fields. #3498 (@kimcoleman)
+* ENHANCEMENT: Added a new function `pmpro_get_gateway_nicename()` to retrieve a gateway's nicename by its slug. #3508 (@andrewlimaza)
+* BUG FIX/ENHANCEMENT: Fixes member list exports including “expired” in the file name when exporting “old members”. #3500 (@andrewlimaza)
+* BUG FIX/ENHANCEMENT: Added Brazil to the list of countries that do not allow Stripe Connect application fees. #3490 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Optimized queries when showing “old members” on the Members List. #3494 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Now hiding links from the Account page if the linked page is not set. #3516 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Now saving the Stripe invoice ID as the PMPro order’s payment transaction ID whenever an invoice is generated in Stripe. #3464 (@dparker1005)
+* BUG FIX: Fixed an issue where incorrect tax values may be set on orders when using Stripe Checkout. #3489 (@dparker1005)
+* BUG FIX: Adding back the !!membership_id!! email template variable to the “admin_cancel” email template. #3503 (@kimcoleman)
+* BUG FIX: Fixed localization in the email header and footer templates. #3492 (@dwanjuki)
+* BUG FIX: Fixed an issue where LifterLMS access plans meta boxes may still show when streamline is enabled. #3439 (@kimcoleman)
+* REFACTOR: Added abstracted functions for processing recurring successful and failed payments during webhook/IPN handlers. #3491 (@dparker1005)
+* REFACTOR: Created a new class `PMPro_AddOns` for managing Add Ons. #3488, #3497 (@dalemugford)
+* REFACTOR: Added an abstracted function `pmpro_update_post_level_restrictions()` for setting the level restrictions for a post. #3462 (@dparker1005)
+
+= 3.5.6 - 2025-09-10 =
+* ENHANCEMENT: Added styles for frontend tables with data filter options. #3482 (@kimcoleman)
+* BUG FIX: Fixed an issue where a generic error message may be shown at checkout instead of the intended error message. #3483 (@JarrydLong)
+* BUG FIX: Fixed an issue where recurring PayPal Express payments would not be recorded in PMPro if the associated subscription did not already have orders present on the site. #3484 (@dparker1005)
+* BUG FIX: Fixed an issue where PayPal subscriptions may remain in "paused" status after being marked as cancelled in PMPro. #3485 (@dparker1005)
+* BUG FIX: Fixed an issue where Stripe application fees could be updated for invoices that did not originate from PMPro subscriptions. #3487 (@dparker1005)
+
+= 3.5.5 - 2025-08-26 =
+* ENHANCEMENT: Improved readability of order notes by adding line breaks before appending data via automated processes. #3480 (@kimcoleman)
+* ENHANCEMENT: Added formatting for the Polish zloty currency. #3478 (@warnaa)
+* ENHANCEMENT: Updated the Gocodebox_Banner_Notifier library and prefixed the class with `PMPro_` to avoid plugin conflicts. #3474 (@dparker1005)
+* BUG FIX: Fixed performance issues that may occur when the plugin is in "pause mode". #3476 (@dparker1005)
+* BUG FIX: Fixed an issue where some admin banners could not be dismissed. #3472 (@dparker1005)
+* BUG FIX: Resolving a PHP warning that may show when deactivating the plugin. #3475 (@dalemugford)
+* BUG FIX: Corrected the description for the Credit Card Expiring email template. #3471 (@kimwhite)
+* REFACTOR: Moved some compatibility code from the PMPro_Action_Scheduler class to separate compatibility files. #3475 (@dalemugford)
+
+= 3.5.4 - 2025-08-18 =
+* BUG FIX/ENHANCEMENT: Now marking restricted Elementor content as "dynamic content" to prevent it from being cached by Elementor. #3469 (@andrewlimaza)
+* BUG FIX: Fixed an issue where "Payment Reminder" emails may go out daily depending on the site's set timezone. #3463 (@dalemugford)
+* BUG FIX: Fixed an issue where some restricted Elementor data may not have successfully migrated after the PMPro v3.5 update. #3466 (@dparker1005)
+* BUG FIX: Fixed an issue where the "Rebuild Webhook" button on the Stripe Payment Settings page would not create a new webhook. #3457 (@dparker1005)
+* BUG FIX: Fixed an issue where PMPro checkouts would not complete if the Stripe Checkout session was set to "no_payment_required" status. #3458 (@johnorourke)
+* BUG FIX: Fixed an issue where PayPal subscriptions may be set to "paused" status instead of "cancelled" after recurring payments are suspended due to failed payments. #3468 (@dparker1005)
+* BUG FIX: Fixed a PHP deprecation warning that may show when updating billing information. #3460 (@dparker1005)
+
+= 3.5.3 - 2025-07-25 =
+* ENHANCEMENT: Added a new `!!renew_url!!` email template variable to expiration and cancellation email templates. #3448 (@kimcoleman)
+* ENHANCEMENT: Extended the checkout spam protection setting to also protect the login form. #3450 (@ideadude)
+* ENHANCEMENT: Added a `startdate` column to the Members List CSV export. #3443 (@dparker1005)
+* ENHANCEMENT: Changed the name of the "Membership Recurring" email template to "Recurring Payment Reminder". #3451 (@kimwhite)
+* ENHANCEMENT: Added an "Action Scheduler Health" section to the PMPro Site Health report. #3453 (@dalemugford)
+* ENHANCEMENT: Now cleaning up PMPro Action Scheduler scheduled tasks when the plugin is deactivated or uninstalled. #3440 (@dalemugford)
+* BUG FIX/ENHANCEMENT: Now avoiding cases where duplicate PMPro Action Scheduler scheduled tasks may be created. #3444 (@dalemugford)
+* BUG FIX: Fixed an issue where the Admin Activity Email would not be sent. #3441 (@dalemugford)
+* BUG FIX: Fixed an issue where "Recent Members" metabox may not show correctly on websites using custom database table prefixes. #3442 (@dparker1005)
+* BUG FIX: Fixed an issue where an incorrect level name may be sent in renewal emails when level for the associated subscription had changed. #3449 (@dparker1005)
+* BUG FIX: Fixed an issue where sorting columns on the Subscriptions List Table would not work when a search term was set. #3447 (@dparker1005)
+* BUG FIX: Fixed a rare plugin conflict that could prevent Elementor data from completing the migration included in PMPro v3.5. #3445 (@dparker1005)
+* BUG FIX: Fixed an issue where Wisdom data would only ever be sent on the first day of each month. #3446 (@dparker1005)
+
+= 3.5.2 - 2025-07-14 =
+* BUG FIX: Fixed an issue where members may receive multiple recurring payment reminder emails for the same payment. #3437 (@mircobabini)
+* BUG FIX: Fixed an issue where gateway settings may not show for some gateways. #3436 (@dparker1005)
+* BUG FIX: Fixed an issue where "Recent Members" metabox may not show correctly on websites using custom database table prefixes. #3434 (@jeiseman)
+* BUG FIX: Fixed a PHP error that would occur when the `post__not_in` parameter of `WP_Query` is not an array. #3438 (@dparker1005)
+* BUG FIX: Added back a missing argument for the deprecated `pmpro_email_template` filter. #3432 (@dparker1005)
+
+= 3.5.1 - 2025-07-09 =
+* ENHANCEMENT: Added caching to the `pmpro_getMembershipCategories()` function to improve performance. #3421 (@dalemugford)
+* ENHANCEMENT: Optimized the query used to retrieve the list of members to show in the Members List table. #3413 (@dalemugford, @dparker1005)
+* BUG FIX: Removed code added in 3.5 that would slow down the query to retrieve the list of members to show in the Members List table. #3430 (@dparker1005)
+* BUG FIX: Fixed an issue where the subscription ID may not be shown in some Stripe webhook log messages. #3429 (@dwanjuki)
+
+= 3.5 - 2025-07-07 =
+* FEATURE: Now using Action Scheduler to handle scheduled tasks. #3393 (@dalemugford)
+* FEATURE: Now allowing files to be restricted using the new `pmpro_can_access_restricted_file` filter. This is currently used to ensure that log files generated during gateway webhook handlers can only be viewed by administrators. #3308 (@dparker1005)
+* FEATURE: Added content restriction settings when using Bricks Builder. #3342 (@MaximilianoRicoTabo)
+* ENHANCEMENT: Added additional widgets to the Memberships > Dashboard page and updated the layout to be more customizable. #3412 (@dalemugford)
+* ENHANCEMENT: Updated the Memberships > Settings > Payments settings page UI to have a separate page for each gateway. #3398 (@dparker1005, @kimcoleman)
+* ENHANCEMENT: Updated orders search to support searching by specific properties using [property]:[value]. #3382 (@kimcoleman)
+* ENHANCEMENT: Now adding the option to automatically install the Update Manager during the setup wizard. #3411 (@dalemugford)
+* ENHANCEMENT: Updated the content restrictions in Elementor to match how restrictions are set in the block editor. #3144 (@MaximilianoRicoTabo)
+* ENHANCEMENT: Now encoding the `pmpro_last_known_url` option to improve compatibility between "pause mode" and site migrations. #3400 (@mircobabini)
+* ENHANCEMENT: Now allowing linking to a filtered result via URL parameters on the Memberships > Add Ons page. #3377 (@kimcoleman)
+* ENHANCEMENT: Now supporting showing information from level meta when using the `[pmpro_member]` shortcode. #3276 (@kimcoleman)
+* ENHANCEMENT: Added new functions `pmpro_get_countries()` and `pmpro_get_default_country()` to avoid relying on global variables. #3353 (@dparker1005)
+* ENHANCEMENT: Added new hooks `pmpro_added_subscription` and `pmpro_updated_subscription`. #3357 (@mircobabini)
+* ENHANCEMENT: Added a new filter `pmpro_deprecated_gateways` to allow developers to filter the list of deprecated gateways. #3404 (@dparker1005)
+* ENHANCEMENT: Updated the PMPro_Email_Template class to streamline the process of sending test emails for each email template. #3340 (@MaximilianoRicoTabo)
+* ENHANCEMENT: Updated Wisdom data sharing to be an opt-out system. This will not change the selected option for existing sites. #3411 (@dalemugford)
+* ENHANCEMENT: Added a new `pmpro_no_download` parameter to CSV exports to prevent downloading the CSV file during Toolkit tests. #3417 (@dalemugford)
+* BUG FIX/ENHANCEMENT: Now syncing application fees with Stripe before recurring payments are charged to ensure that fees reflect whether the site has an active license key. #3403 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Improved accessibility for the hidden honeypot field on the checkout page. #3416 (@andrewlimaza)
+* BUG FIX/ENHANCEMENT: Now using a MutationObserver instead of the deprecated `DOMSubtreeModified` event to detect changes to the checkout message container. #3386 (@getjohn)
+* BUG FIX/ENHANCEMENT: Improved the error message wording for subscriptions with the level ID set to `0`. #3359 (@mircobabini)
+* BUG FIX/ENHANCEMENT: Now trimming whitespace for user field options where only the value is provided. #3379 (@mircobabini)
+* BUG FIX/ENHANCEMENT: Now avoiding extra whitespace in the payment description sent to PayPal Express. #3414 (@JarrydLong)
+* BUG FIX: Fixed an issue where membership expiration emails may show the incorrect level name for users who have multiple levels. #3347 (@MaximilianoRicoTabo)
+* BUG FIX: Fixed a PHP error on the sales reports page and fixed some closing HTML tags that did not match. #3406 (@mircobabini)
+* BUG FIX: Fixed an issue where application fees were not set correctly when setting up Stripe subscriptions. #3358 (@mircobabini)
+* REFACTOR: Now using the Gocodebox_Banner_Notifier class to display banner notifications. #3399 (@brianhogg)
+* DEPRECATED: No longer using crons for scheduled tasks and removed the `/scheduled/` directory. #3393 (@dalemugford)
+* DEPRECATED: Marked the `pmpro_set_application_fee_percentage` filter and the reduced Stripe application fee as deprecated. #3403 (@dparker1005)
 
 == Upgrade Notice ==
 = 3.0 =

@@ -4,7 +4,6 @@
 */
 // Wizard pre-header
 include( PMPRO_DIR . '/adminpages/wizard/save-steps.php' );
-require_once( PMPRO_DIR . '/includes/lib/SendWP/sendwp.php' );
 
 /**
  * Redirect to Setup Wizard if the user hasn't been there yet.
@@ -73,6 +72,36 @@ function pmpro_block_dashboard() {
 	 */
 	return apply_filters( 'pmpro_block_dashboard', $block );
 }
+
+/**
+ * Handle saving custom metabox order via AJAX.
+ *
+ * Saves the order of dashboard metaboxes for the current user.
+ *
+ * @since 3.5
+ * @return void
+ */
+function pmpro_save_metabox_order() {
+
+	// Nonce check.
+	if ( ! wp_verify_nonce( $_POST['pmpro_metabox_nonce'], 'pmpro_metabox_order' ) ) {
+		wp_send_json_error( __( 'Security check failed.', 'paid-memberships-pro' ) );
+	}
+
+	// Sanitize and validate order.
+	$order = sanitize_text_field( wp_unslash( $_POST['order'] ) );
+
+	// Save to user meta.
+	$user_id = get_current_user_id();
+	$updated = update_user_meta( $user_id, 'pmpro_dashboard_metabox_order', $order );
+
+	if ( false === $updated ) {
+		wp_send_json_error( __( 'Could not save order.', 'paid-memberships-pro' ) );
+	}
+
+	wp_send_json_success( __( 'Order saved successfully.', 'paid-memberships-pro' ) );
+}
+add_action( 'wp_ajax_pmpro_save_metabox_order', 'pmpro_save_metabox_order' );
 
 /**
  * Initialize our Site Health integration and add hooks.
@@ -151,7 +180,7 @@ function pmpro_pause_mode_notice() {
 	if ( pmpro_is_paused() && ! empty( $show_notice ) ) {
 		// Site is paused. Show the notice. ?>
 		<div id="hide_pause_notification" class="notice notice-error pmpro_notification pmpro_notification-error">
-			<button type="button" class="pmpro-notice-button notice-dismiss" value="hide_pause_notification"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'paid-memberships-pro' ); ?></span></button>
+			<button type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pmpro_notification_dismiss_hide_pause_notification' ) ); ?>" class="pmpro-notice-button notice-dismiss" value="hide_pause_notification"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'paid-memberships-pro' ); ?></span></button>
 			<div class="pmpro_notification-icon">
 				<span class="dashicons dashicons-warning"></span>
 			</div>
@@ -197,7 +226,7 @@ function pmpro_spamprotection_notice() {
 	if ( ! is_array( $archived_notifications ) || ! array_key_exists( 'hide_spamprotection_notification', $archived_notifications ) ) {
 		?>
 		<div id="hide_spamprotection_notification" class="notice notice-error pmpro_notification pmpro_notification-error">
-			<button type="button" class="pmpro-notice-button notice-dismiss" value="hide_spamprotection_notification"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'paid-memberships-pro' ); ?></span></button>
+			<button type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pmpro_notification_dismiss_hide_spamprotection_notification' ) ); ?>" class="pmpro-notice-button notice-dismiss" value="hide_spamprotection_notification"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'paid-memberships-pro' ); ?></span></button>
 			<div class="pmpro_notification-icon">
 				<span class="dashicons dashicons-warning"></span>
 			</div>
@@ -256,6 +285,25 @@ function pmpro_admin_header() {
 				</h1>
 				<span class="pmpro_version">v<?php echo esc_html( PMPRO_VERSION ); ?></span>
 			</div>
+			<div class="pmpro_admin pmpro_quick_search">
+				<label class="screen-reader-text" for="pmpro_quick_search_input"><?php esc_html_e( 'Search PMPro data', 'paid-memberships-pro' ); ?></label>
+				<input id="pmpro_quick_search_input" type="text" placeholder="<?php esc_attr_e( 'Quick search...', 'paid-memberships-pro' ); ?>" autocomplete="off" />
+				<div class="pmpro_quick_search_select">
+					<label class="screen-reader-text" for="pmpro_quick_search_type"><?php esc_html_e( 'PMPro data to search', 'paid-memberships-pro' ); ?></label>
+					<select id="pmpro_quick_search_type">
+						<option value="all"><?php esc_html_e( 'All', 'paid-memberships-pro' ); ?></option>
+						<option value="users"><?php esc_html_e( 'Users', 'paid-memberships-pro' ); ?></option>
+						<option value="subscriptions"><?php esc_html_e( 'Subscriptions', 'paid-memberships-pro' ); ?></option>
+						<option value="orders"><?php esc_html_e( 'Orders', 'paid-memberships-pro' ); ?></option>
+						<option value="reports"><?php esc_html_e( 'Reports', 'paid-memberships-pro' ); ?></option>
+						<option value="levels"><?php esc_html_e( 'Levels', 'paid-memberships-pro' ); ?></option>
+						<option value="discounts"><?php esc_html_e( 'Discount Codes', 'paid-memberships-pro' ); ?></option>
+						<option value="settings"><?php esc_html_e( 'Settings', 'paid-memberships-pro' ); ?></option>
+						<option value="documentation"><?php esc_html_e( 'Documentation', 'paid-memberships-pro' ); ?></option>
+					</select>
+				</div>
+				<div class="pmpro_quick_search_results"></div>
+			</div>
 			<div class="pmpro_meta">
 				<a target="_blank" rel="noopener noreferrer" href="https://www.paidmembershipspro.com/documentation/?utm_source=plugin&utm_medium=pmpro-admin-header&utm_campaign=documentation"><?php esc_html_e('Documentation', 'paid-memberships-pro' ); ?></a>
 				<a target="_blank" href="https://www.paidmembershipspro.com/support/?utm_source=plugin&utm_medium=pmpro-admin-header&utm_campaign=pricing&utm_content=get-support"><?php esc_html_e('Get Support', 'paid-memberships-pro' );?></a>
@@ -284,24 +332,21 @@ function pmpro_admin_header() {
 add_action( 'admin_notices', 'pmpro_admin_header', 1 );
 
 /**
- * Add notice to rate us that replaces default WordPress footer text on PMPro pages.
+ * Replace the default WordPress footer text on PMPro pages.
  */
 function pmpro_admin_footer_text( $text ) {
-	global $current_screen;
-
 	// Show footer on our pages in admin, but not on the block editor.
 	if (
 		! isset( $_REQUEST['page'] ) ||
-		( isset( $_REQUEST['page'] ) && 'pmpro-' !== substr( $_REQUEST['page'], 0, 6 ) ) ||
-		( isset( $_REQUEST['page'] ) && 'pmpro-advancedsettings' === $_REQUEST['page'] )
+		( isset( $_REQUEST['page'] ) && 'pmpro-' !== substr( $_REQUEST['page'], 0, 6 ) )
 	) {
 		return $text;
 	}
 
 	return sprintf(
 		wp_kses(
-			/* translators: $1$s - Paid Memberships Pro plugin name; $2$s - WP.org review link. */
-			__( 'Please <a href="%1$s" target="_blank" rel="noopener noreferrer">rate us %2$s on WordPress.org</a> to help others find %3$s. Thank you from the %4$s team!', 'paid-memberships-pro' ),
+			/* translators: $1$s - Paid Memberships Pro plugin name; $2$s - testimonial link. */
+			__( 'Please <a href="%1$s" target="_blank" rel="noopener noreferrer">submit a testimonial</a> to help others find %2$s. Thank you from the %3$s team!', 'paid-memberships-pro' ),
 			[
 				'a' => [
 					'href'   => [],
@@ -313,8 +358,7 @@ function pmpro_admin_footer_text( $text ) {
 				],
 			]
 		),
-		'https://wordpress.org/support/plugin/paid-memberships-pro/reviews/?filter=5#new-post',
-		'<span class="pmpro-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>',
+		'https://www.paidmembershipspro.com/submit-testimonial/',
 		'Paid Memberships Pro',
 		'PMPro'
 	);
@@ -326,7 +370,7 @@ add_filter( 'admin_footer_text', 'pmpro_admin_footer_text' );
  * @since 3.0
  */
 function pmpro_hide_non_pmpro_notices() {
-    global $wp_filter;
+	global $wp_filter;
 
 	// Make sure we're on a PMPro page.
 	if ( ! isset( $_REQUEST['page'] )
@@ -335,10 +379,10 @@ function pmpro_hide_non_pmpro_notices() {
 	}
 
 	// Handle notices added through these hooks.
-    $hooks = ['admin_notices', 'all_admin_notices'];
+	$hooks = ['admin_notices', 'all_admin_notices'];
 
-    foreach ($hooks as $hook) {
-        // If no callbacks are registered, skip.
+	foreach ($hooks as $hook) {
+		// If no callbacks are registered, skip.
 		if ( ! isset( $wp_filter[$hook] ) ) {
 			continue;
 		}
@@ -374,6 +418,6 @@ function pmpro_hide_non_pmpro_notices() {
 				}
 			}
 		}
-    }
+	}
 }
 add_action( 'in_admin_header', 'pmpro_hide_non_pmpro_notices' );

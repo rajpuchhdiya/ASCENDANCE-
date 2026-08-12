@@ -1,0 +1,125 @@
+/* assets/css/list-table.css */
+/* ═══════════════════════════════════════════════════════════
+   GateTouch AI SEO — Enterprise List Table Styles
+   Inspired by Shopify & Ahrefs
+   Standardized on Inter Font & HSL Tokens
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --riq-p: 238, 77%, 62%;
+  --riq-s: 161, 84%, 39%;
+  --riq-w: 38, 92%, 50%;
+  --riq-d: 0, 84%, 60%;
+  --riq-primary: hsl(var(--riq-p));
+}
+
+/* ── Columns & Icons ── */
+.gatetouch-col-icon {
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+/* ── Score Badges ── */
+.gatetouch-list-score {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--score-color);
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.gatetouch-list-ai-score {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: hsla(var(--riq-p), 0.1);
+    color: var(--riq-primary);
+    font-weight: 800;
+    font-size: 11px;
+    border: 1px solid hsla(var(--riq-p), 0.2);
+}
+
+/* ── Meta Status Dots ── */
+.gatetouch-meta-status {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.gatetouch-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 900;
+    color: #fff;
+}
+
+.gatetouch-dot.is-good { background: #10b981; }
+.gatetouch-dot.is-bad { background: #e2e8f0; color: #94a3b8; }
+
+.gatetouch-kw-small {
+    font-size: 10px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+/* ── Schema & Index Badges ── */
+.gatetouch-badge-schema {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.gatetouch-badge-schema.is-active {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.gatetouch-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+.dot-green { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+.dot-red   { background: #ef4444; }
+.dot-gray  { background: #cbd5e1; }
+
+/* ── Row Actions ── */
+.row-actions .gatetouch_optimize a {
+    color: var(--riq-primary) !important;
+    font-weight: 800 !important;
+}
+
+/* ── Quick Actions Animations ── */
+@keyframes gatetouchPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.gatetouch-is-optimizing {
+    animation: gatetouchPulse 1s infinite;
+    pointer-events: none;
+    opacity: 0.6;
+}

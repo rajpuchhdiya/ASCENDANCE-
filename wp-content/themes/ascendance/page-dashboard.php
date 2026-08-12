@@ -594,63 +594,157 @@ function as_human_time( $post_id ) {
 		<!-- BILLING -->
 		<section class="view" id="v-billing">
 			<div class="view-head">
-				<h1>Billing &amp; plan</h1>
-				<p>Subscription details and Stripe portal access.</p>
+				<h1>Billing &amp; Plan</h1>
+				<p>Manage your Ascendance subscription, billing schedule, and payment portal.</p>
 			</div>
 			<div class="panel">
-				<span class="plan-tag">Current plan</span>
 				<?php
-				$billing_tier_name = 'Free Guest';
-				$pmpro_active = function_exists( 'pmpro_getMembershipLevelForUser' );
-				if ( $pmpro_active ) {
-					$u_level = pmpro_getMembershipLevelForUser( $current_user->ID );
-					if ( ! empty( $u_level ) ) {
-						$billing_tier_name = $u_level->name;
-					}
-				}
+				$sub_data = \Ascendance\Core\Member_Dashboard::get_instance()->get_user_subscription_data( $current_user->ID );
+				$tier = $sub_data['tier'];
+				$status = $sub_data['status'];
+				$price = $sub_data['price'];
+				$interval = $sub_data['interval'];
+				$next_date = $sub_data['next_billing_date'];
+				$cancel_at_period_end = $sub_data['cancel_at_period_end'];
+				$customer_id = get_user_meta( $current_user->ID, 'ascendance_stripe_customer_id', true ) ?: get_user_meta( $current_user->ID, 'pmpro_stripe_customerid', true );
 				?>
-				<h2 style="margin-top:8px;"><?php echo esc_html( $billing_tier_name ); ?> Subscription</h2>
-				<div class="bill-grid" style="margin-top:14px;">
-					<div>
-						<div class="bill-row"><span>Status</span><span>Active</span></div>
-						<div class="bill-row"><span>Security Clearance</span><span>Verified</span></div>
-					</div>
+
+				<div class="bill-workspace flex flex-col gap-6">
+					
+					<?php if ( 'admin' === $tier ) : ?>
+						<!-- STATE H — ADMIN -->
+						<div class="bg-navy-deep/40 border border-brand-red/30 p-6 rounded-sm">
+							<span class="plan-tag bg-brand-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">System</span>
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-white">Platform Administrator</h2>
+							<div class="bill-grid" style="margin-top:14px;">
+								<div class="bill-row"><span>Status</span><span class="text-green-400 font-bold">✓ Platform Clearance</span></div>
+								<div class="bill-row"><span>Billing</span><span>Administrative Access Override</span></div>
+							</div>
+						</div>
+
+					<?php elseif ( 'enterprise' === $tier ) : ?>
+						<!-- STATE G — ENTERPRISE -->
+						<div class="bg-navy-deep/40 border border-brand-divider-dark p-6 rounded-sm">
+							<span class="plan-tag bg-brand-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">Tier</span>
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-white">Enterprise Membership</h2>
+							<div class="bill-grid" style="margin-top:14px;">
+								<div class="bill-row"><span>Status</span><span class="text-green-400 font-bold">✓ Enterprise Access</span></div>
+								<div class="bill-row"><span>Billing</span><span>Managed via Corporate Advisory Agreement</span></div>
+							</div>
+						</div>
+
+					<?php elseif ( 'payment_issue' === $status ) : ?>
+						<!-- STATE E — PAYMENT ISSUE -->
+						<div class="bg-red-500/10 border border-red-500/40 p-6 rounded-sm">
+							<span class="plan-tag bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">Action Required</span>
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-red-400">⚠ Payment Issue</h2>
+							<p class="text-sm text-cream/80 my-3">
+								Your payment could not be processed. Please update your payment method to maintain access.
+							</p>
+							<div class="row-actions" style="margin-top:16px;">
+								<button type="button" class="btn btn-primary btn-billing-portal">Manage Billing</button>
+							</div>
+						</div>
+
+					<?php elseif ( $cancel_at_period_end ) : ?>
+						<!-- STATE D — CANCELING -->
+						<div class="bg-amber-500/10 border border-amber-500/40 p-6 rounded-sm">
+							<span class="plan-tag bg-amber-600 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">Notice</span>
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-amber-400"><?php echo esc_html( ucfirst( $tier ) ); ?> Membership</h2>
+							<div class="bill-grid" style="margin-top:14px;">
+								<div class="bill-row"><span>Status</span><span class="text-amber-400 font-bold">⚠ Access Ends <?php echo esc_html( $next_date ?: 'End of Period' ); ?></span></div>
+							</div>
+							<p class="text-sm text-cream/80 my-3">
+								Your subscription remains active until the end of your current billing period.
+							</p>
+							<div class="row-actions" style="margin-top:16px;">
+								<?php if ( ! empty( $customer_id ) ) : ?>
+									<button type="button" class="btn btn-primary btn-billing-portal">Manage Billing</button>
+								<?php else : ?>
+									<a class="btn btn-primary" href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>">View Plans</a>
+								<?php endif; ?>
+							</div>
+						</div>
+
+					<?php elseif ( in_array( $tier, array( 'essential', 'professional' ), true ) && in_array( $status, array( 'active', 'trialing' ), true ) ) : ?>
+						<!-- STATE B & C — ESSENTIAL / PROFESSIONAL ACTIVE -->
+						<div class="bg-navy-deep/40 border border-brand-divider-dark p-6 rounded-sm">
+							<span class="plan-tag bg-brand-red text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm">Current Plan</span>
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-white"><?php echo esc_html( ucfirst( $tier ) ); ?> Membership</h2>
+							<div class="bill-grid" style="margin-top:14px;">
+								<div class="bill-row"><span>Rate</span><span><?php echo esc_html( $price ); ?> / <?php echo esc_html( $interval ); ?></span></div>
+								<div class="bill-row"><span>Status</span><span class="text-green-400 font-bold">✓ Active</span></div>
+								<?php if ( ! empty( $next_date ) ) : ?>
+									<div class="bill-row"><span>Next Billing</span><span><?php echo esc_html( $next_date ); ?></span></div>
+								<?php endif; ?>
+							</div>
+							<div class="row-actions" style="margin-top:16px;">
+								<button type="button" class="btn btn-primary btn-billing-portal">Manage Billing</button>
+							</div>
+						</div>
+
+					<?php elseif ( 'canceled' === $status || 'revoked' === $status ) : ?>
+						<!-- STATE F — REVOKED / CANCELED -->
+						<div class="bg-navy-deep/40 border border-brand-divider-dark p-6 rounded-sm">
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-white">Subscription Inactive</h2>
+							<p class="text-sm text-cream/80 my-3">
+								Your subscription is no longer active.
+							</p>
+							<div class="row-actions" style="margin-top:16px;">
+								<a class="btn btn-primary" href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>">View Plans</a>
+							</div>
+						</div>
+
+					<?php else : ?>
+						<!-- STATE A — NO ACTIVE SUBSCRIPTION -->
+						<div class="bg-navy-deep/40 border border-brand-divider-dark p-6 rounded-sm">
+							<h2 style="margin-top:8px;" class="text-xl font-serif font-bold text-white">No Active Subscription</h2>
+							<p class="text-sm text-cream/80 my-3">
+								You're not currently subscribed to an Ascendance Advisory tier.
+							</p>
+							<div class="row-actions" style="margin-top:16px;">
+								<a class="btn btn-primary" href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>">View Plans</a>
+							</div>
+						</div>
+					<?php endif; ?>
+
 				</div>
-				<div class="row-actions" style="margin-top:16px;">
-					<?php
-					$cust_id = get_user_meta( $current_user->ID, 'ascendance_stripe_customer_id', true );
-					if ( ! empty( $cust_id ) ) :
-					?>
-					<button type="button" class="btn btn-primary" id="btn-stripe-portal-dash">Manage Billing via Stripe Portal</button>
-					<script>
-					document.getElementById('btn-stripe-portal-dash').addEventListener('click', function(e) {
+
+				<script>
+				document.querySelectorAll('.btn-billing-portal').forEach(function(btn) {
+					btn.addEventListener('click', function(e) {
 						e.preventDefault();
-						const btn = this;
+						const originalText = btn.textContent;
 						btn.disabled = true;
 						btn.textContent = 'Connecting to Stripe...';
 						fetch('<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/billing/portal-session' ) ); ?>', { method: 'POST' })
-							.then(res => res.json())
+							.then(res => {
+								if (res.status === 401) {
+									throw new Error('Please log in to manage your subscription.');
+								} else if (res.status === 400) {
+									throw new Error('Your billing account is not fully configured yet.');
+								} else if (!res.ok) {
+									throw new Error("We couldn't open billing management right now. Please try again.");
+								}
+								return res.json();
+							})
 							.then(data => {
 								if (data.url) {
 									window.location.href = data.url;
 								} else {
-									alert(data.error || 'Failed to connect to billing portal.');
+									alert(data.error || "We couldn't open billing management right now. Please try again.");
 									btn.disabled = false;
-									btn.textContent = 'Manage Billing via Stripe Portal';
+									btn.textContent = originalText;
 								}
 							})
 							.catch(err => {
-								console.error(err);
-								alert('An error occurred.');
+								alert(err.message || 'An error occurred.');
 								btn.disabled = false;
-								btn.textContent = 'Manage Billing via Stripe Portal';
+								btn.textContent = originalText;
 							});
 					});
-					</script>
-					<?php else : ?>
-					<a class="btn btn-primary" href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>">Upgrade Membership Tier</a>
-					<?php endif; ?>
-				</div>
+				});
+				</script>
 			</div>
 		</section>
 

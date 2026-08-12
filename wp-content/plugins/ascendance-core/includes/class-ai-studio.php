@@ -423,20 +423,31 @@ class AI_Studio {
                 break;
 
             case 'brevo':
+            case 'mailerlite':
                 if ( strpos( strtolower( $key ), 'mock' ) !== false || strpos( strtolower( $key ), 'sandbox' ) !== false ) {
                     return array(
                         'status'        => 'active',
                         'error_message' => '',
                     );
                 }
-                $response = wp_remote_get( 'https://api.brevo.com/v3/account', array(
-                    'timeout' => 15,
-                    'headers' => array(
-                        'api-key'      => $key,
-                        'content-type' => 'application/json',
-                        'accept'       => 'application/json',
-                    ),
-                ) );
+                if ( 'mailerlite' === $provider || strpos( $key, 'eyJ' ) === 0 ) {
+                    $response = wp_remote_get( 'https://connect.mailerlite.com/api/groups', array(
+                        'timeout' => 15,
+                        'headers' => array(
+                            'Authorization' => 'Bearer ' . $key,
+                            'Accept'        => 'application/json',
+                        ),
+                    ) );
+                } else {
+                    $response = wp_remote_get( 'https://api.brevo.com/v3/account', array(
+                        'timeout' => 15,
+                        'headers' => array(
+                            'api-key'      => $key,
+                            'content-type' => 'application/json',
+                            'accept'       => 'application/json',
+                        ),
+                    ) );
+                }
                 break;
 
             default:

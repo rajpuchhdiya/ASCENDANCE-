@@ -21,17 +21,62 @@ get_header();
 <!-- tiers -->
 <section class="section" id="tiers" style="padding-top:44px;">
 	<div class="wrap">
+		<?php
+		$is_logged_in = is_user_logged_in();
+		$user = wp_get_current_user();
+		$current_tier = '';
+		if ( $is_logged_in ) {
+			if ( function_exists( 'pmpro_hasMembershipLevel' ) ) {
+				if ( pmpro_hasMembershipLevel( 3 ) ) {
+					$current_tier = 'enterprise';
+				} elseif ( pmpro_hasMembershipLevel( 2 ) ) {
+					$current_tier = 'professional';
+				} elseif ( pmpro_hasMembershipLevel( 1 ) ) {
+					$current_tier = 'essential';
+				}
+			}
+			if ( empty( $current_tier ) ) {
+				// Fallback to roles
+				if ( in_array( 'ascendance_enterprise', (array) $user->roles ) ) {
+					$current_tier = 'enterprise';
+				} elseif ( in_array( 'ascendance_professional', (array) $user->roles ) ) {
+					$current_tier = 'professional';
+				} elseif ( in_array( 'ascendance_essential', (array) $user->roles ) ) {
+					$current_tier = 'essential';
+				}
+			}
+		}
+
+		function ascendance_get_tier_cta( $tier_slug, $current_tier, $level_id, $btn_class, $btn_text ) {
+			if ( $current_tier === $tier_slug || ( 'essential' === $tier_slug && in_array( $current_tier, array( 'essential', 'professional', 'enterprise' ), true ) ) || ( 'professional' === $tier_slug && in_array( $current_tier, array( 'professional', 'enterprise' ), true ) ) ) {
+				return '<a class="' . esc_attr( $btn_class ) . '" href="' . esc_url( home_url( '/dashboard/' ) ) . '">✓ ' . esc_html__( 'Current Plan', 'ascendance' ) . '</a>';
+			}
+			if ( 'essential' === $tier_slug || 'professional' === $tier_slug ) {
+				return '<a class="' . esc_attr( $btn_class ) . '" href="' . esc_url( home_url( '/membership-checkout/?level=' . intval( $level_id ) ) ) . '">' . esc_html( $btn_text ) . '</a>';
+			}
+			return '<a class="' . esc_attr( $btn_class ) . '" href="' . esc_url( home_url( '/contact/' ) ) . '">' . esc_html( $btn_text ) . '</a>';
+		}
+
+		function ascendance_get_pmpro_price( $level_id, $default_price ) {
+			if ( function_exists( 'pmpro_getLevel' ) && function_exists( 'pmpro_formatPrice' ) ) {
+				$level = pmpro_getLevel( $level_id );
+				if ( ! empty( $level ) && isset( $level->initial_payment ) ) {
+					// Drop trailing .00 if present to match the design.
+					$price = pmpro_formatPrice( $level->initial_payment );
+					return str_replace( '.00', '', $price );
+				}
+			}
+			return $default_price;
+		}
+		?>
 		<div class="price-grid">
 
 			<div class="price-card">
 				<div class="price-name"><?php esc_html_e( 'Essential', 'ascendance' ); ?></div>
-				<?php
-				$level_1 = function_exists('pmpro_getLevel') ? pmpro_getLevel(1) : null;
-				$price_1 = $level_1 ? '$' . intval($level_1->initial_payment) : '$150';
-				?>
+				<?php $price_1 = ascendance_get_pmpro_price( 1, '$150' ); ?>
 				<div class="price-amt"><?php echo esc_html($price_1); ?><span>/month</span></div>
 				<div class="price-sub"><?php esc_html_e( 'For staying current on the partnership.', 'ascendance' ); ?></div>
-				<a class="btn-outline-red" href="<?php echo esc_url( function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout', '?level=1' ) : home_url( '/membership-checkout/?pmpro_level=1' ) ); ?>"><?php esc_html_e( 'Start Essential', 'ascendance' ); ?></a>
+				<?php echo ascendance_get_tier_cta( 'essential', $current_tier, 1, 'btn-outline-red', __( 'Start Essential', 'ascendance' ) ); ?>
 				<ul class="price-list">
 					<li><?php esc_html_e( 'The weekly brief, opening extract', 'ascendance' ); ?></li>
 					<li><?php esc_html_e( 'The full explainer library', 'ascendance' ); ?></li>
@@ -43,13 +88,10 @@ get_header();
 			<div class="price-card featured">
 				<div class="price-flag"><?php esc_html_e( 'Most chosen', 'ascendance' ); ?></div>
 				<div class="price-name"><?php esc_html_e( 'Professional', 'ascendance' ); ?></div>
-				<?php
-				$level_2 = function_exists('pmpro_getLevel') ? pmpro_getLevel(2) : null;
-				$price_2 = $level_2 ? '$' . intval($level_2->initial_payment) : '$299';
-				?>
+				<?php $price_2 = ascendance_get_pmpro_price( 2, '$299' ); ?>
 				<div class="price-amt"><?php echo esc_html($price_2); ?><span>/month</span></div>
 				<div class="price-sub"><?php esc_html_e( 'For principals with live DRC exposure.', 'ascendance' ); ?></div>
-				<a class="btn-primary full" href="<?php echo esc_url( function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout', '?level=2' ) : home_url( '/membership-checkout/?pmpro_level=2' ) ); ?>"><?php esc_html_e( 'Start Professional', 'ascendance' ); ?></a>
+				<?php echo ascendance_get_tier_cta( 'professional', $current_tier, 2, 'btn-primary full', __( 'Start Professional', 'ascendance' ) ); ?>
 				<ul class="price-list">
 					<li><strong><?php esc_html_e( 'Everything in Essential, plus:', 'ascendance' ); ?></strong></li>
 					<li><?php esc_html_e( 'The weekly brief, in full', 'ascendance' ); ?></li>
@@ -62,13 +104,10 @@ get_header();
 
 			<div class="price-card">
 				<div class="price-name"><?php esc_html_e( 'Enterprise', 'ascendance' ); ?></div>
-				<?php
-				$level_3 = function_exists('pmpro_getLevel') ? pmpro_getLevel(3) : null;
-				$price_3 = $level_3 ? '$' . intval($level_3->initial_payment) : '$599';
-				?>
+				<?php $price_3 = ascendance_get_pmpro_price( 3, '$599' ); ?>
 				<div class="price-amt"><?php echo esc_html($price_3); ?><span>/month</span></div>
 				<div class="price-sub"><?php esc_html_e( 'For teams and institutions.', 'ascendance' ); ?></div>
-				<a class="btn-outline-red" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Talk to us', 'ascendance' ); ?></a>
+				<?php echo ascendance_get_tier_cta( 'enterprise', $current_tier, 3, 'btn-outline-red', __( 'Talk to us', 'ascendance' ) ); ?>
 				<ul class="price-list">
 					<li><strong><?php esc_html_e( 'Everything in Professional, plus:', 'ascendance' ); ?></strong></li>
 					<li><?php esc_html_e( 'Seats across your organization', 'ascendance' ); ?></li>

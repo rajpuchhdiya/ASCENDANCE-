@@ -1,0 +1,345 @@
+/* ── GateTouch Support Panel ───────────────────────────────────────────────── */
+
+/* Floating toggle button */
+.riq-sp-toggle {
+  position: fixed;
+  bottom: 30px;
+  right: 24px;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, sans-serif;
+  box-shadow: 0 8px 25px -4px rgba(99, 102, 241, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1;
+}
+
+.riq-sp-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -4px rgba(99, 102, 241, 0.6);
+}
+
+.riq-sp-toggle:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+}
+
+/* Overlay */
+.riq-sp-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 100001;
+  backdrop-filter: blur(2px);
+}
+
+.riq-sp-overlay.is-open {
+  display: block;
+  animation: riq-fade-in 0.2s ease;
+}
+
+/* Panel */
+.riq-sp-panel {
+  position: fixed;
+  top: 32px; /* WP admin bar */
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 100vw;
+  background: #ffffff;
+  z-index: 100002;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.riq-sp-panel.is-open {
+  transform: translateX(0);
+}
+
+/* Header */
+.riq-sp-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.riq-sp-logo {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.riq-sp-title {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.riq-sp-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.riq-sp-close {
+  margin-left: auto;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.riq-sp-close:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Body */
+.riq-sp-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 0 20px;
+}
+
+.riq-sp-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.riq-sp-section:last-child {
+  border-bottom: none;
+}
+
+.riq-sp-section-title {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+/* Quick links */
+.riq-sp-quick-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.riq-sp-quick-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.riq-sp-quick-link:hover {
+  background: #eff6ff;
+  border-color: #6366f1;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.riq-sp-ql-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Services */
+.riq-sp-services .riq-sp-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.riq-sp-service-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.riq-sp-service-card {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: default;
+}
+
+.riq-sp-sc-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.riq-sp-sc-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.riq-sp-sc-price {
+  font-size: 11px;
+  color: #6366f1;
+  font-weight: 700;
+}
+
+/* Form */
+.riq-sp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.riq-sp-field input,
+.riq-sp-field select,
+.riq-sp-field textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #1e293b;
+  background: #f8fafc;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.riq-sp-field input:focus,
+.riq-sp-field select:focus,
+.riq-sp-field textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #fff;
+}
+
+.riq-sp-field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.riq-sp-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  width: 100%;
+}
+
+.riq-sp-submit:hover {
+  opacity: 0.9;
+}
+
+.riq-sp-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.riq-sp-result {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.riq-sp-result--success {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.riq-sp-result--error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* Footer */
+.riq-sp-footer {
+  padding: 12px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #94a3b8;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.riq-sp-footer a {
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@keyframes riq-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .riq-sp-panel {
+    width: 100vw;
+    top: 46px;
+  }
+  .riq-sp-toggle-label {
+    display: none;
+  }
+  .riq-sp-toggle {
+    padding: 12px;
+    border-radius: 50%;
+  }
+}

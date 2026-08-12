@@ -51,12 +51,17 @@ function pmpro_add_pages() {
 	}
 
 	// Top level menu
-	add_menu_page( __( 'Memberships', 'paid-memberships-pro' ), __( 'Memberships', 'paid-memberships-pro' ), 'pmpro_memberships_menu', 'pmpro-dashboard', $top_menu_cap, 'dashicons-groups', 30 );
-	
+	$svg_path = PMPRO_DIR . '/images/pmpro-icon.svg';
+	$icon_url = file_exists( $svg_path )
+		? 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( $svg_path ) )
+		: 'dashicons-groups';
+	add_menu_page( __( 'Memberships', 'paid-memberships-pro' ), __( 'Memberships', 'paid-memberships-pro' ), 'pmpro_memberships_menu', 'pmpro-dashboard', $top_menu_cap, $icon_url, 30 );
+
 	// Main submenus
 	add_submenu_page( 'pmpro-dashboard', __( 'Dashboard', 'paid-memberships-pro' ), __( 'Dashboard', 'paid-memberships-pro' ), 'pmpro_dashboard', 'pmpro-dashboard', 'pmpro_dashboard' );
 	$members_list_table_hook = add_submenu_page( 'pmpro-dashboard', __( 'Members', 'paid-memberships-pro' ), __( 'Members', 'paid-memberships-pro' ), 'pmpro_memberslist', 'pmpro-memberslist', 'pmpro_memberslist' );
 	$orders_list_table_hook = add_submenu_page( 'pmpro-dashboard', __( 'Orders', 'paid-memberships-pro' ), __( 'Orders', 'paid-memberships-pro' ), 'pmpro_orders', 'pmpro-orders', 'pmpro_orders' );
+	$subscriptions_list_table_hook = add_submenu_page( 'pmpro-dashboard', __( 'Subscriptions', 'paid-memberships-pro' ), __( 'Subscriptions', 'paid-memberships-pro' ), pmpro_get_edit_member_capability(), 'pmpro-subscriptions', 'pmpro_subscriptions' );
 	add_submenu_page( 'pmpro-dashboard', __( 'Reports', 'paid-memberships-pro' ), __( 'Reports', 'paid-memberships-pro' ), 'pmpro_reports', 'pmpro-reports', 'pmpro_reports' );
 	add_submenu_page( 'pmpro-dashboard', __( 'Settings', 'paid-memberships-pro' ), __( 'Settings', 'paid-memberships-pro' ), 'pmpro_membershiplevels', 'pmpro-membershiplevels', 'pmpro_membershiplevels' );
 	add_submenu_page( 'pmpro-dashboard', __( 'Add Ons', 'paid-memberships-pro' ), __( 'Add Ons', 'paid-memberships-pro' ), 'pmpro_addons', 'pmpro-addons', 'pmpro_addons' );
@@ -82,9 +87,17 @@ function pmpro_add_pages() {
 	add_submenu_page( 'admin.php', __( 'Advanced Settings', 'paid-memberships-pro' ), __( 'Advanced Settings', 'paid-memberships-pro' ), 'pmpro_advancedsettings', 'pmpro-advancedsettings', 'pmpro_advancedsettings' );
 
 	// Set up screen settings for list tables.
-	add_action( 'load-' . $members_list_table_hook, 'PMPro_Members_List_Table::hook_screen_options' );
-	add_action( 'load-' . $orders_list_table_hook, 'PMPro_Orders_List_Table::hook_screen_options' );
-	add_action( 'load-' . $discount_codes_list_table_hook, 'PMPro_Discount_Code_List_Table::hook_screen_options' );
+	$pmpro_list_table_hooks = array(
+		$members_list_table_hook         => 'PMPro_Members_List_Table::hook_screen_options',
+		$orders_list_table_hook          => 'PMPro_Orders_List_Table::hook_screen_options',
+		$subscriptions_list_table_hook   => 'PMPro_Subscriptions_List_Table::hook_screen_options',
+		$discount_codes_list_table_hook  => 'PMPro_Discount_Code_List_Table::hook_screen_options',
+	);
+
+	foreach ( $pmpro_list_table_hooks as $list_table_hook => $hook_screen_options_callback ) {
+		add_action( 'load-' . $list_table_hook, 'pmpro_maybe_redirect_list_table_referer', 5 );
+		add_action( 'load-' . $list_table_hook, $hook_screen_options_callback );
+	}
 
 	//updates page only if needed
 	if ( pmpro_isUpdateRequired() ) {
@@ -101,10 +114,28 @@ function pmpro_add_pages() {
 	add_submenu_page( $wizard_location, __( 'Setup Wizard', 'paid-memberships-pro' ), __( 'Setup Wizard', 'paid-memberships-pro' ), 'pmpro_wizard', 'pmpro-wizard', 'pmpro_wizard' );
 
 	// Hidden pages
-	add_submenu_page( 'admin.php', __( 'Subscriptions', 'paid-memberships-pro' ), __( 'Subscriptions', 'paid-memberships-pro' ), pmpro_get_edit_member_capability(), 'pmpro-subscriptions', 'pmpro_subscriptions' );
 	add_submenu_page( 'admin.php', __( 'Add Member', 'paid-memberships-pro' ), __( 'Add Member', 'paid-memberships-pro' ), pmpro_get_edit_member_capability(), 'pmpro-member', 'pmpro_member_edit_display' );
 }
 add_action( 'admin_menu', 'pmpro_add_pages' );
+
+/**
+ * Remove stale list table referer parameters from PMPro admin URLs.
+ *
+ * WP_List_Table adds _wp_http_referer to GET forms. Leaving that value in the
+ * URL causes Screen Options submissions to redirect back to the previous URL
+ * because set_screen_options() prefers the request referer. Mirror WordPress
+ * core list screens by stripping the transient referer args once.
+ *
+ * @since 3.7
+ */
+function pmpro_maybe_redirect_list_table_referer() {
+	if ( 'GET' !== $_SERVER['REQUEST_METHOD'] || empty( $_REQUEST['_wp_http_referer'] ) || empty( $_SERVER['REQUEST_URI'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	wp_safe_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+	exit;
+}
 
 /**
  * Keep the Memberships menu selected on subpages.
@@ -123,7 +154,6 @@ function pmpro_parent_file( $parent_file ) {
 		'pmpro-userfields' => 'pmpro-membershiplevels',
 		'pmpro-designsettings' => 'pmpro-membershiplevels',
 		'pmpro-advancedsettings' => 'pmpro-membershiplevels',
-		'pmpro-subscriptions' => '',
 		'pmpro-member' => 'pmpro-memberslist',
 	);
 	
@@ -151,7 +181,7 @@ function pmpro_admin_title( $admin_title, $title ) {
 			$title = sprintf( __( 'Edit Member: %s', 'paid-memberships-pro' ), $user->display_name );
 		}
 		/* translators: Edit/Add Member Admin screen title. 1: Screen name, 2: Site name. */
-		$admin_title = sprintf( __( '%1$s &lsaquo; %2$s &#8212; WordPress' ), $title, get_bloginfo( 'name' ) );
+		$admin_title = sprintf( __( '%1$s &lsaquo; %2$s &#8212; WordPress', 'paid-memberships-pro' ), $title, get_bloginfo( 'name' ) );
 	}
 	return $admin_title;
 }
@@ -182,9 +212,9 @@ function pmpro_admin_bar_menu() {
 	$wp_admin_bar->add_menu(
 		array(
 			'id' => 'paid-memberships-pro',
-			'title' => __( '<span class="ab-icon"></span>Memberships', 'paid-memberships-pro' ),
+			'title' => '<span id="pmpro-ab-icon"></span>' . __( 'Memberships', 'paid-memberships-pro' ),
 			'href' => admin_url( 'admin.php?page=' . $top_menu_page )
-		) 
+		)
 	);
 
 	// Add menu item for Dashboard.
@@ -219,6 +249,18 @@ function pmpro_admin_bar_menu() {
 				'parent' => 'paid-memberships-pro',
 				'title' => __( 'Orders', 'paid-memberships-pro' ),
 				'href' => admin_url( 'admin.php?page=pmpro-orders' )
+			)
+		);
+	}
+
+	// Add menu item for Subscriptions.
+	if ( current_user_can( 'pmpro_edit_members' ) ) {
+		$wp_admin_bar->add_menu(
+			array(
+				'id' => 'pmpro-subscriptions',
+				'parent' => 'paid-memberships-pro',
+				'title' => __( 'Subscriptions', 'paid-memberships-pro' ),
+				'href' => admin_url( 'admin.php?page=pmpro-subscriptions' )
 			)
 		);
 	}
@@ -375,7 +417,7 @@ function pmpro_admin_init_redirect_single_item_edit() {
 	// Edit Order redirect.
 	if ( $pmpro_admin_page == 'pmpro-orders' ) {
 		// If the order they are trying to edit does not exist, redirect them to the orders list.
-		if ( ! empty( $_REQUEST['order'] ) && $_REQUEST['order'] > 0 && empty( MemberOrder::get_order( $_REQUEST['order'] ) ) ) {
+		if ( ! empty( $_REQUEST['id'] ) && $_REQUEST['id'] > 0 && empty( MemberOrder::get_order( $_REQUEST['id'] ) ) ) {
 			wp_redirect( add_query_arg( array( 'page' => 'pmpro-orders' ), admin_url( 'admin.php' ) ) );
 			exit;
 		}
@@ -384,8 +426,8 @@ function pmpro_admin_init_redirect_single_item_edit() {
 	// View Subscription redirect.
 	if ( $pmpro_admin_page == 'pmpro-subscriptions' ) {
 		// If the subscription they are trying to view does not exist, redirect them to the members list.
-		if ( empty( $_REQUEST['id'] ) || empty( PMPro_Subscription::get_subscription( $_REQUEST['id'] ) ) ) {
-			wp_redirect( add_query_arg( array( 'page' => 'pmpro-memberslist' ), admin_url( 'admin.php' ) ) );
+		if ( ! empty( $_REQUEST['id'] ) && empty( PMPro_Subscription::get_subscription( $_REQUEST['id'] ) ) ) {
+			wp_redirect( add_query_arg( array( 'page' => 'pmpro-subscriptions' ), admin_url( 'admin.php' ) ) );
 			exit;
 		}
 	}
@@ -446,11 +488,11 @@ function pmpro_admin_membership_access_menu_bar() {
 	// Set the title and the option value.
 	$title = '<span class="pmpro_admin-view pmpro_admin-view-' . esc_attr( $admin_membership_access ) . '">';
 	if ( 'no' === $admin_membership_access ) {
-		$title .= '<span class="ab-icon dashicons dashicons-lock non-member-icon"></span>' . esc_html__( 'View: No Access', 'paid-memberships-pro' );
+		$title .= '<span class="ab-icon dashicons dashicons-lock non-member-icon" aria-hidden="true"></span>' . esc_html__( 'View', 'paid-memberships-pro' ) . '<span class="screen-reader-text">: ' . esc_html__( 'No Access', 'paid-memberships-pro' ) . '</span>';
 	} elseif ( 'yes' === $admin_membership_access ) {
-		$title .= '<span class="ab-icon dashicons dashicons-unlock has-access-icon"></span>' . esc_html__( 'View: With Access', 'paid-memberships-pro' );
+		$title .= '<span class="ab-icon dashicons dashicons-unlock has-access-icon" aria-hidden="true"></span>' . esc_html__( 'View', 'paid-memberships-pro' ) . '<span class="screen-reader-text">: ' . esc_html__( 'With Access', 'paid-memberships-pro' ) . '</span>';
 	} else {
-		$title .= '<span class="ab-icon dashicons dashicons-admin-users current-access-icon"></span>' . esc_html__( 'View: My Access', 'paid-memberships-pro' );
+		$title .= '<span class="ab-icon dashicons dashicons-admin-users current-access-icon" aria-hidden="true"></span>' . esc_html__( 'View', 'paid-memberships-pro' ) . '<span class="screen-reader-text">: ' . esc_html__( 'My Access', 'paid-memberships-pro' ) . '</span>';
 	}
 	$title .= '</span>';
 
@@ -614,6 +656,11 @@ function pmpro_display_post_states( $post_states, $post ) {
 	// Get assigned page settings.
 	global $pmpro_pages;
 
+	// Bail if $post is empty.
+	if ( empty( $post ) ) {
+		return $post_states;
+	}
+
 	if ( intval( $pmpro_pages['account'] ) === $post->ID ) {
 		$post_states['pmpro_account_page'] = __( 'Membership Account Page', 'paid-memberships-pro' );
 	}
@@ -690,6 +737,10 @@ function pmpro_add_action_links( $links ) {
 			$top_menu_page = str_replace( '_', '-', $cap );
 			break;
 		}
+	}
+
+	if ( empty( $top_menu_page ) ) {
+		return $links;
 	}
 
 	$new_links = array(

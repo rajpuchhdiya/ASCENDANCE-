@@ -1,0 +1,259 @@
+/**
+ * Import & Migrate screen.
+ *
+ * The markup shipped without a stylesheet, so the card header, stat grid,
+ * checkbox row, progress bar and result panel all collapsed into running text.
+ * Tokens follow assets/css/admin-global.css.
+ */
+
+/* ── Card header: title left, status pill right ─────────────────────────── */
+.gatetouch-mig .gatetouch-mig-card > .gatetouch-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gatetouch-mig-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.gatetouch-mig-badge--active {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+/* ── Detected-data stat grid ────────────────────────────────────────────── */
+.gatetouch-mig-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gatetouch-mig-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.gatetouch-mig-stat__num {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--riq-primary, #6366f1);
+}
+
+.gatetouch-mig-stat__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+/* ── "What to import" ───────────────────────────────────────────────────── */
+.gatetouch-mig-options {
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.gatetouch-mig-options > strong {
+  display: block;
+  font-size: 13px;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.gatetouch-mig-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 14px;
+}
+
+.gatetouch-mig .gatetouch-sa-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.gatetouch-mig .gatetouch-sa-check input[type="checkbox"] {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.gatetouch-mig-overwrite {
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+  width: 100%;
+}
+
+.gatetouch-mig .gatetouch-sa-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+
+/* ── Actions ────────────────────────────────────────────────────────────── */
+.gatetouch-mig-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.gatetouch-mig-actions .gatetouch-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Progress ───────────────────────────────────────────────────────────── */
+.gatetouch-mig-progress {
+  margin-bottom: 16px;
+}
+.gatetouch-mig-progress[hidden] { display: none; }
+
+.gatetouch-mig-progress__bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.gatetouch-mig-progress__bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gatetouch-mig-progress__label {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* ── Result panel ───────────────────────────────────────────────────────── */
+.gatetouch-mig-result {
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #334155;
+}
+.gatetouch-mig-result[hidden] { display: none; }
+
+.gatetouch-mig-result p { margin: 0 0 8px; }
+.gatetouch-mig-result p:last-child { margin-bottom: 0; }
+
+.gatetouch-mig-result ul,
+.gatetouch-mig-result ol {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+.gatetouch-mig-result li { margin-bottom: 4px; }
+
+.gatetouch-mig-result code {
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.gatetouch-mig-result.is-info    { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+.gatetouch-mig-result.is-success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+.gatetouch-mig-result.is-error   { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.gatetouch-mig-result.is-warning { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+
+.gatetouch-mig-result__sub {
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+  margin-top: 10px;
+}
+
+.gatetouch-mig-samples { list-style: none; padding-left: 0; }
+.gatetouch-mig-samples li { margin-bottom: 6px; }
+
+.gatetouch-mig-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 12.5px;
+}
+.gatetouch-mig-table th,
+.gatetouch-mig-table td {
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.gatetouch-mig-table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+/* ── "After importing" checklist ────────────────────────────────────────── */
+.gatetouch-mig-steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #334155;
+}
+.gatetouch-mig-steps li { margin-bottom: 6px; }
+
+#gatetouch-mig-rollback-status {
+  display: block;
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+}
+
+@media screen and (max-width: 782px) {
+  .gatetouch-mig-actions { flex-direction: column; align-items: stretch; }
+  .gatetouch-mig-actions .gatetouch-btn { width: 100%; justify-content: center; }
+  .gatetouch-mig-checks { flex-direction: column; gap: 10px; }
+}
+
+.gatetouch-mig-badge--done {
+  background: #eef2ff;
+  color: #3730a3;
+  border-color: #c7d2fe;
+}

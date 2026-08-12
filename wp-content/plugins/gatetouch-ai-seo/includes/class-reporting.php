@@ -1,0 +1,159 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Report generation exports plugin-owned SEO metadata in one bounded admin action.
+
+/**
+ * Generates exportable GateTouch SEO reports.
+ */
+class GateTouch_Reporting {
+
+    /**
+     * Generate a CSV report of site SEO metadata
+     */
+    public static function generate_csv_report() {
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key=%s", GATETOUCH_META_KEY )
+        );
+
+        $filename = 'gatetouch-seo-report-' . gmdate( 'Y-m-d' ) . '.csv';
+        $uploads  = wp_upload_dir();
+
+        if ( ! empty( $uploads['error'] ) ) {
+            return '';
+        }
+
+        $report_dir = trailingslashit( $uploads['basedir'] ) . 'gatetouch-reports';
+        if ( ! wp_mkdir_p( $report_dir ) ) {
+            return '';
+        }
+
+        $csv  = self::csv_row( [ 'Post ID', 'URL', 'Post Type', 'Meta Title', 'Meta Description', 'Focus Keyword', 'Search Intent', 'Score' ] );
+
+        foreach ( $rows as $row ) {
+            $post = get_post( $row->post_id );
+            if ( ! $post ) continue;
+            $meta = maybe_unserialize( $row->meta_value );
+            
+            $csv .= self::csv_row( [
+                $row->post_id,
+                get_permalink( $row->post_id ),
+                $post->post_type,
+                $meta['meta_title'] ?? '',
+                $meta['meta_description'] ?? '',
+                $meta['focus_keyword'] ?? '',
+                $meta['search_intent'] ?? '',
+                $meta['score'] ?? '0'
+            ] );
+        }
+
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        global $wp_filesystem;
+        WP_Filesystem();
+
+        $path = trailingslashit( $report_dir ) . $filename;
+        if ( ! $wp_filesystem || ! $wp_filesystem->put_contents( $path, $csv, FS_CHMOD_FILE ) ) {
+            return '';
+        }
+
+        return trailingslashit( $uploads['baseurl'] ) . 'gatetouch-reports/' . $filename;
+    }
+
+    /**
+     * Generate a JSON report for external tools
+     */
+    public static function generate_json_report() {
+        return GateTouch_Analyzer::get_results();
+    }
+
+    /**
+     * Branded Audit Summary for PDF generation
+     */
+    public static function generate_pdf_audit() {
+        $audit = GateTouch_Analyzer::get_results();
+        $site_name = get_bloginfo( 'name' );
+        
+        $report_css = '';
+        $css_path   = GATETOUCH_PATH . 'assets/css/report.css';
+        if ( file_exists( $css_path ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file, not a remote URL.
+            $report_css = file_get_contents( $css_path );
+        }
+
+        ob_start();
+        ?>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <?php
+            wp_register_style( 'gatetouch-report', false, [], GATETOUCH_VERSION );
+            wp_add_inline_style( 'gatetouch-report', wp_strip_all_tags( $report_css ) );
+            wp_print_styles( 'gatetouch-report' );
+            ?>
+        </head>
+        <body>
+            <div class="report-header">
+                <div class="report-title">SEO Executive Audit</div>
+                <div style="text-align:right;">
+                    <strong><?php echo esc_html( $site_name ); ?></strong><br>
+                    <?php echo esc_html( gmdate( 'F j, Y' ) ); ?>
+                </div>
+            </div>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <div class="score-val"><?php echo esc_html( $audit['scores']['seo'] ); ?>%</div>
+                    <div>Content SEO</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-val"><?php echo esc_html( $audit['scores']['ai'] ); ?>%</div>
+                    <div>AI Search Readiness</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-val"><?php echo esc_html( $audit['scores']['tech'] ); ?>%</div>
+                    <div>Technical Health</div>
+                </div>
+            </div>
+
+            <h3>Critical Issues Detected</h3>
+            <div class="issue-list">
+                <?php foreach ( $audit['issues'] as $issue ) : ?>
+                    <div class="issue-item <?php echo esc_attr( $issue['type'] ); ?>">
+                        <strong><?php echo esc_html( $issue['title'] ); ?></strong><br>
+                        <span style="font-size:13px;"><?php echo esc_html( $issue['desc'] ); ?></span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="footer">
+                Generated by GateTouch – AI SEO & GEO Optimizer
+            </div>
+        </body>
+        </html>
+        <?php
+        $html = ob_get_clean();
+
+        return [
+            'success' => true,
+            'html'    => $html,
+            'filename' => 'seo-audit-' . sanitize_title( $site_name ) . '.html'
+        ];
+    }
+
+    private static function csv_row( $values ) {
+        return implode( ',', array_map( [ __CLASS__, 'csv_cell' ], $values ) ) . "\r\n";
+    }
+
+    private static function csv_cell( $value ) {
+        if ( is_array( $value ) || is_object( $value ) ) {
+            $value = wp_json_encode( $value );
+        }
+
+        $value = (string) $value;
+        return '"' . str_replace( '"', '""', $value ) . '"';
+    }
+}

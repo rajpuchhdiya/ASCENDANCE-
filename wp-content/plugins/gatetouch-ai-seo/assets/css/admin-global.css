@@ -1,0 +1,2900 @@
+:root {
+  --riq-primary: #6366f1;
+  --riq-primary-dark: #4f46e5;
+  --riq-secondary: #f8fafc;
+  --riq-text: #1e293b;
+  --riq-text-light: #64748b;
+  --riq-bg: #f1f5f9;
+  --riq-white: #ffffff;
+  --riq-glass: rgba(255, 255, 255, 0.7);
+  --riq-glass-border: rgba(226, 232, 240, 0.8);
+  --riq-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --riq-ai-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+}
+
+body.gatetouch-dark-mode {
+  --riq-primary: #818cf8;
+  --riq-primary-dark: #6366f1;
+  --riq-secondary: #1e293b;
+  --riq-text: #f8fafc;
+  --riq-text-light: #94a3b8;
+  --riq-bg: #0f172a;
+  --riq-white: #1e293b;
+  --riq-glass: rgba(15, 23, 42, 0.7);
+  --riq-glass-border: rgba(51, 65, 85, 0.8);
+  --riq-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+body.gatetouch-dark-mode #wpcontent,
+body.gatetouch-dark-mode #wpbody-content {
+  background: var(--riq-bg) !important;
+}
+
+.gatetouch-admin-wrap {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--riq-text);
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* ── Header ── */
+.gatetouch-admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: var(--riq-white);
+  padding: 24px 30px;
+  border-radius: 16px;
+  box-shadow: var(--riq-shadow);
+  border: 1px solid var(--riq-glass-border);
+}
+
+.gatetouch-admin-header__left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gatetouch-admin-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--riq-text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gatetouch-admin-header p {
+  margin: 5px 0 0;
+  color: var(--riq-text-light);
+  font-size: 14px;
+}
+
+/* ── Tab Systems ── */
+
+/* 1. Pill Style (Legacy/Secondary) */
+.gatetouch-page-tabs {
+  display: flex;
+  gap: 10px;
+  background: var(--riq-white);
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: var(--riq-shadow);
+  margin-bottom: 25px;
+  width: fit-content;
+}
+
+.gatetouch-page-tab {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--riq-text-light);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9; /* Default pill background */
+}
+
+.gatetouch-page-tab:hover {
+  color: var(--riq-primary);
+  background: #e2e8f0;
+}
+
+.gatetouch-page-tab.active {
+  background: var(--riq-primary);
+  color: var(--riq-white) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* 2. Simple Style (Gold Standard Horizontal Links) */
+.gatetouch-tabs-simple {
+  display: flex;
+  gap: 32px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  margin: 0 0 30px;
+  padding: 0;
+  background: transparent;
+}
+
+.gatetouch-tabs-simple .gatetouch-page-tab {
+  position: relative;
+  padding: 12px 0 20px 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--riq-text-light);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gatetouch-tabs-simple .gatetouch-page-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 2.5px;
+  background: var(--riq-ai-gradient);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.gatetouch-tabs-simple .gatetouch-page-tab:hover {
+  color: var(--riq-primary);
+  background: transparent !important;
+}
+
+.gatetouch-tabs-simple .gatetouch-page-tab.active {
+  color: var(--riq-primary) !important;
+  background: transparent !important;
+}
+
+.gatetouch-tabs-simple .gatetouch-page-tab.active::after {
+  width: 100%;
+}
+
+/* ── Content Area ── */
+.gatetouch-page-tab-content {
+  animation: riqFadeIn 0.3s ease;
+}
+
+@keyframes riqFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cards ── */
+.gatetouch-card {
+  background: var(--riq-white);
+  border-radius: 16px;
+  border: 1px solid var(--riq-glass-border);
+  box-shadow: var(--riq-shadow);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.gatetouch-card__header {
+  padding: 20px 30px;
+  background: #fcfdfe;
+  border-bottom: 1px solid var(--riq-glass-border);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--riq-text);
+  display: flex;
+  align-items: center;
+}
+
+.gatetouch-card__body {
+  padding: 30px;
+}
+
+.gatetouch-card__body--no-pad {
+  padding: 0 !important;
+}
+
+/* ── Premium Tables ── */
+.gatetouch-premium-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.gatetouch-premium-table thead th {
+  background: #f8fafc;
+  padding: 14px 24px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--riq-text-light);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.gatetouch-premium-table tbody td {
+  padding: 18px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.gatetouch-premium-table tbody tr:hover {
+  background: #fcfdfe;
+}
+
+.gatetouch-premium-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Badges ── */
+.gatetouch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gatetouch-badge--blue { background: #eff6ff; color: #3b82f6; }
+.gatetouch-badge--green { background: #f0fdf4; color: #22c55e; }
+.gatetouch-badge--amber { background: #fffbeb; color: #f59e0b; }
+.gatetouch-badge--primary { background: var(--riq-primary); color: #fff; }
+
+/* ── Setting Rows ── */
+.gatetouch-setting-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 30px;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+}
+
+.gatetouch-setting-row:last-child {
+  border-bottom: none;
+}
+
+.gatetouch-setting-label-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.gatetouch-setting-icon {
+  width: 42px;
+  height: 42px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--riq-primary);
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.gatetouch-setting-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gatetouch-setting-label strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: var(--riq-text);
+  font-weight: 700;
+}
+
+.gatetouch-setting-label p {
+  font-size: 13px;
+  color: var(--riq-text-light);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Stacks its children instead of laying them out in a row. As a flex row a
+   textarea and its hint sat side by side and the hint overflowed the column. */
+.gatetouch-setting-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Wide inputs take the full control column and pull their hint left with them. */
+.gatetouch-setting-control > .gatetouch-input-full,
+.gatetouch-setting-control > .gatetouch-textarea,
+.gatetouch-setting-control > .gatetouch-select,
+.gatetouch-setting-control > .gatetouch-input,
+.gatetouch-setting-control > textarea,
+.gatetouch-setting-control > .gatetouch-hint {
+  align-self: stretch;
+}
+
+.gatetouch-setting-control > .gatetouch-textarea,
+.gatetouch-setting-control > textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Panels that render full-width content (grouped tables, card stacks) inside a
+   control column rather than a small right-aligned widget. The crawler matrix
+   is far too wide for a half-column, so it takes the whole row. */
+.gatetouch-setting-row.gatetouch-ai-crawlers {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.gatetouch-ai-crawlers .gatetouch-setting-control,
+.gatetouch-setting-control--full {
+  align-items: stretch;
+}
+.gatetouch-ai-crawlers .gatetouch-setting-control > *,
+.gatetouch-setting-control--full > * {
+  align-self: stretch;
+}
+
+.gatetouch-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #94a3b8;
+  text-align: left;
+}
+
+.gatetouch-hint code {
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+/* Footer holding a settings form's primary action. */
+.gatetouch-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding: 18px 22px;
+  background: var(--riq-white, #fff);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.gatetouch-settings-group + .gatetouch-settings-group { margin-top: 28px; }
+
+/* A titled band separating stacked panels inside one tab. */
+.gatetouch-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 34px 0 14px;
+  padding-top: 26px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.gatetouch-section-heading__text strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--riq-text, #1e293b);
+  line-height: 1.3;
+}
+
+.gatetouch-section-heading__text p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: var(--riq-text-light, #64748b);
+  line-height: 1.55;
+}
+
+/* Label/control split is too tight to hold once the viewport narrows. */
+@media screen and (max-width: 1100px) {
+  .gatetouch-setting-row { gap: 28px; padding: 24px; }
+}
+
+@media screen and (max-width: 860px) {
+  .gatetouch-setting-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 22px;
+  }
+  .gatetouch-setting-control {
+    align-items: flex-start;
+  }
+  .gatetouch-setting-control > * { align-self: stretch; }
+  .gatetouch-form-footer { justify-content: stretch; }
+  .gatetouch-form-footer .gatetouch-btn { width: 100%; justify-content: center; }
+}
+
+/* ── Dashboard Stats ── */
+.gatetouch-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.gatetouch-stat-card {
+  background: var(--riq-white);
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid var(--riq-glass-border);
+  box-shadow: var(--riq-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gatetouch-stat-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.gatetouch-stat-card__icon svg {
+  width: 24px !important;
+  height: 24px !important;
+  stroke-width: 2.5px;
+}
+
+.gatetouch-stat-card--blue .gatetouch-stat-card__icon { background: #eff6ff; color: #3b82f6; }
+.gatetouch-stat-card--green .gatetouch-stat-card__icon { background: #f0fdf4; color: #22c55e; }
+.gatetouch-stat-card--amber .gatetouch-stat-card__icon { background: #fffbeb; color: #f59e0b; }
+.gatetouch-stat-card--purple .gatetouch-stat-card__icon { background: #faf5ff; color: #a855f7; }
+
+.gatetouch-stat-card__num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--riq-text);
+}
+
+.gatetouch-stat-card__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--riq-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* ── Dashboard Quick Actions ── */
+.gatetouch-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 0 0 25px 0;
+}
+
+.gatetouch-quick-action {
+  background: var(--riq-white);
+  border: 1px solid var(--riq-glass-border);
+  padding: 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gatetouch-quick-action:hover {
+  border-color: var(--riq-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+}
+
+.gatetouch-quick-action__icon {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 10px;
+  color: var(--riq-primary);
+}
+
+.gatetouch-quick-action__icon svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* ── Inputs ── */
+.gatetouch-input-full, .gatetouch-textarea, .gatetouch-select, .gatetouch-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.gatetouch-input-full:focus, .gatetouch-textarea:focus, .gatetouch-input:focus, .gatetouch-bulk-inline-input:focus {
+  outline: none;
+  border-color: var(--riq-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.gatetouch-bulk-inline-input {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--riq-text);
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.gatetouch-bulk-inline-input::placeholder {
+  color: #cbd5e1;
+}
+
+textarea.gatetouch-bulk-inline-input {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.riq-field-preview {
+  font-size: 11px;
+  color: var(--riq-primary);
+  margin-top: 6px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.riq-char-bar {
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.riq-char-bar div {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.gatetouch-bulk-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--riq-text-light);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+.gatetouch-bulk-label svg {
+  width: 14px;
+  height: 14px;
+  color: var(--riq-primary);
+}
+
+/* ── Buttons ── */
+.gatetouch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.gatetouch-btn--primary {
+  background: var(--riq-primary);
+  color: #fff;
+}
+
+.gatetouch-btn--primary:hover {
+  background: var(--riq-primary-dark);
+}
+
+.gatetouch-btn--secondary {
+  background: #f1f5f9;
+  color: var(--riq-text);
+}
+
+.gatetouch-btn--ai {
+    background: var(--riq-ai-gradient);
+    color: white;
+}
+
+/* ── Enterprise Dashboard ── */
+.gatetouch-enterprise-dashboard {
+  margin-top: 20px;
+}
+
+.gatetouch-dashboard-top-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.gatetouch-score-card {
+  background: var(--riq-white);
+  padding: 30px;
+  border-radius: 24px;
+  border: 1px solid var(--riq-glass-border);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.gatetouch-score-card:hover {
+  transform: translateY(-5px);
+}
+
+.gatetouch-score-card__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--riq-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.gatetouch-score-card__value {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.gatetouch-score-card__chart {
+  width: 70px;
+  height: 70px;
+}
+
+.gatetouch-circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.gatetouch-circular-chart path {
+  stroke-width: 3;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #f1f5f9;
+}
+
+.circle {
+  fill: none;
+  stroke: #10b981;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
+.gatetouch-chart--purple .circle { stroke: #6366f1; }
+.gatetouch-chart--blue .circle { stroke: #3b82f6; }
+
+@keyframes progress {
+  0% { stroke-dasharray: 0 100; }
+}
+
+/* ── Glass Cards ── */
+.gatetouch-dashboard-main-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.gatetouch-glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.gatetouch-glass-card__header {
+  padding: 24px 30px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--riq-text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gatetouch-glass-card__body {
+  padding: 30px;
+}
+
+/* AI Insight Panel */
+.gatetouch-ai-insight-panel {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(238,242,255,0.9) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.gatetouch-ai-sparkle {
+  font-size: 20px;
+  filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.5));
+}
+
+.gatetouch-insight-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.gatetouch-insight-item:last-child {
+  margin-bottom: 0;
+}
+
+.gatetouch-insight-item__icon {
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.gatetouch-insight-item__content strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: var(--riq-text);
+}
+
+.gatetouch-insight-item__content p {
+  font-size: 14px;
+  color: var(--riq-text-light);
+  margin: 0 0 15px;
+  line-height: 1.6;
+}
+
+/* Audit List */
+.gatetouch-audit-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.gatetouch-audit-row:last-child { border-bottom: none; }
+
+.gatetouch-audit-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gatetouch-status--err { background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+.gatetouch-status--warn { background: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+.gatetouch-status--ok { background: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+
+.gatetouch-audit-text {
+  flex-grow: 1;
+  font-size: 14px;
+  color: var(--riq-text);
+  font-weight: 500;
+}
+
+.gatetouch-audit-fix {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gatetouch-audit-fix:hover {
+  background: var(--riq-primary);
+  color: #fff;
+  border-color: var(--riq-primary);
+}
+
+/* Sidebar Actions */
+.gatetouch-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.gatetouch-sidebar-action {
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  color: var(--riq-text);
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.gatetouch-sidebar-action:last-child { border-bottom: none; }
+
+.gatetouch-sidebar-action:hover {
+  background: rgba(99, 102, 241, 0.05);
+  color: var(--riq-primary);
+}
+
+.gatetouch-sidebar-action svg {
+  color: var(--riq-text-light);
+  transition: color 0.2s;
+}
+
+.gatetouch-sidebar-action:hover svg {
+  color: var(--riq-primary);
+}
+
+/* Search Readiness */
+.gatetouch-readiness-stat {
+  margin-bottom: 20px;
+}
+
+.gatetouch-readiness-stat:last-child { margin-bottom: 0; }
+
+.gatetouch-readiness-stat span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--riq-text-light);
+}
+
+.gatetouch-readiness-bar {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gatetouch-readiness-bar div {
+  height: 100%;
+  background: #6366f1;
+  border-radius: 10px;
+  transition: width 1s ease;
+}
+
+@media (max-width: 1024px) {
+  .gatetouch-dashboard-main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Navigation Tabs ── */
+/* ── Icon box helper ─────────────────────────────────── */
+.rk-icon-box {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.rk-icon-box--sm { width: 28px; height: 28px; border-radius: 8px; }
+.rk-icon-box--lg { width: 44px; height: 44px; border-radius: 12px; }
+.rk-icon-box--indigo { background: #eef2ff; color: #6366f1; }
+.rk-icon-box--purple { background: #faf5ff; color: #a855f7; }
+.rk-icon-box--blue   { background: #eff6ff; color: #3b82f6; }
+.rk-icon-box--green  { background: #f0fdf4; color: #10b981; }
+.rk-icon-box--amber  { background: #fffbeb; color: #f59e0b; }
+.rk-icon-box--red    { background: #fef2f2; color: #ef4444; }
+.rk-icon-box--slate  { background: #f8fafc; color: #64748b; }
+.rk-icon-box--ai     { background: linear-gradient(135deg,#eef2ff,#faf5ff); color: #6366f1; }
+
+/* ── Card header icon+title row ──────────────────────── */
+.rk-card-title {
+  display: flex; align-items: center; gap: 10px;
+}
+.rk-card-title h3,
+.rk-card-title h4 { margin: 0; }
+
+/* ── Quick-action btn icon (dashboard) ───────────────── */
+.riq-action-btn__icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: #eef2ff;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+.riq-action-btn__icon svg { display: block; }
+
+/* ── Help link icon ──────────────────────────────────── */
+.riq-help-link { display: flex; align-items: center; gap: 9px; }
+.riq-help-link .rk-icon-box { flex-shrink: 0; }
+
+.gatetouch-nav-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1px;
+  /* Never let a long tab row push the page sideways. Panels with few tabs keep
+     the classic row and scroll it on narrow screens instead of overflowing. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.gatetouch-nav-tabs::-webkit-scrollbar { height: 4px; }
+.gatetouch-nav-tabs::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+.gatetouch-nav-tabs > .gatetouch-nav-tab { flex-shrink: 0; }
+
+.gatetouch-nav-tab {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: var(--riq-text-light);
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 12px 12px 0 0;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  margin-bottom: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.gatetouch-nav-tab svg {
+  opacity: 0.65;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+.gatetouch-nav-tab:hover svg,
+.gatetouch-nav-tab.active svg {
+  opacity: 1;
+}
+
+.gatetouch-nav-tab:hover {
+  background: #f8fafc;
+  color: var(--riq-primary);
+}
+
+.gatetouch-nav-tab.active {
+  background: var(--riq-white);
+  color: var(--riq-primary);
+  border: 1px solid #e2e8f0;
+  border-bottom-color: var(--riq-white);
+  box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.gatetouch-tab-content {
+  animation: riqFadeIn 0.3s ease;
+  min-width: 0; /* lets grid children shrink instead of forcing page overflow */
+}
+
+/* Some panels double as standalone pages and carry their own page wrapper.
+   Inside a tab they must not re-apply the outer max-width, centring or gutter. */
+.gatetouch-tab-content .gatetouch-admin-wrap {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Vertical tab shell ───────────────────────────────────────────────────
+   Left rail of sections, right pane of content. Used where the tab count is
+   too high for a single row (Settings has ten). Collapses to a scrollable
+   horizontal strip on narrow screens rather than squashing the content pane. */
+.gatetouch-tabs-shell {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.gatetouch-nav-tabs--vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 0;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: var(--riq-white);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  position: sticky;
+  top: 46px; /* clears the WP admin bar */
+  overflow: visible;
+}
+
+.gatetouch-nav-tabs--vertical .gatetouch-nav-tab {
+  border-radius: 10px;
+  padding: 10px 13px;
+  margin-bottom: 0;
+  border: 1px solid transparent;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.35;
+  text-align: left;
+  align-items: center;
+}
+
+.gatetouch-nav-tabs--vertical .gatetouch-nav-tab.active {
+  background: #f0f1fe;
+  color: var(--riq-primary);
+  border: 1px solid #c7d2fe;
+  border-bottom-color: #c7d2fe;
+  box-shadow: none;
+}
+
+.gatetouch-nav-tabs--vertical .gatetouch-nav-tab:hover {
+  background: #f8fafc;
+}
+.gatetouch-nav-tabs--vertical .gatetouch-nav-tab.active:hover {
+  background: #f0f1fe;
+}
+
+.gatetouch-tabs-shell__rail-title {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--riq-text-light);
+  padding: 8px 13px 6px;
+}
+
+/* Tablet and below: rail becomes a scrollable strip above the content. */
+@media screen and (max-width: 1100px) {
+  .gatetouch-tabs-shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .gatetouch-nav-tabs--vertical {
+    flex-direction: row;
+    position: static;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gatetouch-nav-tabs--vertical::-webkit-scrollbar { height: 4px; }
+  .gatetouch-nav-tabs--vertical::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+  .gatetouch-nav-tabs--vertical .gatetouch-nav-tab {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .gatetouch-tabs-shell__rail-title { display: none; }
+}
+
+/* WordPress collapses its own admin menu at 782px; drop our sticky offset. */
+@media screen and (max-width: 782px) {
+  .gatetouch-nav-tabs--vertical { top: 0; }
+}
+
+@keyframes riqFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Custom Switch ── */
+.riq-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.riq-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.riq-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e2e8f0;
+  transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+}
+
+.riq-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .riq-slider {
+  background-color: var(--riq-primary);
+}
+
+input:focus + .riq-slider {
+  box-shadow: 0 0 1px var(--riq-primary);
+}
+
+input:checked + .riq-slider:before {
+  transform: translateX(16px);
+}
+
+/* ── Integration UI ── */
+.gatetouch-integration-card {
+    transition: all 0.3s ease;
+}
+
+.gatetouch-integration-card:hover {
+    border-color: var(--riq-primary);
+    box-shadow: 0 12px 20px -5px rgba(99, 102, 241, 0.1);
+}
+
+.gatetouch-platform-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.gatetouch-platform-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gatetouch-platform-icon {
+    width: 32px;
+    height: 32px;
+    background: #f8fafc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+}
+
+.gatetouch-platform-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--riq-text);
+}
+
+.gatetouch-status-pill {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.gatetouch-status--connected { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.gatetouch-status--disconnected { background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0; }
+
+.gatetouch-help-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-top: 20px;
+}
+
+.gatetouch-help-text {
+    font-size: 13px;
+    color: var(--riq-text-light);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.gatetouch-help-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.gatetouch-btn-platform {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: var(--riq-text);
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gatetouch-btn-platform:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.gatetouch-btn-platform.active {
+    background: var(--riq-primary);
+    color: #fff;
+    border-color: var(--riq-primary);
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+}
+
+.gatetouch-validation-hint {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* ── Intelligent Audit Cards ── */
+.gatetouch-intelligent-card {
+  background: var(--riq-white);
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  margin-bottom: 25px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.gatetouch-intelligent-card:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border-color: var(--riq-primary);
+}
+
+.gatetouch-intelligent-card__header {
+  padding: 25px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fcfdfe;
+}
+
+.gatetouch-intelligent-card__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gatetouch-intelligent-card__priority {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.gatetouch-priority--critical { background: #fee2e2; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+.gatetouch-priority--high { background: #ffedd5; color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+.gatetouch-priority--medium { background: #eff6ff; color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+.gatetouch-priority--low { background: #f1f5f9; color: #64748b; border: 1px solid rgba(100, 116, 139, 0.2); }
+
+.gatetouch-intelligent-card__body {
+  padding: 30px;
+}
+
+.gatetouch-intelligent-card__explanation {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 25px;
+}
+
+.gatetouch-intelligent-card__impact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.gatetouch-impact-section h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--riq-text-light);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gatetouch-impact-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gatetouch-impact-list li {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.gatetouch-impact-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--riq-primary);
+  font-weight: 800;
+}
+
+.gatetouch-mode-toggle-wrap {
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.gatetouch-mode-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--riq-text-light);
+}
+
+.gatetouch-mode-btn.active {
+  background: #fff;
+  color: var(--riq-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.gatetouch-mode-content {
+  display: none;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  animation: riqFadeIn 0.3s ease;
+}
+
+.gatetouch-mode-content.active {
+  display: block;
+}
+
+.gatetouch-code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  margin-top: 10px;
+  border-left: 4px solid var(--riq-primary);
+}
+
+.gatetouch-action-footer {
+  padding: 20px 30px;
+  background: #fcfdfe;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gatetouch-learn-more {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--riq-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gatetouch-learn-more:hover { text-decoration: underline; }
+
+/* ── Loading States ── */
+.gatetouch-btn.loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.gatetouch-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: riqSpin 0.6s linear infinite;
+}
+
+@keyframes riqSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Visual Picker (Premium Selection) ── */
+.gatetouch-visual-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.gatetouch-visual-picker__item {
+    cursor: pointer;
+    padding: 12px 18px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--riq-text);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    user-select: none;
+}
+
+.gatetouch-visual-picker__item:hover {
+    border-color: var(--riq-primary);
+    background: #fcfdfe;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.gatetouch-visual-picker__item.is-active {
+    border-color: transparent;
+    background: #fff;
+    color: var(--riq-primary);
+    box-shadow: 0 0 0 1.5px var(--riq-primary), 0 8px 16px -4px rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+}
+
+.gatetouch-visual-picker__item.is-active::after {
+    /* Hidden indicator if needed */
+}
+
+.gatetouch-preview-box {
+    margin-top: 20px;
+    padding: 15px 20px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gatetouch-preview-box__label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--riq-text-light);
+    letter-spacing: 0.05em;
+}
+
+.gatetouch-preview-box__content {
+    font-size: 14px;
+    color: var(--riq-text);
+    font-weight: 600;
+}
+
+.gatetouch-preview-box__sep {
+    color: var(--riq-primary);
+    font-weight: 900;
+    margin: 0 4px;
+}
+
+/* -- Dashboard V2 -- */
+.gatetouch-enterprise-dashboard-v2 {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.riq-section-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 20px 0;
+    color: var(--riq-text);
+}
+
+.riq-health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.riq-health-card {
+    background: var(--riq-white);
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid var(--riq-glass-border);
+    box-shadow: var(--riq-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.riq-health-card:hover {
+    transform: translateY(-5px);
+}
+
+.riq-health-card__score {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.riq-health-card__score span {
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+.riq-health-card__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--riq-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 6px;
+}
+
+.riq-health-card__chart {
+    width: 60px;
+    height: 60px;
+}
+
+.riq-circular-chart {
+    display: block;
+    max-width: 100%;
+}
+
+.riq-circle-bg {
+    fill: none;
+    stroke: #f1f5f9;
+    stroke-width: 3.5;
+}
+
+.riq-circle {
+    fill: none;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    animation: riq-progress 1s ease-out forwards;
+}
+
+@keyframes riq-progress {
+    0% { stroke-dasharray: 0 100; }
+}
+
+.riq-dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.riq-dashboard-col {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.riq-panel {
+    background: var(--riq-white);
+    border-radius: 20px;
+    border: 1px solid var(--riq-glass-border);
+    box-shadow: var(--riq-shadow);
+    overflow: hidden;
+}
+
+.riq-panel__header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.riq-panel__title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--riq-text);
+}
+
+.riq-panel--ai {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+.riq-panel--help {
+    background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+}
+
+.riq-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    padding: 24px;
+}
+
+.riq-action-btn {
+    padding: 20px 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.riq-action-btn:hover {
+    background: var(--riq-white);
+    border-color: var(--riq-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+}
+
+.riq-action-btn__icon {
+    font-size: 24px;
+}
+
+.riq-action-btn__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--riq-text);
+}
+
+.riq-issue-list {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.riq-issue-item {
+    padding: 20px;
+    border-radius: 14px;
+    border-left: 4px solid #cbd5e1;
+    background: #f8fafc;
+}
+
+.riq-issue--critical { border-left-color: #ef4444; background: #fef2f2; }
+.riq-issue--high { border-left-color: #f97316; background: #fff7ed; }
+.riq-issue--medium { border-left-color: #f59e0b; background: #fffbeb; }
+
+.riq-issue-item__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.riq-issue-item__priority {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.1);
+}
+
+.riq-issue--critical .riq-issue-item__priority { background: #fee2e2; color: #b91c1c; }
+.riq-issue--high .riq-issue-item__priority { background: #ffedd5; color: #c2410c; }
+
+.riq-issue-item__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--riq-text);
+    flex-grow: 1;
+}
+
+.riq-issue-item__body p {
+    font-size: 13px;
+    color: var(--riq-text-light);
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.riq-issue-item__impact {
+    font-size: 12px;
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+}
+
+.riq-issue-item__impact strong { color: var(--riq-text); }
+
+.riq-ai-status {
+    padding: 24px;
+}
+
+.riq-ai-stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+.riq-ai-stat-label { color: var(--riq-text-light); font-weight: 600; }
+.riq-ai-stat-value { color: var(--riq-text); font-weight: 700; }
+
+.riq-ai-usage-meter {
+    margin-top: 20px;
+}
+
+.riq-ai-usage-bar {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.riq-ai-usage-bar div {
+    height: 100%;
+    background: var(--riq-ai-gradient);
+    border-radius: 10px;
+}
+
+.riq-ai-usage-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--riq-text-light);
+    text-transform: uppercase;
+}
+
+.riq-crawl-status {
+    padding: 24px;
+}
+
+.riq-crawl-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.riq-crawl-stat {
+    text-align: center;
+}
+
+.riq-crawl-stat__num { font-size: 20px; font-weight: 800; color: var(--riq-text); }
+.riq-crawl-stat__label { font-size: 11px; color: var(--riq-text-light); font-weight: 600; text-transform: uppercase; }
+
+.riq-crawl-last {
+    font-size: 12px;
+    text-align: center;
+    color: var(--riq-text-light);
+    margin-bottom: 15px;
+}
+
+.riq-queue-panel {
+    padding: 24px;
+}
+
+.riq-progress-container {
+    margin-bottom: 20px;
+}
+
+.riq-progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--riq-text);
+}
+
+.riq-progress-bar {
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.riq-progress-bar div {
+    height: 100%;
+    background: #10b981;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.riq-progress-stats {
+    font-size: 11px;
+    color: var(--riq-text-light);
+    text-align: center;
+}
+
+.riq-system-health {
+    padding: 20px 24px;
+}
+
+.riq-health-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+}
+
+.riq-health-item:last-child { border-bottom: none; }
+.riq-health-item span { color: var(--riq-text-light); font-weight: 600; }
+.riq-health-item strong { color: var(--riq-text); }
+
+.riq-status-text--ok { color: #10b981; }
+
+.riq-help-links {
+    padding: 20px 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.riq-help-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--riq-text);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.riq-help-link:hover {
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transform: translateX(4px);
+    color: var(--riq-primary);
+}
+
+.riq-btn--full { width: 100%; }
+.riq-btn--ghost { background: transparent; border-color: #e2e8f0; color: var(--riq-text); }
+.riq-btn--ghost:hover { background: #f8fafc; border-color: #cbd5e1; }
+.riq-btn--xs { padding: 4px 8px; font-size: 11px; }
+
+.riq-status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.riq-status--ok { background: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
+.riq-status--err { background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
+
+.riq-badge--error { background: #fee2e2; color: #ef4444; }
+
+.riq-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.riq-empty-state__icon { font-size: 40px; margin-bottom: 15px; display: block; }
+.riq-empty-state__text { font-size: 14px; color: var(--riq-text-light); font-weight: 600; }
+.riq-empty-state--sm { padding: 20px; }
+
+@media (max-width: 1200px) {
+    .riq-dashboard-main-grid { grid-template-columns: 1fr; }
+}
+
+/* -- Bulk Optimizer Styles -- */
+.gatetouch-bulk-bar {
+    background: var(--riq-white);
+    border-radius: 16px 16px 0 0;
+}
+
+.gatetouch-bulk-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--riq-text-light);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+}
+
+.gatetouch-bulk-label svg {
+    width: 14px;
+    height: 14px;
+    color: var(--riq-primary);
+}
+
+.gatetouch-progress-modern {
+    padding: 24px 30px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--riq-glass-border);
+}
+
+.gatetouch-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--riq-text);
+}
+
+.gatetouch-bar-outer {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.gatetouch-bar-inner {
+    height: 100%;
+    background: var(--riq-ai-gradient);
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gatetouch-bulk-table-container {
+    overflow-x: auto;
+}
+
+.riq-inline-input {
+    width: 100%;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--riq-text);
+    transition: all 0.2s;
+    background: #fff;
+    line-height: 1.5;
+}
+
+.riq-inline-input:focus {
+    border-color: var(--riq-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.riq-inline-input.riq-saved {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+/* -- Modals -- */
+.gatetouch-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    animation: riqFadeIn 0.2s ease;
+}
+
+.gatetouch-modal__content {
+    background: #fff;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    animation: riqModalSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes riqModalSlide {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.gatetouch-modal__header {
+    padding: 24px 30px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.gatetouch-modal__body {
+    padding: 30px;
+}
+
+.gatetouch-modal__footer {
+    padding: 20px 30px;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.gatetouch-choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.gatetouch-choice-card {
+    border: 2px solid #f1f5f9;
+    background: #fff;
+    padding: 24px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.gatetouch-choice-card:hover {
+    border-color: var(--riq-primary);
+    background: #fcfdfe;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+}
+
+.gatetouch-choice-icon {
+    font-size: 32px;
+}
+
+.gatetouch-choice-text strong {
+    display: block;
+    font-size: 15px;
+    color: var(--riq-text);
+    margin-bottom: 4px;
+}
+
+.gatetouch-choice-text span {
+    font-size: 12px;
+    color: var(--riq-text-light);
+    line-height: 1.4;
+    display: block;
+}
+
+.riq-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: inline-block;
+    animation: riqSpin 0.6s linear infinite;
+}
+
+/* -- Pagination -- */
+.gatetouch-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.riq-page-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--riq-text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.riq-page-btn:hover {
+    border-color: var(--riq-primary);
+    color: var(--riq-primary);
+    background: #fcfdfe;
+}
+
+.riq-page-btn.active {
+    background: var(--riq-primary);
+    color: #fff;
+    border-color: var(--riq-primary);
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+}
+
+/* -- Empty States -- */
+.gatetouch-empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    background: #fff;
+    border: 1px dashed #e2e8f0;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+/* -- Analysis & Audit UI -- */
+.gatetouch-score-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.riq-row-toggle {
+    font-size: 10px;
+    color: var(--riq-text-light);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+    cursor: pointer;
+}
+
+.riq-site-row {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.riq-site-row:hover {
+    background: #f8fafc;
+}
+
+.gatetouch-checklist-item {
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.gatetouch-checklist-item:hover {
+    border-color: #cbd5e1;
+    background: #fcfdfe;
+}
+
+.gatetouch-checklist-item.active {
+    border-color: var(--riq-primary);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.08);
+}
+
+.gatetouch-checklist-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.gatetouch-checklist-title {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--riq-text);
+}
+
+.gatetouch-checklist-body {
+    display: none;
+    padding: 0 20px 24px 50px;
+}
+
+/* -- Dashboard V2 Layout -- */
+.gatetouch-enterprise-dashboard-v2 {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 0 40px 0;
+}
+
+.riq-dashboard-section {
+    margin-bottom: 40px;
+}
+
+.riq-section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--riq-text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.riq-dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 1100px) {
+    .riq-dashboard-main-grid { grid-template-columns: 1fr; }
+}
+
+.riq-dashboard-col {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* -- Insights List (User Request) -- */
+.riq-insights-list {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.riq-insight-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 30px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s;
+}
+
+.riq-insight-row:last-child { border-bottom: none; }
+
+.riq-insight-row:hover {
+    background: #fcfdfe;
+    transform: translateX(4px);
+}
+
+.riq-insight-row__icon {
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.riq-insight-row:hover .riq-insight-row__icon {
+    background: var(--riq-ai-gradient);
+    color: #fff;
+    box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.riq-insight-row__content {
+    flex-grow: 1;
+}
+
+.riq-insight-row__content strong {
+    display: block;
+    font-size: 15px;
+    color: var(--riq-text);
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.riq-insight-row__content span {
+    display: block;
+    font-size: 13px;
+    color: var(--riq-text-light);
+    line-height: 1.5;
+}
+
+.riq-btn--ghost {
+    background: #f1f5f9;
+    color: var(--riq-text);
+    border: none;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.riq-btn--ghost:hover {
+    background: var(--riq-primary);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
+/* -- Stats Grid Refinements -- */
+.gatetouch-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.gatetouch-stat-card {
+    padding: 24px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.gatetouch-stat-card:hover {
+    border-color: var(--riq-primary);
+    background: #fff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.gatetouch-stat-card__label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--riq-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.gatetouch-stat-card__num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--riq-text);
+}
+
+/* -- Panel & Card Refinements -- */
+.riq-panel {
+    background: #fff;
+    border-radius: 24px;
+    border: 1px solid var(--riq-glass-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.riq-panel:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+}
+
+.riq-panel__header {
+    padding: 24px 30px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.riq-panel__title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--riq-text);
+    letter-spacing: -0.01em;
+}
+
+.riq-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.riq-btn--sm {
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+/* SEO Diagnostic Highlights */
+.gatetouch-checklist-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1.5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.status-fail .gatetouch-checklist-icon {
+    border-color: #fee2e2;
+    background: #fffafa;
+    color: #ef4444;
+}
+
+.status-warn .gatetouch-checklist-icon {
+    border-color: #fef3c7;
+    background: #fffdf5;
+    color: #f59e0b;
+}
+
+.status-pass .gatetouch-checklist-icon {
+    border-color: #d1fae5;
+    background: #f9fdfb;
+    color: #10b981;
+}
+
+.gatetouch-checklist-item {
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gatetouch-checklist-item:hover {
+    border-color: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transform: translateY(-1px);
+}
+
+.gatetouch-checklist-item.status-fail:hover, .gatetouch-checklist-item.status-fail.active { border-color: #ef4444; }
+.gatetouch-checklist-item.status-pass:hover, .gatetouch-checklist-item.status-pass.active { border-color: #10b981; }
+.gatetouch-checklist-item.status-warn:hover, .gatetouch-checklist-item.status-warn.active { border-color: #f59e0b; }
+.gatetouch-checklist-item.active .gatetouch-checklist-header { background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+.gatetouch-checklist-item.active .gatetouch-checklist-arrow { transform: rotate(90deg); }
+.gatetouch-checklist-item.status-pass.active { border-left: 4px solid #10b981; }
+.gatetouch-checklist-item.status-fail.active { border-left: 4px solid #ef4444; }
+.gatetouch-checklist-item.status-warn.active { border-left: 4px solid #f59e0b; }
+.gatetouch-checklist-header { padding: 16px 20px; display: flex; align-items: center; cursor: pointer; user-select: none; transition: background 0.2s; }
+.gatetouch-checklist-header:hover { background: #fcfdfe; }
+.gatetouch-checklist-body { display: none; padding: 24px 30px 24px 70px; }
+.gatetouch-checklist-arrow { font-size: 10px; color: #94a3b8; transition: transform 0.2s; margin-right: 5px; }
+.riq-hide-passed .status-pass { display: none !important; }
+.gatetouch-checklist-item.active .gatetouch-checklist-header { background: #f8fafc; }
+.gatetouch-checklist-item.status-pass.active { border-left: 4px solid #10b981; }
+/* Status-specific row colors */
+.gatetouch-checklist-item.status-pass { background: #f9fdfb; border-color: #e6f7ef; }
+.gatetouch-checklist-item.status-fail { background: #fffafb; border-color: #ffeff1; }
+.gatetouch-checklist-item.status-warn { background: #fffdf5; border-color: #fff4e0; }
+.gatetouch-checklist-item.status-pass:hover { background: #f0fdf4; }
+.gatetouch-checklist-item.status-fail:hover { background: #fef2f2; }
+.gatetouch-checklist-item.status-warn:hover { background: #fffbeb; }
+.gatetouch-checklist-item.status-fail.active { border-left: 4px solid #ef4444; }
+.gatetouch-checklist-item.status-warn.active { border-left: 4px solid #f59e0b; }
+
+/* Flat Checklist Styles */
+.gatetouch-checklist-flat { display: flex; gap: 20px; padding: 24px 30px; }
+.gatetouch-checklist-details { flex-grow: 1; }
+.gatetouch-checklist-fix { font-size: 14px; color: var(--riq-text-light); margin-top: 8px; line-height: 1.6; }
+.gatetouch-checklist-actions { display: flex; gap: 15px; align-items: center; margin-top: 20px; }
+
+.riq-hide-passed .status-pass { display: none !important; }
+
+/* Fix Action column padding to prevent touching the right edge */
+.gatetouch-premium-table tbody td:last-child {
+  padding-right: 24px !important;
+}
+.gatetouch-premium-table thead th:last-child {
+  padding-right: 24px !important;
+}
+
+/* ══════════════════════════════════════════════
+   NOTICE / ALERT SYSTEM
+   Used by GateTouch_Helpers::notice()
+══════════════════════════════════════════════ */
+.gatetouch-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  border: 1px solid transparent;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.gatetouch-notice::before {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.gatetouch-notice--success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+.gatetouch-notice--success::before { content: '✅'; }
+
+.gatetouch-notice--error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+.gatetouch-notice--error::before { content: '❌'; }
+
+.gatetouch-notice--warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.gatetouch-notice--warn::before { content: '⚠️'; }
+
+.gatetouch-notice--info {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+.gatetouch-notice--info::before { content: 'ℹ️'; }
+
+/* Dismissible notice */
+.gatetouch-notice .gatetouch-notice__dismiss {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  font-size: 16px;
+  padding: 0 2px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.gatetouch-notice .gatetouch-notice__dismiss:hover { opacity: 1; }
+
+/* ── File Permission Badge ── */
+.riq-perm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+.riq-perm-badge--ok {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+.riq-perm-badge--fail {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+.riq-perm-badge--warn {
+  background: #fffbeb;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+/* ── Save notification toast ── */
+@keyframes riqToastIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.gatetouch-save-toast {
+  position: fixed;
+  top: 46px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background: #1e293b;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  animation: riqToastIn 0.25s ease;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+.gatetouch-save-toast--success { background: #065f46; }
+.gatetouch-save-toast--error   { background: #991b1b; }
+
+.gatetouch-image-tools-wrap .gatetouch-admin-wrap {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.gatetouch-image-tools-wrap .gatetouch-media-header {
+  display: none !important;
+}
+
+.gatetouch-social-tab-btn {
+  background: none;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #64748b;
+  border-bottom: 2px solid transparent;
+  transition: 0.3s;
+}
+
+.gatetouch-social-tab-btn.active {
+  color: var(--riq-primary);
+  border-bottom-color: var(--riq-primary);
+  background: #eff6ff;
+  border-radius: 6px 6px 0 0;
+}
+
+.gatetouch-social-tab-btn:hover:not(.active) {
+  color: var(--riq-text);
+  background: #f1f5f9;
+  border-radius: 6px 6px 0 0;
+}
+
+.gatetouch-social-row {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.gatetouch-social-row:hover {
+  background: #f8fafc !important;
+}
+
+.gatetouch-expand-icon {
+  display: inline-block;
+  transition: 0.3s;
+  width: 20px;
+  text-align: center;
+}
+
+/* ── Help Center ────────────────────────────────────────────────────────────── */
+.gatetouch-help-center { display: flex; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-height: 80vh; overflow: hidden; font-family: 'Inter', sans-serif; color: #1e293b; }
+.rhc-sidebar { width: 320px; background: #f8fafc; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; flex-shrink: 0; }
+.rhc-search { padding: 20px; border-bottom: 1px solid #e2e8f0; background: #fff; position: sticky; top: 0; z-index: 10; }
+.rhc-search input { width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #f8fafc url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%2364748b" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat 14px center; transition: all 0.2s; }
+.rhc-search input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); background-color: #fff; }
+.rhc-nav { padding: 15px 0; overflow-y: auto; flex-grow: 1; }
+.rhc-nav-category { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; padding: 15px 20px 5px; }
+.rhc-nav-item { padding: 10px 20px; cursor: pointer; font-size: 14px; color: #475569; transition: all 0.2s; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px; }
+.rhc-nav-item:hover { background: #f1f5f9; color: #1e293b; }
+.rhc-nav-item.active { background: #e0e7ff; color: #4338ca; border-left-color: #6366f1; font-weight: 600; }
+.rhc-content-area { flex-grow: 1; padding: 40px 60px; overflow-y: auto; background: #ffffff; position: relative; }
+.rhc-content { max-width: 800px; margin: 0 auto; line-height: 1.7; }
+.rhc-content h1 { font-size: 32px; font-weight: 800; color: #0f172a; margin-bottom: 24px; line-height: 1.2; letter-spacing: -0.02em; }
+.rhc-content h2 { font-size: 24px; font-weight: 700; color: #1e293b; margin-top: 40px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+.rhc-content h3 { font-size: 18px; font-weight: 600; color: #334155; margin-top: 24px; margin-bottom: 12px; }
+.rhc-content p { font-size: 16px; color: #475569; margin-bottom: 16px; }
+.rhc-content ul, .rhc-content ol { margin-bottom: 20px; padding-left: 24px; color: #475569; font-size: 16px; }
+.rhc-content li { margin-bottom: 8px; }
+.rhc-content code { background: #f1f5f9; color: #ef4444; padding: 2px 6px; border-radius: 4px; font-size: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.rhc-content pre { background: #0f172a; color: #f8fafc; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+.rhc-content pre code { background: transparent; color: inherit; padding: 0; }
+.rhc-alert { padding: 16px 20px; border-radius: 8px; margin: 24px 0; display: flex; gap: 12px; font-size: 15px; line-height: 1.5; }
+.rhc-alert-info { background: #eff6ff; color: #1e40af; border-left: 4px solid #3b82f6; }
+.rhc-alert-warning { background: #fffbeb; color: #92400e; border-left: 4px solid #f59e0b; }
+.rhc-alert-success { background: #f0fdf4; color: #166534; border-left: 4px solid #22c55e; }
+.rhc-alert-danger { background: #fef2f2; color: #991b1b; border-left: 4px solid #ef4444; }
+.rhc-alert svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+.rhc-image-placeholder { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 40px; text-align: center; color: #94a3b8; margin: 24px 0; font-size: 14px; font-weight: 500; }
+.rhc-table-wrapper { overflow-x: auto; margin: 24px 0; border-radius: 8px; border: 1px solid #e2e8f0; }
+.rhc-content table { width: 100%; border-collapse: collapse; text-align: left; }
+.rhc-content th { background: #f8fafc; padding: 12px 16px; font-size: 14px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #e2e8f0; }
+.rhc-content td { padding: 12px 16px; font-size: 14px; color: #475569; border-bottom: 1px solid #e2e8f0; }
+.rhc-empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
+.rhc-empty-state svg { width: 64px; height: 64px; margin: 0 auto 20px; color: #cbd5e1; }
+.gatetouch-dark-mode .gatetouch-help-center { background: #1e293b; border-color: #334155; color: #f8fafc; }
+.gatetouch-dark-mode .rhc-sidebar { background: #0f172a; border-color: #334155; }
+.gatetouch-dark-mode .rhc-search { background: #0f172a; border-color: #334155; }
+.gatetouch-dark-mode .rhc-search input { background-color: #1e293b; border-color: #475569; color: #f8fafc; }
+.gatetouch-dark-mode .rhc-nav-item:hover { background: #1e293b; color: #f8fafc; }
+.gatetouch-dark-mode .rhc-nav-item.active { background: #312e81; color: #a5b4fc; }
+.gatetouch-dark-mode .rhc-content-area { background: #1e293b; }
+.gatetouch-dark-mode .rhc-content h1, .gatetouch-dark-mode .rhc-content h2 { color: #f8fafc; border-color: #334155; }
+.gatetouch-dark-mode .rhc-content p, .gatetouch-dark-mode .rhc-content li { color: #cbd5e1; }
+.gatetouch-dark-mode .rhc-table-wrapper { border-color: #334155; }
+.gatetouch-dark-mode .rhc-content th { background: #0f172a; border-color: #334155; color: #f8fafc; }
+.gatetouch-dark-mode .rhc-content td { border-color: #334155; color: #cbd5e1; }
+
+/* ── Redirect Manager ───────────────────────────────────────────────────────── */
+.gatetouch-sub-tabs .sub-tab { padding: 15px 0; font-weight: 700; color: var(--riq-text-light); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.gatetouch-sub-tabs .sub-tab.active { color: var(--riq-primary); border-color: var(--riq-primary); }
+.gatetouch-tab-panel { display: none; }
+.gatetouch-tab-panel.active { display: block; }
+.gatetouch-stat-card { background: #fff; padding: 24px; border-radius: 16px; border: 1px solid var(--riq-glass-border); box-shadow: var(--riq-shadow); }
+.stat-label { font-size: 12px; color: var(--riq-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.stat-value { font-size: 32px; font-weight: 800; color: var(--riq-text); }
+.ai-suggestion-item { padding: 12px; background: var(--riq-bg); border-radius: 8px; margin-bottom: 8px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; border: 1px solid transparent; transition: all 0.2s; }
+.ai-suggestion-item:hover { background: #fff; border-color: var(--riq-primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.gatetouch-premium-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.gatetouch-premium-table th { text-align: left; padding: 12px 15px; font-size: 11px; text-transform: uppercase; color: var(--riq-text-light); border-bottom: 1px solid #e2e8f0; font-weight: 800; }
+.gatetouch-premium-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; vertical-align: middle; }
+.gatetouch-grid--4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* ── Link Assistant ─────────────────────────────────────────────────────────── */
+.gatetouch-link-row { cursor: pointer; transition: 0.2s; }
+.gatetouch-link-row:hover { background: #f8fafc !important; }
+.gatetouch-btn--full { display: block; width: 100%; text-align: center; }
+
+/* ── Get Started Wizard ─────────────────────────────────────────────────────── */
+.sep-choice { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 18px; transition: all 0.2s; }
+.sep-choice:hover { border-color: #6366f1; color: #6366f1; }
+.sep-choice.active { background: #6366f1; border-color: #6366f1; color: #fff; }
+.gatetouch-setup-wizard-wrapper input[type="password"]:focus, .gatetouch-setup-wizard-wrapper input[type="text"]:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important; outline: none !important; }
+#gatetouch_validate_api.loading { opacity: 0.7; pointer-events: none; }
+
+/* ── Bulk Media Manager ─────────────────────────────────────────────────────── */
+.riq-spinner--sm { width: 14px; height: 14px; border-width: 2px; }
+.gatetouch-media-manager { --riq-primary: #6366f1; --riq-primary-soft: #eef2ff; }
+.gatetouch-stat-premium { background: #fff; padding: 24px; border-radius: 18px; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+.gatetouch-stat-premium--ai { background: var(--riq-ai-gradient); color: #fff; border: none; }
+.gatetouch-stat-premium--ai .gatetouch-stat-premium__label, .gatetouch-stat-premium--ai .gatetouch-stat-premium__trend { color: rgba(255,255,255,0.8); }
+.gatetouch-stat-premium__label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.gatetouch-stat-premium__val { font-size: 28px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
+.gatetouch-stat-premium__trend { font-size: 11px; color: #94a3b8; font-weight: 600; }
+.riq-tab-link { font-size: 14px; font-weight: 600; color: #64748b; text-decoration: none; padding-bottom: 15px; border-bottom: 2px solid transparent; transition: 0.2s; }
+.riq-tab-link:hover { color: var(--riq-primary); }
+.riq-tab-link.active { color: var(--riq-primary); border-color: var(--riq-primary); }
+.gatetouch-premium-table th { background: #f8fafc; color: #475569; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-top: none; }
+.gatetouch-premium-table td { padding: 16px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #1e293b; }
+.gatetouch-media-preview { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: #f1f5f9; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+.gatetouch-badge--optimized { background: #d1fae5; color: #065f46; }
+.gatetouch-badge--missing { background: #fee2e2; color: #991b1b; }
+.gatetouch-media-manager .gatetouch-card { border-radius: 20px; overflow: hidden; }
+.gatetouch-media-manager { padding-bottom: 100px; }
+
+/* ── Automation ─────────────────────────────────────────────────────────────── */
+.gatetouch-card--premium { border-left: 4px solid var(--riq-primary); }
+.gatetouch-feature-list { margin: 15px 0 0; padding: 0; list-style: none; }
+.gatetouch-feature-list li { font-size: 13px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.gatetouch-feature-list li::before { content: '\2713'; color: #10b981; font-weight: 800; }
+.gatetouch-stat { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+.gatetouch-stat__label { font-size: 13px; color: #64748b; }
+.gatetouch-stat__val { font-weight: 700; color: var(--riq-text); }
+
+/* ── Bulk Meta ──────────────────────────────────────────────────────────────── */
+.gatetouch-saas-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: #fafbfc; border-bottom: 1px solid #e5e7eb; gap: 16px; }
+.gatetouch-saas-select { appearance: none; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 36px 10px 16px; font-size: 13px; font-weight: 600; color: #4b5563; cursor: pointer; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 12px center; background-repeat: no-repeat; background-size: 16px; transition: all 0.15s ease-in-out; line-height: 1.5; }
+.gatetouch-saas-input { background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: #1f2937; transition: all 0.15s ease-in-out; }
+.gatetouch-saas-select:hover, .gatetouch-saas-input:hover { border-color: #d1d5db; }
+.gatetouch-saas-select:focus, .gatetouch-saas-input:focus { border-color: #7B61FF; outline: none; box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.15); }
+.gatetouch-saas-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease-in-out; text-decoration: none; line-height: 1.5; }
+.gatetouch-saas-btn--secondary { background: #ffffff; color: #4b5563; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+.gatetouch-saas-btn--secondary:hover { border-color: #d1d5db; color: #1f2937; background: #f9fafb; }
+.riq-inline-input { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--riq-text); transition: border-color 0.2s, box-shadow 0.2s; background: #fff; }
+.riq-inline-input:focus { border-color: var(--riq-primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); outline: none; }
+textarea.riq-inline-input { height: 60px; resize: vertical; line-height: 1.4; }
+.riq-char-bar { width: 100%; height: 3px; background: #e2e8f0; margin-top: 5px; border-radius: 2px; overflow: hidden; }
+.riq-char-bar div { height: 100%; transition: width 0.3s ease, background 0.3s ease; }
+.riq-saved { border-color: #10b981 !important; background: #f0fdf4 !important; }
+.riq-page-btn { border: 1px solid #cbd5e1; background: #fff; padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; cursor: pointer; color: #475569; transition: all 0.2s; }
+.riq-page-btn.active { background: var(--riq-primary); color: #fff; border-color: var(--riq-primary); }
+.riq-page-btn:hover:not(.active) { background: #f1f5f9; border-color: #94a3b8; }
+.riq-modal-close:hover { color: #334155 !important; }
+
+/* ── Data table ───────────────────────────────────────────────────────────
+   .gatetouch-table shipped with no styling at all, so headers rendered as
+   plain inline text ("# User Agent Directive Value") and empty bodies looked
+   like a broken layout. */
+.gatetouch-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--riq-white, #fff);
+  font-size: 13px;
+}
+
+.gatetouch-table thead th {
+  text-align: left;
+  padding: 11px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.gatetouch-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #334155;
+}
+
+.gatetouch-table tbody tr:last-child td { border-bottom: none; }
+.gatetouch-table tbody tr:hover td { background: #f8fafc; }
+
+.gatetouch-table tbody td .gatetouch-input-full,
+.gatetouch-table tbody td select { margin: 0; }
+
+/* Empty state so a table with no rows reads as intentional. */
+.gatetouch-table__empty td {
+  padding: 26px 14px !important;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  background: #fff !important;
+}
+
+.gatetouch-table .remove-rule {
+  color: #94a3b8;
+  padding: 4px 6px;
+  line-height: 1;
+}
+.gatetouch-table .remove-rule:hover { color: #ef4444; }
+
+/* The card footer that holds a panel's primary save action. */
+.gatetouch-card__footer {
+  padding: 16px 22px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 782px) {
+  .gatetouch-table { display: block; overflow-x: auto; }
+  .gatetouch-card__footer { justify-content: stretch; }
+  .gatetouch-card__footer .gatetouch-btn { width: 100%; justify-content: center; }
+}

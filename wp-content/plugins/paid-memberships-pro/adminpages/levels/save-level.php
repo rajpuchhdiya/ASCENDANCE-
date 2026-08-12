@@ -26,8 +26,8 @@ if(!empty($_REQUEST['custom_trial']))
 	$ml_custom_trial = 1;
 else
 	$ml_custom_trial = 0;
-$ml_trial_amount = sanitize_text_field($_REQUEST['trial_amount']);
-$ml_trial_limit = intval($_REQUEST['trial_limit']);
+$ml_trial_amount = isset( $_REQUEST['trial_amount'] ) ? sanitize_text_field( $_REQUEST['trial_amount'] ) : '';
+$ml_trial_limit = isset( $_REQUEST['trial_limit'] ) ? intval( $_REQUEST['trial_limit'] ) : 0;
 if(!empty($_REQUEST['expiration']))
 	$ml_expiration = 1;
 else
@@ -35,6 +35,12 @@ else
 $ml_expiration_number = intval($_REQUEST['expiration_number']);
 $ml_expiration_period = sanitize_text_field($_REQUEST['expiration_period']);
 $ml_categories = array();
+
+if ( ! empty( $_REQUEST['membership_account_message'] ) ) {
+	$ml_membership_account_message = wp_kses( wp_unslash( $_REQUEST['membership_account_message'] ), $allowedposttags );
+} else {
+	$ml_membership_account_message = '';
+}
 
 //reversing disable to allow here
 if(empty($_REQUEST['disable_signups']))
@@ -141,5 +147,8 @@ if ( isset( $ml_confirmation_in_email ) ) {
 if ( ! empty( $_REQUEST['level_group'] ) ) {
 	pmpro_add_level_to_group( $saveid, (int) $_REQUEST['level_group'] );
 }
+
+// Update the Membership Account Message.
+update_pmpro_membership_level_meta( $saveid, 'membership_account_message', $ml_membership_account_message );
 
 do_action("pmpro_save_membership_level", $saveid);

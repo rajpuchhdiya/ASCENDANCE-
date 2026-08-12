@@ -461,13 +461,9 @@ class CPT_Taxonomy {
             <label for="addon_price_amount"><?php _e( 'Add-on Price Amount ($)', 'ascendance-core' ); ?></label>
             <input type="number" step="0.01" min="0" name="addon_price_amount" id="addon_price_amount" value="49.00" placeholder="49.00" />
         </div>
-        <div class="form-field term-stripe-test-price-wrap">
-            <label for="stripe_test_price_id"><?php _e( 'Stripe Test Price ID (e.g. price_1N...)', 'ascendance-core' ); ?></label>
-            <input type="text" name="stripe_test_price_id" id="stripe_test_price_id" value="" placeholder="price_1N..." />
-        </div>
-        <div class="form-field term-stripe-live-price-wrap">
-            <label for="stripe_live_price_id"><?php _e( 'Stripe Live Price ID (e.g. price_1N...)', 'ascendance-core' ); ?></label>
-            <input type="text" name="stripe_live_price_id" id="stripe_live_price_id" value="" placeholder="price_1N..." />
+        <div class="form-field term-simpay-form-wrap">
+            <label for="simpay_form_id"><?php _e( 'WP Simple Pay Form ID', 'ascendance-core' ); ?></label>
+            <input type="number" name="simpay_form_id" id="simpay_form_id" value="" placeholder="e.g. 123" />
         </div>
         <?php
     }
@@ -479,10 +475,7 @@ class CPT_Taxonomy {
         $desc       = get_term_meta( $term->term_id, 'addon_description', true );
         $amount     = get_term_meta( $term->term_id, 'addon_price_amount', true ) ?: '49.00';
         $currency   = get_term_meta( $term->term_id, 'addon_currency', true ) ?: 'USD';
-        $test_price = get_term_meta( $term->term_id, 'stripe_test_price_id', true );
-        $live_price = get_term_meta( $term->term_id, 'stripe_live_price_id', true );
-        $test_prod  = get_term_meta( $term->term_id, 'stripe_test_product_id', true );
-        $live_prod  = get_term_meta( $term->term_id, 'stripe_live_product_id', true );
+        $simpay_form = get_term_meta( $term->term_id, 'simpay_form_id', true );
         ?>
         <tr class="form-field term-is-paid-addon-wrap">
             <th scope="row"><label for="is_paid_addon"><?php _e( 'Paid Add-on Category', 'ascendance-core' ); ?></label></th>
@@ -523,18 +516,11 @@ class CPT_Taxonomy {
                 <span class="description"><?php _e( 'USD monthly recurring price.', 'ascendance-core' ); ?></span>
             </td>
         </tr>
-        <tr class="form-field term-stripe-test-price-wrap">
-            <th scope="row"><label for="stripe_test_price_id"><?php _e( 'Stripe Test Price ID', 'ascendance-core' ); ?></label></th>
+        <tr class="form-field term-simpay-form-wrap">
+            <th scope="row"><label for="simpay_form_id"><?php _e( 'WP Simple Pay Form ID', 'ascendance-core' ); ?></label></th>
             <td>
-                <input type="text" name="stripe_test_price_id" id="stripe_test_price_id" value="<?php echo esc_attr( $test_price ); ?>" placeholder="price_1N..." />
-                <p class="description"><?php _e( 'Stripe Price ID for Sandbox/Development mode.', 'ascendance-core' ); ?></p>
-            </td>
-        </tr>
-        <tr class="form-field term-stripe-live-price-wrap">
-            <th scope="row"><label for="stripe_live_price_id"><?php _e( 'Stripe Live Price ID', 'ascendance-core' ); ?></label></th>
-            <td>
-                <input type="text" name="stripe_live_price_id" id="stripe_live_price_id" value="<?php echo esc_attr( $live_price ); ?>" placeholder="price_1N..." />
-                <p class="description"><?php _e( 'Stripe Price ID for Production/Live mode.', 'ascendance-core' ); ?></p>
+                <input type="number" name="simpay_form_id" id="simpay_form_id" value="<?php echo esc_attr( $simpay_form ); ?>" placeholder="e.g. 123" />
+                <p class="description"><?php _e( 'The ID of the WP Simple Pay form used for checkout.', 'ascendance-core' ); ?></p>
             </td>
         </tr>
         <?php
@@ -559,33 +545,20 @@ class CPT_Taxonomy {
         if ( isset( $_POST['addon_price_amount'] ) ) {
             update_term_meta( $term_id, 'addon_price_amount', sanitize_text_field( $_POST['addon_price_amount'] ) );
         }
-        if ( isset( $_POST['stripe_test_price_id'] ) ) {
-            update_term_meta( $term_id, 'stripe_test_price_id', sanitize_text_field( $_POST['stripe_test_price_id'] ) );
-        }
-        if ( isset( $_POST['stripe_live_price_id'] ) ) {
-            update_term_meta( $term_id, 'stripe_live_price_id', sanitize_text_field( $_POST['stripe_live_price_id'] ) );
+        if ( isset( $_POST['simpay_form_id'] ) ) {
+            update_term_meta( $term_id, 'simpay_form_id', sanitize_text_field( $_POST['simpay_form_id'] ) );
         }
     }
 
     /**
-     * Helper to resolve the appropriate Stripe Price ID for a topic term based on current environment.
+     * Helper to resolve the WP Simple Pay form ID for a topic term.
      *
      * @param int $term_id Term ID
-     * @return string Stripe Price ID or empty string if not configured.
+     * @return string WP Simple Pay Form ID or empty string if not configured.
      */
-    public static function get_term_stripe_price_id( $term_id ) {
-        $is_live = ( defined( 'WP_ENVIRONMENT_TYPE' ) && 'production' === WP_ENVIRONMENT_TYPE )
-                || ( defined( 'STRIPE_ENV' ) && 'live' === STRIPE_ENV );
-
-        $meta_key = $is_live ? 'stripe_live_price_id' : 'stripe_test_price_id';
-        $price_id = get_term_meta( $term_id, $meta_key, true );
-
-        if ( empty( $price_id ) ) {
-            // Fallback: check either test or live if specific env key is empty
-            $price_id = get_term_meta( $term_id, 'stripe_test_price_id', true ) ?: get_term_meta( $term_id, 'stripe_live_price_id', true );
-        }
-
-        return (string) $price_id;
+    public static function get_term_simpay_form_id( $term_id ) {
+        $form_id = get_term_meta( $term_id, 'simpay_form_id', true );
+        return (string) $form_id;
     }
 
     public function register_topic_admin_columns( $columns ) {

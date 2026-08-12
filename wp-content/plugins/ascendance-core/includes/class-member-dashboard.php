@@ -40,6 +40,9 @@ class Member_Dashboard {
         add_action( 'personal_options_update', array( $this, 'save_user_preferences' ) );
         add_action( 'edit_user_profile_update', array( $this, 'save_user_preferences' ) );
 
+        // Phase 2A.2 — Intercept legacy PMPro checkout page
+        // Legacy checkout interception removed
+
         // Phase 4A — Category entitlement admin metabox (admin-only on user-edit.php)
         add_action( 'edit_user_profile', array( $this, 'render_category_entitlements_metabox' ) );
         add_action( 'edit_user_profile_update', array( $this, 'save_category_entitlements' ) );
@@ -59,6 +62,12 @@ class Member_Dashboard {
     }
 
     /**
+     * Intercepts legacy /membership-checkout/ page to render WP Simple Pay form instead
+     *
+     * @param string $content
+     * @return string
+     */
+    /**
      * Renders member dashboard HTML
      *
      * @return string Dashboard markup
@@ -76,22 +85,39 @@ class Member_Dashboard {
         $user_id = get_current_user_id();
         $user_data = get_userdata( $user_id );
         
-        // Fetch membership details
-        $level_name = __( 'Free Guest', 'ascendance-core' );
-        $billing_info = __( 'Free Access', 'ascendance-core' );
-        $pmpro_active = function_exists( 'pmpro_getMembershipLevelForUser' );
-
-        if ( $pmpro_active ) {
-            $user_level = pmpro_getMembershipLevelForUser( $user_id );
-            if ( ! empty( $user_level ) ) {
-                $level_name = esc_html( $user_level->name );
-                $billing_info = sprintf( 
-                    /* translators: 1: Billing amount, 2: Billing cycle */
-                    __( '$%1$s / %2$s', 'ascendance-core' ),
-                    number_format( $user_level->initial_payment, 0 ),
-                    $user_level->cycle_number == 1 && $user_level->cycle_period == 'Month' ? 'month' : 'year'
-                );
+        // Fetch membership details dynamically
+        $roles = (array) $user_data->roles;
+        $tier_slug = 'free';
+        foreach ( $roles as $r ) {
+            if ( 0 === strpos( $r, 'ascendance_' ) && 'ascendance_subscriber' !== $r ) {
+                $tier_slug = str_replace( 'ascendance_', '', $r );
+                break;
             }
+        }
+        
+        $level_names = array(
+            'essential'    => __( 'Essential Tier', 'ascendance-core' ),
+            'professional' => __( 'Professional Tier', 'ascendance-core' ),
+            'enterprise'   => __( 'Enterprise Tier', 'ascendance-core' ),
+            'free'         => __( 'Free Guest', 'ascendance-core' ),
+        );
+        $level_name = isset( $level_names[ $tier_slug ] ) ? $level_names[ $tier_slug ] : ucfirst( $tier_slug );
+
+        $sub_status = get_user_meta( $user_id, 'ascendance_stripe_subscription_status', true ) ?: 'active';
+        $period_end = get_user_meta( $user_id, 'ascendance_stripe_period_end', true );
+        
+        if ( 'free' === $tier_slug ) {
+            $billing_info = __( 'Free Access', 'ascendance-core' );
+        } else {
+            $status_labels = array(
+                'active'        => __( 'ACTIVE', 'ascendance-core' ),
+                'canceling'     => __( 'CANCELING', 'ascendance-core' ),
+                'payment_issue' => __( 'PAYMENT ISSUE', 'ascendance-core' ),
+                'canceled'      => __( 'CANCELED', 'ascendance-core' ),
+                'revoked'       => __( 'REVOKED', 'ascendance-core' ),
+            );
+            $status_text = isset( $status_labels[ $sub_status ] ) ? $status_labels[ $sub_status ] : strtoupper( $sub_status );
+            $billing_info = ! empty( $period_end ) ? sprintf( '%s (Until %s)', $status_text, date( 'M j, Y', strtotime( $period_end ) ) ) : $status_text;
         }
 
         // Fetch dynamic counts for telemetry stats
@@ -236,54 +262,60 @@ class Member_Dashboard {
                         <div class="dashboard-services-grid grid grid-cols-2 gap-3">
                             <?php 
                             $customer_id = get_user_meta( $user_id, 'ascendance_stripe_customer_id', true );
-                            if ( function_exists( 'pmpro_url' ) ) : ?>
-                                <a href="<?php echo esc_url( add_query_arg( 'portal', '1', pmpro_url( 'account' ) ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
-                                    <i class="fa-regular fa-id-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
-                                    <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Manage Tier', 'ascendance-core' ); ?></span>
-                                </a>
-                                <a href="<?php echo esc_url( pmpro_url( 'billing' ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
-                                    <i class="fa-regular fa-credit-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
-                                    <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Billing Info', 'ascendance-core' ); ?></span>
-                                </a>
-                            <?php elseif ( ! empty( $customer_id ) ) : ?>
+                            if ( empty( $customer_id ) ) {
+                                $customer_id = get_user_meta( $user_id, 'pmpro_stripe_customerid', true );
+                            }
+                            ?>
+                            <a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
+                                <i class="fa-regular fa-id-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Manage Tier', 'ascendance-core' ); ?></span>
+                            </a>
+                            <?php if ( ! empty( $customer_id ) ) : ?>
                                 <button id="btn-billing-portal" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
                                     <i class="fa-regular fa-credit-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
                                     <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Manage Billing', 'ascendance-core' ); ?></span>
                                 </button>
                                 <script>
-                                document.getElementById('btn-billing-portal').addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    const btn = this;
-                                    const originalText = btn.innerHTML;
-                                    btn.disabled = true;
-                                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mb-1.5"></i>';
-                                    fetch('<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/billing/portal-session' ) ); ?>', {
-                                        method: 'POST'
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.url) {
-                                            window.location.href = data.url;
-                                        } else {
-                                            alert(data.error || 'Failed to redirect to billing portal.');
+                                if (document.getElementById('btn-billing-portal')) {
+                                    document.getElementById('btn-billing-portal').addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        const btn = this;
+                                        const originalText = btn.innerHTML;
+                                        btn.disabled = true;
+                                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mb-1.5"></i>';
+                                        fetch('<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/billing/portal-session' ) ); ?>', {
+                                            method: 'POST'
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.url) {
+                                                window.location.href = data.url;
+                                            } else {
+                                                alert(data.error || 'Failed to redirect to billing portal.');
+                                                btn.disabled = false;
+                                                btn.innerHTML = originalText;
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error(err);
+                                            alert('An error occurred.');
                                             btn.disabled = false;
                                             btn.innerHTML = originalText;
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error(err);
-                                        alert('An error occurred.');
-                                        btn.disabled = false;
-                                        btn.innerHTML = originalText;
+                                        });
                                     });
-                                });
+                                }
                                 </script>
+                            <?php else : ?>
+                                <a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
+                                    <i class="fa-regular fa-credit-card text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
+                                    <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Billing Info', 'ascendance-core' ); ?></span>
+                                </a>
                             <?php endif; ?>
-                            <a href="<?php echo esc_url( get_edit_user_link() ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group <?php echo !function_exists( 'pmpro_url' ) ? 'col-span-2' : ''; ?>">
+                            <a href="<?php echo esc_url( get_edit_user_link() ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
                                 <i class="fa-regular fa-user text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
                                 <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Preferences', 'ascendance-core' ); ?></span>
                             </a>
-                            <a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group <?php echo !function_exists( 'pmpro_url' ) ? 'col-span-2' : ''; ?>">
+                            <a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>" class="flex flex-col items-center justify-center p-3 text-center rounded-sm border border-brand-divider-light dark:border-brand-divider-dark bg-cream/20 dark:bg-navy-deep/20 hover:border-brand-red dark:hover:border-brand-red-light transition-colors group">
                                 <i class="fa-solid fa-arrow-right-from-bracket text-brand-red text-base mb-1.5 transition-transform group-hover:scale-110"></i>
                                 <span class="text-[10px] font-sans font-bold text-brand-text-primary dark:text-cream leading-tight"><?php esc_html_e( 'Sign Out', 'ascendance-core' ); ?></span>
                             </a>
@@ -461,25 +493,16 @@ class Member_Dashboard {
      * Pricing table rendering [ascendance_pricing_table]
      */
     public function render_pricing_table() {
-        // Stripe Checkout URL or PMPro level checkout URLs
-        $checkout_url = '#';
-        if ( function_exists( 'pmpro_url' ) ) {
-            $checkout_url = pmpro_url( 'checkout' );
-        }
-
         ob_start();
         ?>
         <div class="pricing-table-matrix">
-                <!-- Plan 1: Essential -->
+            <!-- Plan 1: Essential -->
             <div class="card pricing-tier-card">
                 <span class="pricing-tier-card-number"><?php esc_html_e( 'Tier 1', 'ascendance-core' ); ?></span>
                 <h3><?php esc_html_e( 'Essential', 'ascendance-core' ); ?></h3>
                 <?php
-                // Dynamic: pull price live from PMPro using the configured Essential Level ID.
-                $essential_level_id = (int) get_option( 'ascendance_essential_level_id', 1 );
-                $essential_level    = function_exists( 'pmpro_getLevel' ) ? pmpro_getLevel( $essential_level_id ) : null;
-                $essential_price    = $essential_level ? number_format( (float) $essential_level->initial_payment, 0 ) : '150';
-                $essential_period   = ( $essential_level && $essential_level->cycle_number == 1 && $essential_level->cycle_period === 'Month' ) ? 'month' : 'year';
+                $essential_price    = '150';
+                $essential_period   = 'month';
                 ?>
                 <div class="pricing-tier-card-price-row">
                     <span class="pricing-tier-card-price">$<?php echo esc_html( $essential_price ); ?></span>
@@ -488,10 +511,13 @@ class Member_Dashboard {
                 <p class="pricing-tier-card-desc">
                     <?php esc_html_e( 'Full access to Intelligence Briefs, tracking updates, and primary industry research feeds.', 'ascendance-core' ); ?>
                 </p>
-                <?php if ( function_exists( 'pmpro_url' ) ) : ?>
-                    <a href="<?php echo esc_url( add_query_arg( 'level', $essential_level_id, $checkout_url ) ); ?>" class="btn btn-secondary"><?php esc_html_e( 'Select Plan', 'ascendance-core' ); ?></a>
-                <?php else : ?>
-                    <button class="btn btn-secondary btn-choose-plan" data-tier="essential"><?php esc_html_e( 'Select Plan', 'ascendance-core' ); ?></button>
+                <?php 
+                $essential_form_id = get_option( 'ascendance_essential_simpay_form_id' );
+                if ( $essential_form_id ) : 
+                    echo do_shortcode( sprintf( '[simpay id="%d"]', $essential_form_id ) );
+                else : 
+                ?>
+                    <button class="btn btn-secondary" disabled><?php esc_html_e( 'Select Plan', 'ascendance-core' ); ?></button>
                 <?php endif; ?>
             </div>
 
@@ -501,11 +527,8 @@ class Member_Dashboard {
                 <span class="pricing-tier-card-number" style="color: var(--color-red);"><?php esc_html_e( 'Tier 2', 'ascendance-core' ); ?></span>
                 <h3><?php esc_html_e( 'Professional', 'ascendance-core' ); ?></h3>
                 <?php
-                // Dynamic: pull price live from PMPro using the configured Professional Level ID.
-                $professional_level_id = (int) get_option( 'ascendance_professional_level_id', 2 );
-                $professional_level    = function_exists( 'pmpro_getLevel' ) ? pmpro_getLevel( $professional_level_id ) : null;
-                $professional_price    = $professional_level ? number_format( (float) $professional_level->initial_payment, 0 ) : '299';
-                $professional_period   = ( $professional_level && $professional_level->cycle_number == 1 && $professional_level->cycle_period === 'Month' ) ? 'month' : 'year';
+                $professional_price    = '299';
+                $professional_period   = 'month';
                 ?>
                 <div class="pricing-tier-card-price-row">
                     <span class="pricing-tier-card-price">$<?php echo esc_html( $professional_price ); ?></span>
@@ -514,10 +537,13 @@ class Member_Dashboard {
                 <p class="pricing-tier-card-desc">
                     <?php esc_html_e( 'Unlock high-density Dossiers, downloads, stakeholder profiling, and cross-referenced historical indexes.', 'ascendance-core' ); ?>
                 </p>
-                <?php if ( function_exists( 'pmpro_url' ) ) : ?>
-                    <a href="<?php echo esc_url( add_query_arg( 'level', $professional_level_id, $checkout_url ) ); ?>" class="btn btn-primary"><?php esc_html_e( 'Activate Professional', 'ascendance-core' ); ?></a>
-                <?php else : ?>
-                    <button class="btn btn-primary btn-choose-plan" data-tier="professional"><?php esc_html_e( 'Activate Professional', 'ascendance-core' ); ?></button>
+                <?php 
+                $professional_form_id = get_option( 'ascendance_professional_simpay_form_id' );
+                if ( $professional_form_id ) : 
+                    echo do_shortcode( sprintf( '[simpay id="%d"]', $professional_form_id ) );
+                else : 
+                ?>
+                    <button class="btn btn-primary" disabled><?php esc_html_e( 'Activate Professional', 'ascendance-core' ); ?></button>
                 <?php endif; ?>
             </div>
 
@@ -539,47 +565,6 @@ class Member_Dashboard {
                 <a href="<?php echo esc_url( $enterprise_contact_url ); ?>" class="btn btn-secondary"><?php esc_html_e( 'Contact Enterprise', 'ascendance-core' ); ?></a>
             </div>
         </div>
-
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.btn-choose-plan');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tier = this.getAttribute('data-tier');
-                    if (!tier) return;
-                    
-                    const originalText = this.innerHTML;
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Redirecting...';
-                    
-                    fetch('<?php echo esc_url_raw( get_rest_url( null, 'ascendance/v1/checkout/create' ) ); ?>', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ tier: tier })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.url) {
-                            window.location.href = data.url;
-                        } else {
-                            alert(data.error || 'Failed to create checkout session.');
-                            this.disabled = false;
-                            this.innerHTML = originalText;
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert('An error occurred. Please try again.');
-                        this.disabled = false;
-                        this.innerHTML = originalText;
-                    });
-                });
-            });
-        });
-        </script>
         <?php
         return ob_get_clean();
     }
@@ -659,6 +644,24 @@ class Member_Dashboard {
      * Register REST API routes for Dashboard 2.0
      */
     public function register_rest_routes() {
+        register_rest_route( 'ascendance/v1', '/user/subscription', array(
+            'methods'             => 'GET',
+            'callback'            => array( $this, 'rest_get_subscription' ),
+            'permission_callback' => 'is_user_logged_in',
+        ) );
+
+        register_rest_route( 'ascendance/v1', '/billing/portal-session', array(
+            'methods'             => 'POST',
+            'callback'            => array( $this, 'rest_create_portal_session' ),
+            'permission_callback' => 'is_user_logged_in',
+        ) );
+
+        register_rest_route( 'ascendance/v1', '/category-checkout', array(
+            'methods'             => 'POST',
+            'callback'            => array( $this, 'rest_category_checkout' ),
+            'permission_callback' => 'is_user_logged_in',
+        ) );
+
         register_rest_route( 'ascendance/v1', '/user/saved/toggle', array(
             'methods'             => 'POST',
             'callback'            => array( $this, 'rest_toggle_saved' ),
@@ -742,6 +745,128 @@ class Member_Dashboard {
             'callback'            => array( $this, 'rest_get_category_addons' ),
             'permission_callback' => 'is_user_logged_in',
         ) );
+    }
+
+    /**
+     * REST Handler: Get Current User's Subscription Details
+     */
+    public function rest_get_subscription( \WP_REST_Request $request ) {
+        $user_id = get_current_user_id();
+        if ( ! $user_id ) {
+            return new \WP_REST_Response( array( 'error' => __( 'Authentication required.', 'ascendance-core' ) ), 401 );
+        }
+
+        $data = $this->get_user_subscription_data( $user_id );
+
+        $response = new \WP_REST_Response( $data, 200 );
+        $response->header( 'Cache-Control', 'private, no-cache, no-store, must-revalidate' );
+        return $response;
+    }
+
+    /**
+     * Helper to resolve authoritative user subscription details
+     */
+    public function get_user_subscription_data( $user_id ) {
+        $user = get_userdata( $user_id );
+        $default_data = array(
+            'has_subscription'     => false,
+            'tier'                 => 'free',
+            'status'               => 'none',
+            'price'                => '$0',
+            'interval'             => '',
+            'next_billing_date'    => null,
+            'cancellation_date'    => null,
+            'cancel_at_period_end' => false,
+        );
+
+        if ( ! $user ) {
+            return $default_data;
+        }
+
+        $tier = 'free';
+        $sub_status = 'none';
+        $price = '$0';
+        $interval = '';
+        $next_billing_date = null;
+        $cancellation_date = null;
+        $cancel_at_period_end = false;
+        
+        $roles = (array) $user->roles;
+        if ( in_array( 'administrator', $roles, true ) ) {
+            $tier = 'admin';
+            $sub_status = 'active';
+            $price = 'System';
+        }
+
+        if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+            $level = pmpro_getMembershipLevelForUser( $user_id );
+            if ( ! empty( $level ) ) {
+                if ( $level->id == 3 ) {
+                    $tier = 'enterprise';
+                    $price = 'Custom';
+                    $interval = 'annual';
+                } elseif ( $level->id == 2 ) {
+                    $tier = 'professional';
+                } elseif ( $level->id == 1 ) {
+                    $tier = 'essential';
+                }
+                
+                $sub_status = 'active';
+                if ( isset( $level->billing_amount ) && $level->billing_amount > 0 && function_exists( 'pmpro_formatPrice' ) ) {
+                    $price = str_replace( '.00', '', pmpro_formatPrice( $level->billing_amount ) );
+                    $interval = 'month';
+                }
+                
+                if ( isset( $level->enddate ) && ! empty( $level->enddate ) ) {
+                    // PMPro uses UNIX timestamp for enddate
+                    $next_billing_date = date( 'M j, Y', $level->enddate );
+                    
+                    // If a user cancels, PMPro often sets an enddate without a recurring billing
+                    $cancel_at_period_end = true;
+                    $cancellation_date = $next_billing_date;
+                }
+            }
+        }
+
+        // Fallback for roles if PMPro didn't match (for legacy or admin assignment)
+        if ( 'free' === $tier && 'admin' !== $tier ) {
+            if ( in_array( 'ascendance_enterprise', $roles, true ) ) {
+                $tier = 'enterprise';
+                $price = 'Custom';
+            } elseif ( in_array( 'ascendance_professional', $roles, true ) ) {
+                $tier = 'professional';
+                $price = '$299';
+                $interval = 'month';
+            } elseif ( in_array( 'ascendance_essential', $roles, true ) ) {
+                $tier = 'essential';
+                $price = '$150';
+                $interval = 'month';
+            }
+            if ( 'free' !== $tier ) {
+                $sub_status = 'active';
+            }
+        }
+
+        $has_sub = in_array( $tier, array( 'essential', 'professional', 'enterprise', 'admin' ), true );
+
+        return array(
+            'has_subscription'     => $has_sub,
+            'tier'                 => $tier,
+            'status'               => $has_sub ? 'active' : 'none',
+            'price'                => $price,
+            'interval'             => $interval,
+            'next_billing_date'    => $next_billing_date,
+            'cancellation_date'    => $cancellation_date,
+            'cancel_at_period_end' => $cancel_at_period_end,
+        );
+    }
+
+    /**
+     * REST Handler: Create Stripe Customer Portal Session
+     * (Deprecated: PMPro natively handles Stripe Customer Portals on the Membership Account page)
+     */
+    public function rest_create_portal_session( \WP_REST_Request $request ) {
+        return new \WP_REST_Response( array( 'error' => __( 'Billing portal is now managed natively through PMPro at /membership-account/', 'ascendance-core' ) ), 400 );
     }
 
     /**

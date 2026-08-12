@@ -47,6 +47,11 @@ function pmpro_cloudflare_turnstile_validation( $okay ) {
 		return $okay;
 	}
 
+	// Don't show it more than once on a screen. This is for "PayPal Express".
+	if ( pmpro_get_session_var( 'pmpro_cloudflare_turnstile_validated' ) ) {
+		return $okay;
+	}
+
 	// If the Turnstile is not passed, show an error.
 	if ( empty( $_POST['cf-turnstile-response'] ) ) {
 		pmpro_setMessage( __( 'Please complete the security check.', 'paid-memberships-pro' ), 'pmpro_error' );
@@ -74,6 +79,7 @@ function pmpro_cloudflare_turnstile_validation( $okay ) {
 		$okay = false;
 	}
 
+	pmpro_set_session_var( 'pmpro_cloudflare_turnstile_validated', true );
 	return $okay;
 }
 add_action( 'pmpro_checkout_checks', 'pmpro_cloudflare_turnstile_validation' );
@@ -107,13 +113,13 @@ function pmpro_cloudflare_turnstile_settings() {
 			<p class="description"><?php esc_html_e( 'A free CloudFlare Turnstile key is required.', 'paid-memberships-pro' ); ?> <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="nofollow noopener"><?php esc_html_e( 'Click here to signup for CloudFlare Turnstile', 'paid-memberships-pro' ); ?></a>.</p>
 		</td>
 	</tr>
-   <tr class='pmpro_cloudflare_turnstile_settings' style='<?php esc_attr_e( $tr_style ); ?>'>
+   <tr class="pmpro_cloudflare_turnstile_settings" style="<?php echo esc_attr( $tr_style ); ?>">
 		<th scope="row"><label for="cloudflare_turnstile_site_key"><?php esc_html_e( 'Turnstile Site Key', 'paid-memberships-pro' ); ?>:</label></th>
 		<td>
 			<input type="text" id="cloudflare_turnstile_site_key" name="cloudflare_turnstile_site_key" value="<?php echo esc_attr( $cloudflare_site_key ); ?>" class="regular-text code" />
 		</td>
 	</tr>
-	<tr class='pmpro_cloudflare_turnstile_settings' style='<?php esc_attr_e( $tr_style ); ?>'>
+	<tr class="pmpro_cloudflare_turnstile_settings" style="<?php echo esc_attr( $tr_style ); ?>">
 		<th scope="row"><label for="cloudflare_turnstile_secret_key"><?php esc_html_e( 'Turnstile Secret Key', 'paid-memberships-pro' ); ?>:</label></th>
 		<td>
 			<input type="text" id="cloudflare_turnstile_secret_key" name="cloudflare_turnstile_secret_key" value="<?php echo esc_attr( $cloudflare_secret_key ); ?>" class="regular-text code" />
@@ -164,3 +170,13 @@ function pmpro_cloudflare_turnstile_get_error_message() {
 
 	return $error_messages;
 }
+
+/**
+ * Clear the CloudFlare Turnstile session variable after checkout.
+ * @since 3.3.3
+ */
+function pmpro_after_checkout_reset_cloudflare_turnstile() {
+    pmpro_unset_session_var( 'pmpro_cloudflare_turnstile_validated' );
+}
+add_action( 'pmpro_after_checkout', 'pmpro_after_checkout_reset_cloudflare_turnstile' );
+add_action( 'pmpro_after_update_billing', 'pmpro_after_checkout_reset_cloudflare_turnstile' );

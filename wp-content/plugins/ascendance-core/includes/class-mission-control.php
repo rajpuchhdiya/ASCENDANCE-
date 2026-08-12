@@ -582,7 +582,7 @@ class Mission_Control {
 
         // 4b. API Key Statuses & Alerts Integration
         $ai_studio = \Ascendance\Core\AI_Studio::get_instance();
-        $api_providers = array( 'openai', 'anthropic', 'gemini', 'stripe', 'brevo' );
+        $api_providers = array( 'openai', 'anthropic', 'gemini', 'stripe', 'mailerlite' );
         $api_statuses = array();
         $api_alerts_count = 0;
         $api_alert_messages = array();
@@ -1105,7 +1105,7 @@ class Mission_Control {
                 <span><span class="dot-indicator offline" id="indicator_anthropic"></span>Anthropic API</span>
                 <span><span class="dot-indicator offline" id="indicator_gemini"></span>Gemini API</span>
                 <span><span class="dot-indicator offline" id="indicator_stripe"></span>Stripe API</span>
-                <span><span class="dot-indicator offline" id="indicator_brevo"></span>Brevo API</span>
+                <span><span class="dot-indicator offline" id="indicator_mailerlite"></span>MailerLite API</span>
             </div><!-- .ascendance-dashboard-inner -->
         </div><!-- .wrap -->
  
@@ -1281,6 +1281,18 @@ class Mission_Control {
             exit;
         }
 
+        // Save Pricing Settings
+        if ( isset( $_POST['save_pricing_settings'] ) ) {
+            check_admin_referer( 'ascendance_pricing_settings_action', 'ascendance_pricing_settings_nonce' );
+
+            update_option( 'ascendance_simpay_form_essential', intval( $_POST['ascendance_simpay_form_essential'] ) );
+            update_option( 'ascendance_simpay_form_professional', intval( $_POST['ascendance_simpay_form_professional'] ) );
+            update_option( 'ascendance_simpay_form_enterprise', intval( $_POST['ascendance_simpay_form_enterprise'] ) );
+
+            wp_safe_redirect( admin_url( 'admin.php?page=ascendance-settings&settings_saved=pricing' ) );
+            exit;
+        }
+
         // Handle manual recheck action from the settings page
         if ( isset( $_GET['action'] ) && 'recheck_gateways' === $_GET['action'] ) {
             check_admin_referer( 'ascendance_recheck_gateways' );
@@ -1351,6 +1363,11 @@ class Mission_Control {
         $rec_exact_bonus     = intval( get_option( 'ascendance_rec_exact_bonus', 20 ) );
         $rec_freshness_bonus = intval( get_option( 'ascendance_rec_freshness_bonus', 5 ) );
         $rec_freshness_days  = intval( get_option( 'ascendance_rec_freshness_days', 7 ) );
+
+        $simpay_essential    = intval( get_option( 'ascendance_simpay_form_essential', 0 ) );
+        $simpay_professional = intval( get_option( 'ascendance_simpay_form_professional', 0 ) );
+        $simpay_enterprise   = intval( get_option( 'ascendance_simpay_form_enterprise', 0 ) );
+        $simpay_forms        = get_posts( array( 'post_type' => 'simple-pay', 'numberposts' => -1, 'post_status' => 'publish' ) );
 
         ?>
         <div class="wrap ascendance-dashboard-wrap ascendance-settings-wrap">
@@ -1551,6 +1568,8 @@ class Mission_Control {
                             esc_html_e( 'API Key Settings saved and verified successfully.', 'ascendance-core' );
                         } elseif ( 'recommendation' === $_GET['settings_saved'] ) {
                             esc_html_e( 'Recommendation Engine settings updated successfully.', 'ascendance-core' );
+                        } elseif ( 'pricing' === $_GET['settings_saved'] ) {
+                            esc_html_e( 'Pricing plan subscription forms updated successfully.', 'ascendance-core' );
                         } else {
                             esc_html_e( 'Analytics GTM configuration updated.', 'ascendance-core' );
                         }
@@ -1698,11 +1717,59 @@ class Mission_Control {
                 </form>
             </div>
 
+            <!-- Pricing & Subscription Settings -->
+            <div class="settings-card">
+                <h3><i class="dashicons dashicons-cart" style="color: #3B82F6;"></i> SUBSCRIPTION PLAN MAPPING (WP SIMPLE PAY)</h3>
+                <form method="post" action="">
+                    <?php wp_nonce_field( 'ascendance_pricing_settings_action', 'ascendance_pricing_settings_nonce' ); ?>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                        
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_simpay_form_essential" class="settings-label"><?php esc_html_e( 'Essential Plan Form', 'ascendance-core' ); ?></label>
+                            <select name="ascendance_simpay_form_essential" id="ascendance_simpay_form_essential" class="settings-input">
+                                <option value="0"><?php esc_html_e( '-- Select Form --', 'ascendance-core' ); ?></option>
+                                <?php foreach ( $simpay_forms as $form ) : ?>
+                                    <option value="<?php echo esc_attr( $form->ID ); ?>" <?php selected( $simpay_essential, $form->ID ); ?>><?php echo esc_html( $form->post_title ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="settings-help">&gt; WP Simple Pay form for Essential tier.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_simpay_form_professional" class="settings-label"><?php esc_html_e( 'Professional Plan Form', 'ascendance-core' ); ?></label>
+                            <select name="ascendance_simpay_form_professional" id="ascendance_simpay_form_professional" class="settings-input">
+                                <option value="0"><?php esc_html_e( '-- Select Form --', 'ascendance-core' ); ?></option>
+                                <?php foreach ( $simpay_forms as $form ) : ?>
+                                    <option value="<?php echo esc_attr( $form->ID ); ?>" <?php selected( $simpay_professional, $form->ID ); ?>><?php echo esc_html( $form->post_title ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="settings-help">&gt; WP Simple Pay form for Professional tier.</div>
+                        </div>
+
+                        <div class="settings-field-group" style="margin-bottom: 0;">
+                            <label for="ascendance_simpay_form_enterprise" class="settings-label"><?php esc_html_e( 'Enterprise Plan Form', 'ascendance-core' ); ?></label>
+                            <select name="ascendance_simpay_form_enterprise" id="ascendance_simpay_form_enterprise" class="settings-input">
+                                <option value="0"><?php esc_html_e( '-- Select Form --', 'ascendance-core' ); ?></option>
+                                <?php foreach ( $simpay_forms as $form ) : ?>
+                                    <option value="<?php echo esc_attr( $form->ID ); ?>" <?php selected( $simpay_enterprise, $form->ID ); ?>><?php echo esc_html( $form->post_title ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="settings-help">&gt; WP Simple Pay form for Enterprise tier.</div>
+                        </div>
+                        
+                    </div>
+                    
+                    <input type="submit" name="save_pricing_settings" class="settings-btn-save" style="border-color: #3B82F6; color: #3B82F6;" value="Save Subscription Mappings" />
+                </form>
+            </div>
+
             <!-- Analytics Settings -->
             <div class="settings-card">
                 <h3><i class="dashicons dashicons-chart-bar" style="color: #10B981;"></i> WEB ANALYTICS & VISITOR TRACKING</h3>
                 <form method="post" action="">
                     <?php wp_nonce_field( 'ascendance_analytics_settings_action', 'ascendance_analytics_settings_nonce' ); ?>
+
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px;">
                         <!-- Google Tag Manager -->

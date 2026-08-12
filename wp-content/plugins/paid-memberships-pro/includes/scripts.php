@@ -38,8 +38,8 @@ function pmpro_enqueue_scripts() {
 				'discount_code_passed_in' => !empty( $_REQUEST['pmpro_discount_code'] ) && !empty( $_REQUEST['discount_code'] ),
 				'sensitiveCheckoutRequestVars' => pmpro_get_sensitive_checkout_request_vars(),
 				'update_nonce' => apply_filters( 'pmpro_update_nonce_at_checkout', false ),
-				'hide_password_text' =>  __( 'Hide password', 'paid-memberships-pro' ),
-				'show_password_text' =>  __( 'Show password', 'paid-memberships-pro' ),
+				'hide_password_text' =>  __( 'Hide Password', 'paid-memberships-pro' ),
+				'show_password_text' =>  __( 'Show Password', 'paid-memberships-pro' ),
 			)
 		);
 		wp_enqueue_script( 'pmpro_checkout' );
@@ -80,8 +80,8 @@ function pmpro_enqueue_scripts() {
 				'pmpro_login_page' => 'changepassword',
 				'strength_indicator_text' => __( 'Strength Indicator', 'paid-memberships-pro' ),
 				'allow_weak_passwords' => $allow_weak_passwords,
-				'hide_password_text' =>  __( 'Hide password', 'paid-memberships-pro' ),
-				'show_password_text' =>  __( 'Show password', 'paid-memberships-pro' )
+				'hide_password_text' =>  __( 'Hide Password', 'paid-memberships-pro' ),
+				'show_password_text' =>  __( 'Show Password', 'paid-memberships-pro' )
 			)
 		);
 		wp_enqueue_script( 'pmpro_login' );
@@ -129,12 +129,14 @@ function pmpro_admin_enqueue_scripts() {
                         plugins_url( 'js/pmpro-admin.js', dirname(__FILE__) ),
                         array( 'jquery', 'jquery-ui-sortable', 'select2' ),
                         PMPRO_VERSION );
+
     $all_levels = pmpro_getAllLevels( true, true );
     $all_level_values_and_labels = array();
     foreach( $all_levels as $level ) {
         $all_level_values_and_labels[] = array( 'value' => $level->id, 'label' => $level->name );
 		$level->formatted_price = trim( pmpro_no_quotes( pmpro_getLevelCost( $level, true, true ) ) );
         $level->formatted_expiration = trim( pmpro_no_quotes( pmpro_getLevelExpiration( $level ) ) );
+		$level->formatted_description = apply_filters( 'pmpro_level_description', $level->description, $level );
         $all_levels_formatted_text[$level->id] = $level;
     }
     // Get HTML for empty field group.
@@ -154,10 +156,13 @@ function pmpro_admin_enqueue_scripts() {
 			'all_levels_formatted_text' => $all_levels_formatted_text,
 			'all_level_values_and_labels' => $all_level_values_and_labels,
 			'checkout_url' => pmpro_url( 'checkout' ),
+			'stripe_webhook_nonce' => wp_create_nonce( 'pmpro_stripe_webhook_nonce' ),
 			'user_fields_blank_group' => $empty_field_group_html,
 			'user_fields_blank_field' => $empty_field_html,
 			// We want the core WP translation so we can check for it in JS.
-			'plugin_updated_successfully_text' => __( 'Plugin updated successfully.' ),
+			'plugin_updated_successfully_text' => __( 'Plugin updated successfully.', 'paid-memberships-pro' ),
+			'rest_url' => esc_url( rest_url() ),
+			'nonce' => wp_create_nonce( 'wp_rest' ),
 		)
 	);
 	wp_enqueue_script( 'pmpro_admin' );
@@ -191,3 +196,54 @@ function pmpro_admin_enqueue_scripts() {
 	}
 }
 add_action( 'admin_enqueue_scripts', 'pmpro_admin_enqueue_scripts' );
+
+/**
+ * Register a wp_editor() instance for PMPro Liquid autocomplete support.
+ *
+ * @since 3.8
+ *
+ * @param string $editor_id TinyMCE editor ID.
+ */
+function pmpro_register_liquid_autocomplete_editor( $editor_id ) {
+	if ( empty( $editor_id ) ) {
+		return;
+	}
+
+	if ( empty( $GLOBALS['pmpro_liquid_autocomplete_editor_ids'] ) || ! is_array( $GLOBALS['pmpro_liquid_autocomplete_editor_ids'] ) ) {
+		$GLOBALS['pmpro_liquid_autocomplete_editor_ids'] = array();
+	}
+
+	$GLOBALS['pmpro_liquid_autocomplete_editor_ids'][ $editor_id ] = true;
+}
+
+/**
+ * Load PMPro's TinyMCE plugin for registered Liquid autocomplete editors.
+ *
+ * @since 3.8
+ *
+ * @param array  $external_plugins External TinyMCE plugins.
+ * @param string $editor_id        TinyMCE editor ID. Empty on WordPress versions before 5.3.
+ * @return array External TinyMCE plugins.
+ */
+function pmpro_liquid_autocomplete_tinymce_external_plugins( $external_plugins, $editor_id = '' ) {
+	$registered_editor_ids = empty( $GLOBALS['pmpro_liquid_autocomplete_editor_ids'] ) || ! is_array( $GLOBALS['pmpro_liquid_autocomplete_editor_ids'] )
+		? array()
+		: $GLOBALS['pmpro_liquid_autocomplete_editor_ids'];
+
+	if ( ! empty( $editor_id ) && empty( $registered_editor_ids[ $editor_id ] ) ) {
+		return $external_plugins;
+	}
+
+	if ( empty( $editor_id ) && empty( $registered_editor_ids ) ) {
+		return $external_plugins;
+	}
+
+	$external_plugins['pmpro_liquid_autocomplete'] = add_query_arg(
+		'ver',
+		PMPRO_VERSION,
+		plugins_url( 'js/pmpro-liquid-autocomplete.js', __DIR__ )
+	);
+
+	return $external_plugins;
+}
+add_filter( 'mce_external_plugins', 'pmpro_liquid_autocomplete_tinymce_external_plugins', 10, 2 );

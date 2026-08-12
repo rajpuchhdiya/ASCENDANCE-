@@ -1,0 +1,93 @@
+/* assets/css/frontend.css */
+/* Professional styling for GateTouch SEO elements */
+
+.gatetouch-breadcrumbs {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.gatetouch-bc-container {
+    max-width: var(--wp--style--global--content-size, 1200px);
+    margin: 0 auto 20px;
+    padding: 0 16px;
+}
+
+.gatetouch-bc-prefix {
+    color: #475569;
+    font-weight: 600;
+}
+
+.gatetouch-breadcrumbs a {
+    color: #6366f1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.gatetouch-breadcrumbs a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+.gatetouch-bc-sep {
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+.gatetouch-bc-current {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Location Info Shortcode Styling */
+.gatetouch-location-info {
+    padding: 24px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: 20px 0;
+    font-family: inherit;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.gatetouch-location-name {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.gatetouch-location-address {
+    font-style: normal;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.gatetouch-location-phone,
+.gatetouch-location-hours {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.gatetouch-location-phone strong,
+.gatetouch-location-hours strong {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.gatetouch-location-phone a {
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.gatetouch-location-phone a:hover {
+    text-decoration: underline;
+}

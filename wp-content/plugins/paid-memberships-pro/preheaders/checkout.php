@@ -116,8 +116,14 @@ if ( ! $besecure && ! empty( $_REQUEST['submit-checkout'] ) && is_ssl() ) {
 	$besecure = true;
 }    //be secure anyway since we're already checking out
 
-//action to run extra code for gateways/etc
-do_action( 'pmpro_checkout_preheader' );
+/**
+ * Action to run extra code for gateways/etc.
+ *
+ * @since 3.4 Added $pmpro_level parameter.
+ *
+ * @param object $pmpro_level The level being purchased.
+ */
+do_action( 'pmpro_checkout_preheader', $pmpro_level );
 
 // We set a global var for add-ons that are expecting it.
 $pmpro_show_discount_code = pmpro_show_discount_code();
@@ -313,10 +319,20 @@ $pmpro_confirmed = false;
 if ( $submit && $pmpro_msgt != "pmpro_error" ) {
 	// Check the nonce.
 	if ( empty( $_REQUEST['pmpro_checkout_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['pmpro_checkout_nonce'] ), 'pmpro_checkout_nonce' ) ) {
-		// Nonce is not valid, but a nonce was only added in the 3.0 checkout template. We only want to show an error if the checkout template is 3.0 or later.
-		$loaded_path = pmpro_get_template_path_to_load( 'checkout' );
-		$loaded_version = pmpro_get_version_for_page_template_at_path( $loaded_path );
-		if ( ! empty( $loaded_version ) && version_compare( $loaded_version, '3.0', '>=' ) ) {
+		// The nonce field was added in the 3.0 checkout template. Skip enforcement only when
+		// the site has explicitly opted in to a pre-3.0 custom template via the Page Settings
+		// "Use Custom Page Template" option. In every other case (default template, or custom
+		// template at 3.0+, or custom template that pmpro_loadTemplate silently falls back to
+		// the default for) the rendered form includes the nonce field, so we can enforce.
+		$skip_nonce_check = false;
+		if ( 'yes' === get_option( 'pmpro_use_custom_page_template_checkout' ) ) {
+			$loaded_path = pmpro_get_template_path_to_load( 'checkout' );
+			$loaded_version = pmpro_get_version_for_page_template_at_path( $loaded_path );
+			if ( empty( $loaded_version ) || version_compare( $loaded_version, '3.0', '<' ) ) {
+				$skip_nonce_check = true;
+			}
+		}
+		if ( ! $skip_nonce_check ) {
 			// Nonce is not valid. Show an error.
 			pmpro_setMessage( __( "Nonce security check failed.", 'paid-memberships-pro' ), 'pmpro_error' );
 		}
@@ -423,9 +439,12 @@ if ( $submit && $pmpro_msgt != 'pmpro_error' && empty( $pmpro_review ) ) {
 		 * Filter whether the current checkout should continue.
 		 * Note: This will be deprecated in a future version. Use pmpro_checkout_checks, pmpro_checkout_user_creation_checks, or pmpro_checkout_order_creation_checks instead.
 		 *
+		 * @since 3.4 Added $pmpro_level parameter.
+		 *
 		 * @param bool $pmpro_continue_registration True if the checkout should continue.
+		 * @param object $pmpro_level The level being purchased.
 		 */
-		$pmpro_continue_registration = apply_filters( "pmpro_registration_checks", true );
+		$pmpro_continue_registration = apply_filters( "pmpro_registration_checks", true, $pmpro_level );
 		if ( ! $pmpro_continue_registration ) {
 			// If this is false, there should have been an error message set by the filter but just in case, set a generic error message.
 			pmpro_setMessage( __( 'Checkout checks failed.', 'paid-memberships-pro' ), 'pmpro_error' );
@@ -437,9 +456,12 @@ if ( $submit && $pmpro_msgt != 'pmpro_error' && empty( $pmpro_review ) ) {
 		/**
 		 * Filter whether this checkout should proceed to the user creation step.
 		 *
+		 * @since 3.4 Added $pmpro_level parameter.
+		 *
 		 * @param bool $pmpro_checkout_user_creation_checks True if the checkout should continue.
+		 * @param object $pmpro_level The level being purchased.
 		 */
-		$pmpro_checkout_user_creation_checks = apply_filters( 'pmpro_checkout_user_creation_checks', true );
+		$pmpro_checkout_user_creation_checks = apply_filters( 'pmpro_checkout_user_creation_checks', true, $pmpro_level );
 		if ( ! $pmpro_checkout_user_creation_checks ) {
 			// If this is false, there should have been an error message set by the filter but just in case, set a generic error message.
 			pmpro_setMessage( __( 'User creation checks failed.', 'paid-memberships-pro' ), 'pmpro_error' );
@@ -549,9 +571,12 @@ if ( $submit && $pmpro_msgt != 'pmpro_error' && empty( $pmpro_review ) ) {
 		/**
 		 * Filter whether this checkout should proceed to the order creation step.
 		 *
+		 * @since 3.4 Added $pmpro_level parameter.
+		 *
 		 * @param bool $pmpro_checkout_checks True if the checkout should continue.
+		 * @param object $pmpro_level The level being purchased.
 		 */
-		$pmpro_checkout_order_creation_checks = apply_filters( "pmpro_checkout_order_creation_checks", true );
+		$pmpro_checkout_order_creation_checks = apply_filters( "pmpro_checkout_order_creation_checks", true, $pmpro_level );
 		if ( ! $pmpro_checkout_order_creation_checks ) {
 			// If this is false, there should have been an error message set by the filter but just in case, set a generic error message.
 			pmpro_setMessage( __( 'Order creation checks failed.', 'paid-memberships-pro' ), 'pmpro_error' );
@@ -616,7 +641,10 @@ if ( $submit && $pmpro_msgt != "pmpro_error" && ! empty( $pmpro_review ) ) {
 		do_action( 'pmpro_checkout_processing_failed', $pmpro_review );
 
 		// Make sure we have an error message.
-		$pmpro_msg = !empty( $pmpro_review->error ) ? $pmpro_review->error : null;
+		if( ! empty( $pmpro_review->error ) ) {
+			$pmpro_msg = $pmpro_review->error;
+		}
+		
 		if ( empty( $pmpro_msg ) ) {
 			$pmpro_msg = __( "Unknown error generating account. Please contact us to set up your membership.", 'paid-memberships-pro' );
 		}
@@ -678,8 +706,9 @@ if ( ! empty( $pmpro_confirmed ) ) {
 		$pmpro_msgt = "";
 	}
 
-	//default values from DB
-	if ( ! empty( $current_user->ID ) ) {
+	// Default billing address fields from the values stored in user meta.
+	// Note that this will be removed in a future update as billing addresses are no longer stored in user meta by default.
+	if ( ! empty( $current_user->ID ) && empty( $submit ) ) {
 		$bfirstname    = get_user_meta( $current_user->ID, "pmpro_bfirstname", true );
 		$blastname     = get_user_meta( $current_user->ID, "pmpro_blastname", true );
 		$baddress1     = get_user_meta( $current_user->ID, "pmpro_baddress1", true );

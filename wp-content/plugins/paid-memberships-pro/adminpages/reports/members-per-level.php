@@ -4,20 +4,22 @@
 	Title: Members per Level
 	Slug: members_per_level
 
-	For each report, add a line like:
-	global $pmpro_reports;
-	$pmpro_reports['slug'] = 'Title';
-
-	For each report, also write two functions:
+	For each report, write three functions:
+	* pmpro_report_{slug}_register() to register the widget (slug and title).
 	* pmpro_report_{slug}_widget()   to show up on the report homepage.
 	* pmpro_report_{slug}_page()     to show up when users click on the report page widget.
 */
-global $pmpro_reports;
-$pmpro_reports['members_per_level'] = __('Active Members Per Level', 'paid-memberships-pro' );
+function pmpro_report_members_per_level_register( $pmpro_reports ) {
+	$pmpro_reports['members_per_level'] = __('Active Members Per Level', 'paid-memberships-pro' );
+
+	return $pmpro_reports;
+}
+
+add_filter( 'pmpro_registered_reports', 'pmpro_report_members_per_level_register' );
 
 // Enqueue Google Visualization JS on report page
 function pmpro_report_members_per_level_init() {
-	if ( is_admin() && ( isset( $_REQUEST['report'] ) && $_REQUEST[ 'report' ] == 'members_per_level' ) || ( isset( $_REQUEST['page'] ) && $_REQUEST[ 'page' ] == 'pmpro-reports' ) ) {
+	if ( is_admin() && isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'pmpro-reports' && isset( $_REQUEST['report'] ) && $_REQUEST['report'] == 'members_per_level' ) {
 		wp_enqueue_script( 'corechart', plugins_url( 'js/corechart.js',  plugin_dir_path( __DIR__ ) ) );
 	}
 }
@@ -80,19 +82,33 @@ function pmpro_report_members_per_level_page() {
 function pmpro_report_get_active_members_per_level() {
 	global $wpdb;
 
+	// Check for cached data.
+	$cache = get_transient( 'pmpro_report_members_per_level' );
+	if ( false !== $cache ) {
+		return $cache;
+	}
+
 	// Query to get active members per level.
-	$sqlQuery = "SELECT membership_id, count(*) as total_active_members 
-	FROM $wpdb->pmpro_memberships_users as mu 
-	LEFT JOIN $wpdb->users as u on u.ID = mu.user_id 
-	WHERE mu.status = 'active' 
-	AND u.ID IS NOT NULL
-	GROUP BY membership_id 
+	$sqlQuery = "SELECT membership_id, count(*) as total_active_members
+	FROM $wpdb->pmpro_memberships_users as mu
+	INNER JOIN $wpdb->users as u on u.ID = mu.user_id
+	WHERE mu.status = 'active'
+	GROUP BY membership_id
 	ORDER BY total_active_members DESC";
-	
+
 	$results = $wpdb->get_results( $sqlQuery );
+
+	// Cache the results for 24 hours.
+	set_transient( 'pmpro_report_members_per_level', $results, DAY_IN_SECONDS );
 
 	return $results;
 }
+
+// Clear the members per level transient when membership data changes.
+function pmpro_report_members_per_level_delete_transients() {
+	delete_transient( 'pmpro_report_members_per_level' );
+}
+add_action( 'pmpro_after_change_membership_level', 'pmpro_report_members_per_level_delete_transients' );
 
 // Draw a pie chart of active members per level.
 function pmpro_report_draw_active_members_per_level_chart() {

@@ -282,7 +282,7 @@ class Search_SEO {
     }
 
     /**
-     * 3. Sync PMPro subscriber status to Brevo Lists
+     * 3. Sync PMPro subscriber status to MailerLite Lists
      */
     public function sync_subscriber_to_newsletter( $level_id, $user_id, $old_levels ) {
         $user_data = get_userdata( $user_id );
@@ -303,31 +303,31 @@ class Search_SEO {
             }
         }
 
-        $api_key = getenv( 'ASCENDANCE_NEWSLETTER_API_KEY' );
-        $list_id = getenv( 'ASCENDANCE_NEWSLETTER_LIST_ID' );
+        $api_key = getenv( 'ASCENDANCE_NEWSLETTER_API_KEY' ) ?: ( defined( 'ASCENDANCE_NEWSLETTER_API_KEY' ) ? ASCENDANCE_NEWSLETTER_API_KEY : '' );
+        $list_id = getenv( 'ASCENDANCE_NEWSLETTER_LIST_ID' ) ?: ( defined( 'ASCENDANCE_NEWSLETTER_LIST_ID' ) ? ASCENDANCE_NEWSLETTER_LIST_ID : '178485407216830358' );
 
         if ( empty( $api_key ) ) {
             error_log( sprintf( "Subscriber sync requested: User ID %d ($email) registered level %s", $user_id, $level_name ) );
             return;
         }
 
-        // Setup call parameters
+        // Setup call parameters for MailerLite
         $body = array(
-            'email'      => $email,
-            'attributes' => array(
-                'FIRSTNAME'   => $first_name,
-                'LASTNAME'    => $last_name,
-                'MEMBER_TIER' => $level_name,
-                'STATUS'      => $level_id ? 'Active' : 'Cancelled',
+            'email'  => $email,
+            'status' => $level_id ? 'active' : 'unsubscribed',
+            'groups' => array( (string) $list_id ),
+            'fields' => array(
+                'name'      => $first_name,
+                'last_name' => $last_name,
             ),
-            'updateEnabled' => true,
         );
 
         // Execute background remote post request
-        wp_remote_post( 'https://api.brevo.com/v3/contacts', array(
+        wp_remote_post( 'https://connect.mailerlite.com/api/subscribers', array(
             'headers' => array(
-                'api-key'      => $api_key,
-                'content-type' => 'application/json',
+                'Authorization' => 'Bearer ' . $api_key,
+                'Content-Type'  => 'application/json',
+                'Accept'        => 'application/json',
             ),
             'body'    => wp_json_encode( $body ),
             'timeout' => 5,

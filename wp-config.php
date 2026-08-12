@@ -15,7 +15,6 @@ if ( version_compare( PHP_VERSION, '8.2.0', '<' ) ) {
 }
 
 // 1. Lightweight Native .env Parser (looks in current dir and parent dirs for security outside web root)
-file_put_contents(__DIR__ . '/trace.txt', "[" . date('H:i:s') . "] wp-config.php start\n");
 $env_file = null;
 $paths_to_check = array(
     __DIR__ . '/.env',
@@ -63,6 +62,21 @@ if ( ! defined( 'WP_ENVIRONMENT_TYPE' ) ) {
     define( 'WP_ENVIRONMENT_TYPE', 'production' );
 }
 
+// 2a. Auto-detect Site URL — works on localhost AND any live domain.
+//     Priority: .env value → PHP auto-detect (no database update needed on migration)
+if ( ! defined( 'WP_HOME' ) ) {
+    $__protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ? 'https' : 'http';
+    $__host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    // Strip port for comparison only
+    $__hostname = strtolower( explode( ':', $__host )[0] );
+    // Local dev runs in a subdirectory; every other host runs at root
+    $__is_local = in_array( $__hostname, [ 'localhost', '127.0.0.1' ], true );
+    $__subdir   = $__is_local ? '/Ascendance' : '';
+    define( 'WP_HOME',    $__protocol . '://' . $__host . $__subdir );
+    define( 'WP_SITEURL', $__protocol . '://' . $__host . $__subdir );
+    unset( $__protocol, $__host, $__hostname, $__is_local, $__subdir );
+}
+
 if ( ! defined( 'DB_NAME' ) )     define( 'DB_NAME', 'ascendance' );
 if ( ! defined( 'DB_USER' ) )     define( 'DB_USER', 'root' );
 if ( ! defined( 'DB_PASSWORD' ) ) define( 'DB_PASSWORD', '' );
@@ -78,8 +92,11 @@ switch ( WP_ENVIRONMENT_TYPE ) {
         define( 'WP_DEBUG_DISPLAY', true );
         define( 'SCRIPT_DEBUG', true );
         define( 'SAVEQUERIES', true );
-        define( 'WP_HTTP_BLOCK_EXTERNAL', true );
-        define( 'WP_ACCESSIBLE_HOSTS', 'localhost,127.0.0.1,api.wordpress.org,downloads.wordpress.org,wordpress.org' );
+        define( 'WP_HTTP_BLOCK_EXTERNAL', false );
+        define( 'WP_ACCESSIBLE_HOSTS', 'localhost,127.0.0.1,api.wordpress.org,downloads.wordpress.org,wordpress.org,api.anthropic.com,api.openai.com,generativelanguage.googleapis.com,api.stripe.com,api.brevo.com,connect.mailerlite.com,api.mailerlite.com' );
+        define( 'WP_MEMORY_LIMIT', '256M' );
+        define( 'WP_MAX_MEMORY_LIMIT', '512M' );
+        define( 'DISABLE_WP_CRON', false );
         break;
 
     case 'staging':

@@ -1,0 +1,16 @@
+{
+  "name": "Ascendance Strategies",
+  "short_name": "Ascendance",
+  "description": "Analysis, dossiers and registers on the US-DRC Strategic Partnership.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#BC1B1D",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -396,7 +396,8 @@ function pmpro_add_email_order_modal() {
 				// Get email address from order ID
 				data = {
 					action: 'pmpro_get_order_json',
-					order_id: order_id
+					order_id: order_id,
+					nonce: '<?php echo esc_js( wp_create_nonce( 'pmpro_get_order_json' ) ); ?>'
 				};
 				$.post(ajaxurl, data, function (response) {
 					order = JSON.parse(response);
@@ -463,7 +464,7 @@ function pmpro_edit_level_templates() {
 		),
 		'gift' => array(
 			'name' => __( 'Gift', 'paid-memberships-pro' ),
-			'description' => __( 'Allow anyone to purchase a gift of membership.' ),
+			'description' => __( 'Allow anyone to purchase a gift of membership.', 'paid-memberships-pro' ),
 			'external-link' => 'https://www.paidmembershipspro.com/add-ons/pmpro-gift-levels/',
 			'type' => 'add_on'
 		)

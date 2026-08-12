@@ -1,0 +1,1053 @@
+/* assets/css/meta-box.css */
+/* ═══════════════════════════════════════════════════════════
+   GateTouch AI SEO — Premium Meta Box & Sidebar Styles
+   Cinematic glassmorphism with high-fidelity components
+   Standardized on Inter Font & HSL Tokens
+═══════════════════════════════════════════════════════════ */
+
+:root {
+  --riq-p: 238, 77%, 62%;    /* #6366f1 (Indigo) */
+  --riq-s: 161, 84%, 39%;    /* #10b981 (Emerald) */
+  --riq-w: 38, 92%, 50%;     /* #f59e0b (Amber) */
+  --riq-d: 0, 84%, 60%;      /* #ef4444 (Rose) */
+
+  --riq-glass: rgba(255, 255, 255, 0.7);
+  --riq-glass-border: rgba(255, 255, 255, 0.3);
+  --riq-glass-sh: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  --riq-primary:      hsl(var(--riq-p));
+  --riq-primary-glow: hsla(var(--riq-p), 0.15);
+  --riq-success:      hsl(var(--riq-s));
+  --riq-warning:      hsl(var(--riq-w));
+  --riq-danger:       hsl(var(--riq-d));
+
+  --riq-text:         #1e293b;
+  --riq-text-mid:     #64748b;
+  --riq-text-light:   #94a3b8;
+  --riq-border:       #e2e8f0;
+  --riq-bg-faint:     #f8fafc;
+}
+
+#gatetouch-meta-box {
+  background: #fff;
+  border-radius: 16px !important;
+  border: 1px solid var(--riq-border) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+  font-family: 'Inter', -apple-system, sans-serif !important;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+/* Ensure parent containers don't clip our portals if they aren't moved yet */
+.gatetouch-mb-wrap { overflow: visible !important; }
+
+#gatetouch_meta_box .inside { margin: 0 !important; padding: 0 !important; }
+#gatetouch_meta_box .postbox-header { display: none !important; }
+
+/* ── Header ─────────────────────────────────────────────── */
+.gatetouch-mb__header {
+  padding: 20px 24px;
+  background: linear-gradient(to right, #ffffff, #fcfdfe);
+  border-bottom: 1px solid var(--riq-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gatetouch-mb__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--riq-primary);
+  letter-spacing: -0.02em;
+}
+
+.gatetouch-mb__brand svg {
+  filter: drop-shadow(0 4px 6px hsla(var(--riq-p), 0.2));
+}
+
+/* ── Tabs ───────────────────────────────────────────────── */
+.gatetouch-mb__tabs-wrap {
+    padding: 10px 24px;
+    background: #fcfdfe;
+    border-bottom: 1px solid var(--riq-border);
+}
+
+.gatetouch-mb__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--riq-bg-faint);
+  border-radius: 12px;
+  border: 1px solid var(--riq-border);
+  position: relative;
+  z-index: 10;
+}
+
+.gatetouch-tab-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--riq-text-mid);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 100;
+  pointer-events: auto !important;
+}
+
+.gatetouch-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--riq-primary);
+}
+
+.gatetouch-tab-btn.active {
+  background: #fff;
+  color: var(--riq-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* ── Sub Tabs ───────────────────────────────────────────── */
+.gatetouch-sub-tab-btn {
+    padding: 6px 14px;
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--riq-text-mid);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+.gatetouch-sub-tab-btn:hover {
+    background: #f1f5f9;
+    color: var(--riq-primary);
+}
+.gatetouch-sub-tab-btn.active {
+    background: hsla(var(--riq-p), 0.1);
+    color: var(--riq-primary);
+}
+.gatetouch-sub-tab-panel { display: none; }
+.gatetouch-sub-tab-panel.active { display: block; animation: gatetouchFadeIn 0.3s ease; }
+
+/* ── FAQ Engine Styling ────────────────────────────────────── */
+.gatetouch-faq-item {
+    position: relative;
+    background: #fdfdfd;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+.gatetouch-faq-item:hover {
+    border-color: #cbd5e1;
+    background: #fff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.gatetouch-faq-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 900;
+    transition: all 0.2s;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.gatetouch-faq-remove:hover {
+    background: #ef4444;
+    color: #fff;
+    border-color: #b91c1c;
+    transform: scale(1.15);
+}
+
+/* ── AI Action Alpha ────────────────────────────────────── */
+.gatetouch-mb__ai-bar {
+  padding: 18px 24px;
+  background: hsla(var(--riq-p), 0.03);
+  border-bottom: 1px solid var(--riq-border);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gatetouch-ai-badge {
+    padding: 8px;
+    background: linear-gradient(135deg, var(--riq-primary), #8b5cf6);
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 8px 16px -4px hsla(var(--riq-p), 0.4);
+}
+
+.gatetouch-mb__ai-content { flex-grow: 1; }
+.gatetouch-mb__ai-content strong { display: block; font-size: 14px; font-weight: 700; color: var(--riq-text); }
+.gatetouch-mb__ai-content span { font-size: 12px; color: var(--riq-text-mid); }
+
+/* ── Form Fields ───────────────────────────────────────── */
+.gatetouch-tab-panel {
+    display: none;
+    padding: 24px;
+    min-height: 400px;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+.gatetouch-tab-panel.active {
+    display: block !important;
+    animation: gatetouchFadeIn 0.3s ease;
+}
+
+@keyframes gatetouchFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.gatetouch-field { margin-bottom: 24px; }
+.gatetouch-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gatetouch-label__text { font-size: 13px; font-weight: 700; color: var(--riq-text); }
+.gatetouch-counter { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 40px; }
+.gatetouch-counter--good { background: #dcfce7; color: #166534; }
+.gatetouch-counter--warn { background: #fef9c3; color: #854d0e; }
+.gatetouch-counter--over { background: #fee2e2; color: #991b1b; }
+
+#gatetouch-meta-box .gatetouch-input,
+#gatetouch-meta-box .gatetouch-textarea,
+#gatetouch-meta-box .gatetouch-select {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: 1.5px solid var(--riq-border) !important;
+  border-radius: 12px !important;
+  background-color: #fff !important;
+  color: var(--riq-text) !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+#gatetouch-meta-box .gatetouch-input,
+#gatetouch-meta-box .gatetouch-select {
+  min-height: 46px !important;
+  padding: 0 16px !important;
+}
+
+#gatetouch-meta-box .gatetouch-textarea {
+  min-height: 46px;
+  padding: 12px 16px !important;
+  resize: vertical;
+}
+
+#gatetouch-meta-box .gatetouch-btn {
+  border-radius: 12px;
+}
+
+#gatetouch-meta-box .gatetouch-input:focus,
+#gatetouch-meta-box .gatetouch-textarea:focus,
+#gatetouch-meta-box .gatetouch-select:focus {
+  outline: none !important;
+  border-color: var(--riq-primary) !important;
+  box-shadow: 0 0 0 4px var(--riq-primary-glow) !important;
+}
+
+.gatetouch-progress-bg {
+    height: 4px;
+    background: #f1f5f9;
+    margin-top: 8px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.gatetouch-progress-fill {
+    height: 100%;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+}
+
+/* ── SERP Preview (Premium Card) ───────────────────────── */
+.gatetouch-serp-preview {
+  margin-top: 32px;
+  background: var(--riq-bg-faint);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--riq-border);
+}
+
+.gatetouch-preview-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--riq-text-light);
+    margin-bottom: 12px;
+}
+
+.gatetouch-google-card {
+  background: #fff;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.gatetouch-google-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.gatetouch-google-site { color: #202124; font-size: 14px; }
+.gatetouch-google-title { color: #1a0dab; font-size: 20px; padding-top: 4px; margin-bottom: 4px; line-height: 1.3; }
+.gatetouch-google-desc { color: #4d5156; font-size: 14px; line-height: 1.5; }
+
+/* ── Score Gauge ───────────────────────────────────────── */
+.gatetouch-score-gauge {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gatetouch-score-circle-svg { transform: rotate(-90deg); }
+.gatetouch-score-circle-bg { fill: none; stroke: var(--riq-bg-faint); stroke-width: 8; }
+.gatetouch-score-circle-fill { fill: none; stroke: var(--riq-primary); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+
+.gatetouch-score-val { position: absolute; font-size: 24px; font-weight: 800; color: var(--riq-text); }
+
+/* ── Social Preview ─────────────────────────────────────── */
+.gatetouch-social-preview {
+  margin-top: 32px;
+  background: var(--riq-bg-faint);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--riq-border);
+}
+
+.gatetouch-facebook-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  max-width: 524px;
+  border: 1px solid #dddfe2;
+}
+
+.gatetouch-facebook-img {
+  height: 274px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #dddfe2;
+  overflow: hidden;
+}
+
+.gatetouch-facebook-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gatetouch-facebook-content {
+  padding: 12px 16px;
+  background: #f0f2f5;
+}
+
+.gatetouch-facebook-site {
+  color: #65676b;
+  font-size: 12px;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.gatetouch-facebook-title {
+  color: #1c1e21;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.gatetouch-facebook-desc {
+  color: #65676b;
+  font-size: 14px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Sidebar Polish ─────────────────────────────────────── */
+.gatetouch-sidebar-header {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--riq-bg-faint);
+  border-radius: 12px;
+}
+
+.gatetouch-sidebar-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.gatetouch-sidebar-score-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--riq-text-mid);
+}
+
+.gatetouch-sidebar-score-val {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.gatetouch-sidebar-score-bar-bg {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gatetouch-sidebar-score-bar-fill {
+  height: 100%;
+  transition: width 1s ease;
+}
+
+.gatetouch-sidebar-counter {
+  font-size: 10px;
+  text-align: right;
+  margin-top: 4px;
+  color: var(--riq-text-light);
+}
+
+.gatetouch-sidebar-tips {
+  margin-top: 20px;
+}
+
+/* ── Gutenberg Sidebar Overrides ────────────────────────── */
+.gatetouch-sidebar-wrap { padding: 16px; }
+.gatetouch-sidebar-field { margin-bottom: 20px; }
+.gatetouch-sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #757575; display: block; margin-bottom: 8px; }
+
+/* ── FAQ Items ─────────────────────────────────────────── */
+.gatetouch-faq-item {
+    background: #fff;
+    border: 1px solid var(--riq-border);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.gatetouch-faq-item:hover { transform: translateX(4px); border-color: var(--riq-primary); }
+.gatetouch-faq-remove { position: absolute; top: 12px; right: 12px; cursor: pointer; color: var(--riq-text-light); }
+.gatetouch-faq-remove:hover { color: var(--riq-danger); }
+
+/* ── Smart Tags ────────────────────────────────────────── */
+.gatetouch-tag-group {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+}
+.gatetouch-tag-badge {
+    padding: 4px 10px; border-radius: 6px; background: #eff6ff;
+    color: #1d4ed8; font-size: 11px; font-weight: 700; border: 1.5px solid #dbeafe;
+    cursor: pointer; transition: all 0.2s; user-select: none;
+    display: inline-flex; align-items: center; gap: 4px;
+}
+.gatetouch-tag-badge:hover { background: #dbeafe; transform: translateY(-1px); }
+.gatetouch-tag-badge:active { transform: translateY(0); }
+.gatetouch-tag-badge svg { color: #3b82f6; }
+
+/* ── Categorized Analysis ────────────────────────────────── */
+.gatetouch-analysis-category {
+    margin-bottom: 24px; background: #fff; border: 1px solid var(--riq-border);
+    border-radius: 12px; overflow: hidden;
+}
+.gatetouch-analysis-category__header {
+    padding: 12px 16px; background: #fcfdfe; border-bottom: 1px solid var(--riq-border);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.gatetouch-analysis-category__title { font-size: 13px; font-weight: 700; color: var(--riq-text); }
+.gatetouch-analysis-category__count { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 40px; }
+
+.gatetouch-check-item-flex {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    border-bottom: 1px solid #f8fafc; font-size: 13px;
+}
+.gatetouch-check-item-flex:last-child { border-bottom: none; }
+.gatetouch-check-item-flex:hover { background: #fcfdfe; }
+.gatetouch-check-item__icon { font-size: 16px; flex-shrink: 0; }
+.gatetouch-check-item__label { flex-grow: 1; color: var(--riq-text-mid); }
+.gatetouch-check-item__status { font-weight: 700; font-size: 11px; text-transform: uppercase; }
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.gatetouch-ai-status { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--riq-primary); }
+.gatetouch-spinner {
+    width: 16px; height: 16px; border: 2px solid var(--riq-primary-light);
+    border-top-color: var(--riq-primary); border-radius: 50%;
+    animation: gatetouch-spin .7s linear infinite;
+}
+@keyframes gatetouch-spin { to { transform: rotate(360deg); } }
+.gatetouch-spinner-inline {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: gatetouch-spin .7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.gatetouch-btn.is-loading {
+    opacity: 0.8 !important;
+    pointer-events: none;
+    position: relative;
+}
+
+/* ── AI Insights Card ────────────────────────────────────── */
+.gatetouch-ai-insights-card {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #fdfcfd 0%, #f7f9ff 100%);
+  border: 1.5px solid #e0e7ff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.gatetouch-ai-insights-card.is-empty {
+  background: var(--riq-bg-faint);
+  border: 1px dashed var(--riq-border);
+  box-shadow: none;
+}
+
+.gatetouch-ai-insights-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.gatetouch-ai-icon { font-size: 20px; }
+
+.gatetouch-intent-badge {
+  padding: 4px 10px;
+  background: #fff;
+  border: 1px solid var(--riq-intent-color, #e0e7ff);
+  color: var(--riq-intent-color, #6366f1);
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.gatetouch-intent-tag {
+  background: var(--riq-primary);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px hsla(var(--riq-p), 0.3);
+  display: inline-block;
+}
+
+/* ── Portal Fixes ── */
+.gatetouch-portal {
+  display: none;
+  position: absolute; /* Managed by JS */
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+.gatetouch-topic-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gatetouch-topic-tag {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--riq-text-mid);
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.gatetouch-topic-tag:hover {
+  border-color: var(--riq-primary);
+  color: var(--riq-primary);
+  transform: translateY(-1px);
+}
+
+/* Analysis Section Overrides */
+.gatetouch-analysis-section { margin-bottom: 24px; }
+.gatetouch-analysis-section-head {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--riq-text-light); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+}
+.gatetouch-analysis-checklist { display: flex; flex-direction: column; gap: 10px; }
+.gatetouch-check-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.gatetouch-check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.gatetouch-check--pass .gatetouch-check-icon { background: #dcfce7; color: #10b981; }
+.gatetouch-check--pass .gatetouch-check-icon::before { content: '✓'; font-weight: 800; font-size: 10px; }
+.gatetouch-check--warn .gatetouch-check-icon { background: #fef9c3; color: #f59e0b; }
+.gatetouch-check--warn .gatetouch-check-icon::before { content: '!'; font-weight: 800; font-size: 10px; }
+.gatetouch-check--fail .gatetouch-check-icon { background: #fee2e2; color: #ef4444; }
+.gatetouch-check--fail .gatetouch-check-icon::before { content: '✕'; font-weight: 800; font-size: 10px; }
+.gatetouch-check-text { color: var(--riq-text-mid); }
+.gatetouch-check--fail .gatetouch-check-text { color: var(--riq-text); font-weight: 600; }
+
+.gatetouch-check-help {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+.gatetouch-check-help:hover {
+    background: var(--riq-primary);
+    color: #fff;
+    border-color: var(--riq-primary);
+    transform: scale(1.1);
+}
+
+/* ── Guidance Modal ────────────────────────────────────── */
+.gatetouch-guidance-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 100000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: gatetouchFadeIn 0.3s ease;
+}
+
+.gatetouch-guidance-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gatetouch-guidance-head {
+    padding: 24px 30px;
+    background: linear-gradient(135deg, var(--riq-primary), #8b5cf6);
+    color: #fff;
+    position: relative;
+}
+
+.gatetouch-guidance-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.gatetouch-guidance-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.gatetouch-guidance-close:hover { background: rgba(255, 255, 255, 0.3); }
+
+.gatetouch-guidance-body {
+    padding: 30px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.gatetouch-guidance-section { margin-bottom: 25px; }
+.gatetouch-guidance-section h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--riq-text-light);
+    margin-bottom: 12px;
+}
+
+.gatetouch-guidance-explanation { font-size: 15px; color: var(--riq-text); line-height: 1.6; }
+
+.gatetouch-guidance-impact {
+    background: #fff1f2;
+    border-radius: 12px;
+    padding: 15px 20px;
+    border-left: 4px solid var(--riq-danger);
+}
+
+.gatetouch-guidance-impact ul { margin: 10px 0 0 20px; padding: 0; }
+.gatetouch-guidance-impact li { font-size: 13px; color: #9f1239; margin-bottom: 5px; font-weight: 600; }
+
+.gatetouch-guidance-fix {
+    background: #f0fdf4;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #dcfce7;
+}
+
+.gatetouch-guidance-fix p { margin: 0; font-size: 14px; color: #166534; line-height: 1.6; font-weight: 600; }
+
+/* ── Link Assistant ────────────────────────────────────────── */
+.gatetouch-link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gatetouch-link-item {
+    background: #fff;
+    border: 1px solid var(--riq-border);
+    padding: 14px;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.gatetouch-link-item:hover {
+    border-color: var(--riq-primary);
+    background: hsla(var(--riq-p), 0.02);
+    transform: translateX(4px);
+}
+
+.gatetouch-link-item a {
+    color: var(--riq-primary);
+    text-decoration: none;
+}
+
+.gatetouch-link-item a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+/* ── AI Content Grid ─────────────────────────────────────── */
+.gatetouch-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.gatetouch-ai-card {
+    background: #fff;
+    border: 1.5px solid var(--riq-border);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.gatetouch-ai-card:hover {
+    border-color: var(--riq-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px hsla(var(--riq-p), 0.2);
+}
+
+.gatetouch-ai-card__icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.gatetouch-ai-card h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--riq-text);
+}
+
+.gatetouch-ai-card p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--riq-text-mid);
+    line-height: 1.5;
+}
+
+/* AI Result Area */
+.gatetouch-ai-result-area {
+    background: #fff;
+    border: 1.5px solid var(--riq-primary);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: gatetouchFadeIn 0.4s ease;
+    box-shadow: 0 10px 25px -5px hsla(var(--riq-p), 0.1);
+}
+
+.gatetouch-ai-result-head {
+    background: hsla(var(--riq-p), 0.05);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid hsla(var(--riq-p), 0.1);
+}
+
+.gatetouch-ai-result-head span {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--riq-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.gatetouch-ai-result-close {
+    background: transparent;
+    border: none;
+    color: var(--riq-text-light);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.gatetouch-ai-result-body {
+    padding: 20px;
+    font-size: 14px;
+    color: var(--riq-text);
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.gatetouch-ai-result-body pre {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+/* Social Tag Buttons (consistent with SEO ones) */
+/* ── SEO Grid Layout — single column, full-width contained — */
+.gatetouch-seo-grid {
+    animation: gatetouchFadeIn 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.gatetouch-seo-inputs .gatetouch-field {
+    margin-bottom: 24px;
+}
+
+.gatetouch-sticky-preview {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--riq-border);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+}
+
+.gatetouch-preview-label {
+    margin-bottom: 16px;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--riq-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ── Locked States & Tooltips ───────────────────────────── */
+.gatetouch-locked {
+    position: relative;
+    cursor: not-allowed !important;
+}
+
+.gatetouch-locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(1.5px);
+    z-index: 1000;
+    border-radius: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.gatetouch-locked:hover::after {
+    background: rgba(255, 255, 255, 0.8);
+    content: 'API Required';
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--riq-primary);
+    text-transform: uppercase;
+}
+
+.gatetouch-locked > * {
+    pointer-events: none !important;
+    user-select: none !important;
+    filter: grayscale(1) opacity(0.5);
+}
+
+/* Tooltips */
+[data-riq-tooltip] {
+    position: relative;
+}
+
+[data-riq-tooltip]::before {
+    content: attr(data-riq-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    padding: 6px 12px;
+    background: #1e293b;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s;
+    z-index: 10000;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+[data-riq-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+.edit-post-meta-boxes-area__header,
+.edit-post-meta-boxes-area .postbox-header,
+.interface-interface-skeleton__footer .edit-post-meta-boxes-area__header,
+.edit-post-meta-boxes-area__header button,
+.edit-post-meta-boxes-area__header::after,
+.edit-post-meta-boxes-area__header::before,
+.postbox-header,
+#gatetouch_meta_box h2.hndle {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    visibility: hidden !important;
+}
+
+.edit-post-meta-boxes-area {
+    border: none !important;
+    border-top: 1px solid #e2e8f0 !important;
+    margin-top: 80px !important;
+    padding-top: 40px !important;
+    display: block !important;
+    background: #fff !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    box-shadow: none !important;
+}
+
+#gatetouch_meta_box {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+}
+
+#gatetouch_meta_box .inside {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.edit-post-meta-boxes-area::before {
+    display: none !important;
+}
+
+.edit-post-meta-boxes-area .postbox {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+#gatetouch-link-suggestions {
+    border: none;
+    background: #fafbff;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    border-radius: 8px;
+}
+
+#gatetouch-link-suggestions .postbox-header {
+    border-bottom: 1px solid #f3f4f6;
+}

@@ -321,13 +321,35 @@ add_action( 'login_init', function() {
 } );
 
 
-// 7. Global redirect for /pricing/ or /subscribe/ to PMPro levels page
+// Stage 2C: Legacy Checkout Compatibility (Redirect to PMPro Checkout)
 add_action( 'template_redirect', function() {
     $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-    if ( preg_match( '#^/Ascendance/(pricing|subscribe)/?(\?.*)?$#i', $request_uri ) || preg_match( '#^/(pricing|subscribe)/?(\?.*)?$#i', $request_uri ) ) {
-        $levels_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'levels' ) : home_url( '/membership-levels/' );
-        wp_safe_redirect( $levels_url );
+    
+    // Redirect /essential-checkout/
+    if ( preg_match( '#^/(Ascendance/)?(essential-checkout)/?(\?.*)?$#i', $request_uri ) ) {
+        wp_safe_redirect( home_url( '/membership-checkout/?level=1' ) );
         exit;
+    }
+    
+    // Redirect /professional-checkout/
+    if ( preg_match( '#^/(Ascendance/)?(professional-checkout)/?(\?.*)?$#i', $request_uri ) ) {
+        wp_safe_redirect( home_url( '/membership-checkout/?level=2' ) );
+        exit;
+    }
+    
+    // Redirect /checkout/
+    if ( preg_match( '#^/(Ascendance/)?(checkout)/?#i', $request_uri ) ) {
+        $plan = isset( $_GET['plan'] ) ? sanitize_text_field( $_GET['plan'] ) : '';
+        if ( 'essential' === $plan ) {
+            wp_safe_redirect( home_url( '/membership-checkout/?level=1' ) );
+            exit;
+        } elseif ( 'professional' === $plan ) {
+            wp_safe_redirect( home_url( '/membership-checkout/?level=2' ) );
+            exit;
+        } else {
+            wp_safe_redirect( home_url( '/membership-levels/' ) );
+            exit;
+        }
     }
 } );
 

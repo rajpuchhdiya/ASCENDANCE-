@@ -5,6 +5,11 @@ if ( ! function_exists( 'current_user_can' ) || ( ! current_user_can( 'manage_op
 	die( esc_html__( 'You do not have permissions to perform this action.', 'paid-memberships-pro' ) );
 }
 
+// Check the nonce.
+if ( empty( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'membership_stats_csv' ) ) {
+	die( esc_html__( 'You do not have permissions to perform this action.', 'paid-memberships-pro' ) );
+}
+
 if ( ! defined( 'PMPRO_BENCHMARK' ) ) {
 	define( 'PMPRO_BENCHMARK', false );
 }
@@ -294,7 +299,7 @@ fprintf( $csv_fh, '%s', $csv_file_header );
 $user_ids    = $wpdb->get_col( $sqlQuery );
 $users_found = count( $user_ids );
 
-if ( empty( $user_ids ) ) {
+if ( empty( $user_ids ) && empty( $_REQUEST['pmpro_no_download'] ) ) {
 	// send data to remote browser
 	pmpro_transmit_report_data( $csv_fh, $filename, $headers );
 }
@@ -409,8 +414,11 @@ for ( $ic = 1; $ic <= $iterations; $ic ++ ) {
 	$user_list = null;
 	wp_cache_flush();
 }
-pmpro_transmit_report_data( $csv_fh, $filename, $headers );
 
+// If this was run via Toolkit API, we don't have to output the CSV file.
+if ( empty( $_REQUEST['pmpro_no_download'] ) ) {
+	pmpro_transmit_report_data( $csv_fh, $filename, $headers );
+}
 
 /**
  * Enclose items passed through to ensure data structure is valid for export CSV.
@@ -419,7 +427,7 @@ pmpro_transmit_report_data( $csv_fh, $filename, $headers );
  * @return string
  */
 function pmpro_enclose( $s ) {
-	return '"' . str_replace( '"', '\\"', $s ) . '"';
+	return '"' . str_replace( '"', '""', $s ) . '"';
 }
 
 /**

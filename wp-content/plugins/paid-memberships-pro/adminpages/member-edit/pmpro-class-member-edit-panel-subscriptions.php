@@ -5,8 +5,10 @@ class PMPro_Member_Edit_Panel_Subscriptions extends PMPro_Member_Edit_Panel {
 	 * Set up the panel.
 	 */
 	public function __construct() {
+		$user = self::get_user();
 		$this->slug = 'subscriptions';
 		$this->title = __( 'Subscriptions', 'paid-memberships-pro' );
+		$this->title_link = empty( $user->ID ) ? '' : '<a href="' . esc_url( add_query_arg( array( 'page' => 'pmpro-subscriptions', 'action' => 'link', 'user_id' => intval( $user->ID ) ), admin_url( 'admin.php' ) ) ) . '" class="page-title-action pmpro-has-icon pmpro-has-icon-plus">' . esc_html__( 'Link Subscription', 'paid-memberships-pro' ) . '</a>';
 	}
 
 	/**
@@ -103,6 +105,14 @@ class PMPro_Member_Edit_Panel_Subscriptions extends PMPro_Member_Edit_Panel {
 					<th><?php esc_html_e( 'Gateway', 'paid-memberships-pro' ); ?></th>
 					<th><?php echo esc_html( $showing_active_subscriptions ? __( 'Next Payment', 'paid-memberships-pro' ) : __( 'Ended', 'paid-memberships-pro' ) ); ?></th>
 					<th><?php esc_html_e( 'Orders', 'paid-memberships-pro' ); ?></th>
+					<?php
+						/**
+						 * Allow adding extra columns to the subscriptions table.
+						 *
+						 * @since 3.7.3
+						 */
+						do_action('pmpro_edit_member_subscriptions_extra_cols_header');
+					?>
 				</tr>
 			</thead>
 			<tbody>
@@ -131,12 +141,22 @@ class PMPro_Member_Edit_Panel_Subscriptions extends PMPro_Member_Edit_Panel {
 							</strong>
 							<?php
 							// Show warning if the user does not have the level for this subscription.
-							if ( $showing_active_subscriptions && ! in_array( $subscription->get_membership_level_id(), $user_level_ids ) ) {
-								?>
-								<span class="pmpro_tag pmpro_tag-has_icon pmpro_tag-error">
-									<?php esc_html_e( 'Membership Ended', 'paid-memberships-pro' ); ?>
-								</span>
-								<?php
+							if ( $showing_active_subscriptions ) {
+								if( $subscription->get_membership_level_id() > 0 ) {
+									if( ! in_array( $subscription->get_membership_level_id(), $user_level_ids ) ){
+										?>
+										<span class="pmpro_tag pmpro_tag-has_icon pmpro_tag-error">
+										<?php esc_html_e( 'Membership Ended', 'paid-memberships-pro' ); ?>
+										</span>
+										<?php
+									}
+								} else {
+									?>
+									<span class="pmpro_tag pmpro_tag-has_icon pmpro_tag-error">
+										<?php esc_html_e( 'No Level', 'paid-memberships-pro' ); ?>
+									</span>
+									<?php
+								}
 							}
 
 							// Show warning if the subscription had an error when trying to sync.
@@ -235,6 +255,16 @@ class PMPro_Member_Edit_Panel_Subscriptions extends PMPro_Member_Edit_Panel {
 							?>
 							<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'pmpro-orders', 's' => $subscription->get_subscription_transaction_id() ), admin_url( 'admin.php' ) ) ); ?>" title="<?php esc_attr_e( 'View all orders for this subscription', 'paid-memberships-pro' ); ?>"><?php echo esc_html( number_format_i18n( $orders_count ) ); ?></a>
 						</td>
+						<?php
+							/**
+							 * Allow adding extra columns to the subscriptions table.
+							 *
+							 * @since 3.7.3
+							 *
+							 * @param PMPro_Subscription $subscription The subscription for the current row in the table.
+							 */
+							do_action('pmpro_edit_member_subscriptions_extra_cols_body', $subscription );
+						?>
 					</tr>
 					<?php
 				}

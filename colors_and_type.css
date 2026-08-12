@@ -1,0 +1,208 @@
+/* ============================================================
+   ASCENDANCE STRATEGIES - Foundations
+   Color + Type tokens. Import this file anywhere in the system.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* Wordmark face - Cooper Hewitt (OFL), self-hosted via Fontsource CDN */
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/cooper-hewitt@5.2.5/600.css');
+@import url('https://cdn.jsdelivr.net/npm/@fontsource/cooper-hewitt@5.2.5/700.css');
+
+:root {
+  /* -------- Brand fonts --------
+     CANON STACK - Noto Serif / Cooper Hewitt / JetBrains Mono. Every file assumes it.
+     Wordmark : Cooper Hewitt  - the LOGO only: "ASCENDANCE STRATEGIES" caps, letter-spaced
+     Display  : Noto Serif     - headlines, kickers, decks
+     Body     : Noto Serif     - article prose
+     UI       : Barlow         - nav, labels, buttons
+     Data     : JetBrains Mono - metadata, tickers, register rows, IDs */
+  --font-wordmark:'Cooper Hewitt', 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Noto Serif', Georgia, serif;
+  --font-body:    'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-ui:      'Barlow', 'Cooper Hewitt', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ============================================================
+     COLOR - warm-neutral base, single sharp crimson-red accent
+     ============================================================ */
+
+  /* Neutrals (warm) */
+  --paper:      #faf8f3;  /* page background */
+  --paper-2:    #f3efe6;  /* bands, footer, inset panels */
+  --card:       #ffffff;  /* article cards / surfaces */
+  --ink:        #1f1c18;  /* headlines, primary text */
+  --ink-2:      #4a463f;  /* body prose */
+  --ink-3:      #6f695c;  /* metadata, captions, muted */
+  --ink-4:      #b4ac9d;  /* disabled, faint labels */
+  --hairline:   #e4ddd0;  /* thin dividers on paper */
+  --hairline-2: #d4ccbc;  /* slightly stronger rule */
+
+  /* Accent - "Red" (sharp contemporary crimson - New Yorker register,
+     deliberately NOT claret/old-world and NOT orange). Single brand color. */
+  --red:      #BC1B1D;  /* primary accent - kickers, links, CTA */
+  --red-deep: #9b1719;  /* hover / gradient end / pressed */
+  --red-soft: #d8595b;  /* faint accent (rare) */
+  --red-wash: #fbe6e6;  /* tinted background behind accent chips */
+  --red-fill: #BC1B1D;  /* white-on-red fills; pinned, never lifted on dark */
+  --red-fill-deep: #9b1719;
+
+  /* Ink-on-dark inversion (dark header / footer variant) */
+  --ink-surface:   #272119;  /* dark surface, lifted off black for long-form comfort */
+  --ink-surface-2: #332c22;
+  --on-ink:        #efe9dd;  /* text on dark, held below pure white to limit halation */
+  --on-ink-soft:   #d9d2c3;  /* body copy on dark */
+  --on-ink-muted:  #b3ab99;
+  --on-ink-rule:   rgba(239,233,221,0.16);
+
+  /* Status / utility (used sparingly) */
+  --success:#3f6b4a;
+
+  /* ============================================================
+     TYPE SCALE  (editorial, 1.0 rem = 16px base UI)
+     ============================================================ */
+  --fs-kicker:   12px;   /* country / category kicker */
+  --fs-meta:     13px;   /* metadata row */
+  --fs-ui:       14px;   /* nav, buttons */
+  --fs-body:     17px;   /* article prose */
+  --fs-body-lg:  19px;   /* lead paragraph */
+  --fs-h6:       18px;
+  --fs-h5:       21px;
+  --fs-h4:       25px;
+  --fs-h3:       31px;
+  --fs-h2:       40px;
+  --fs-h1:       54px;   /* hero headline */
+  --fs-display:  72px;   /* marketing display */
+
+  /* Spacing scale (4pt) */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+
+  /* Radii - editorial = mostly square; small radius on UI controls only */
+  --r-sm: 3px;
+  --r-md: 6px;
+
+  /* Elevation - restrained, warm-tinted */
+  --shadow-1: 0 1px 2px rgba(31,28,24,0.06);
+  --shadow-2: 0 2px 8px rgba(31,28,24,0.08);
+  --shadow-3: 0 10px 30px rgba(31,28,24,0.12);
+
+  --maxw: 1240px;       /* content column max-width */
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES - apply via .as-prose / utility classes
+   ============================================================ */
+
+.as-kicker {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: var(--fs-kicker);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--red);
+  line-height: 1;
+}
+/* article-level kicker (country | topic) - slab variant, like the reference */
+.as-kicker-slab {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.005em;
+  color: var(--red);
+  line-height: 1.05;
+}
+
+.as-h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h1); line-height: 1.04; letter-spacing: -0.01em; color: var(--ink); }
+.as-h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h2); line-height: 1.06; letter-spacing: -0.005em; color: var(--ink); }
+.as-h3 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); line-height: 1.12; color: var(--ink); }
+.as-h4 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.18; color: var(--ink); }
+.as-h5 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h5); line-height: 1.22; color: var(--ink); }
+
+/* Headline used on cards - slab, tight */
+.as-headline { font-family: var(--font-display); font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -0.003em; }
+
+.as-lead { font-family: var(--font-body); font-size: var(--fs-body-lg); line-height: 1.5; color: var(--ink-2); }
+.as-body { font-family: var(--font-body); font-size: var(--fs-body); line-height: 1.62; color: var(--ink-2); }
+.as-body p { margin: 0 0 0.9em; }
+
+.as-meta {
+  font-family: var(--font-ui);
+  font-size: var(--fs-meta);
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
+}
+
+/* Subscriber / access tag - "Abonné" equivalent */
+.as-access {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: var(--fs-meta);
+  color: var(--red);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   LOGO LOCKUP - AS monogram (boxed initials) + wordmark. NO TAGLINE.
+   The brand zone under the wordmark is deliberately empty pending an approved tagline.
+   "The Art of Strategic Positioning" is NOT approved and must never be built.
+   (.ll-tag below is retained only so the class does not break; do not emit it.)
+   Markup:
+     <a class="as-lockup">                 (add .on-dark on dark surfaces)
+       <span class="ll-row"><i class="ll-box ll-a">A</i><i class="ll-word">SCENDANCE</i></span>
+       <span class="ll-row"><i class="ll-box ll-s">S</i><i class="ll-word">TRATEGIES</i></span>
+     </a>
+   Scale the whole lockup by setting --ll (wordmark cap size) on .as-lockup.
+   ============================================================ */
+.as-lockup{display:inline-flex;flex-direction:column;gap:3px;text-decoration:none;line-height:1;--ll:22px;}.as-lockup i,.as-lockup .ll-word,.as-lockup .ll-box,.as-lockup .ll-tag{font-style:normal;} /*lockup-upright*/
+.ll-row{display:flex;align-items:stretch;}
+.ll-box{width:var(--ll);height:var(--ll);background:var(--red-fill);color:#fff;/* .ll-a: white on pinned brand red */display:flex;align-items:center;justify-content:center;font-family:var(--font-wordmark);font-weight:700;font-size:calc(var(--ll)*0.72);line-height:1;}
+.ll-s{background:var(--ink);color:var(--paper);}
+.ll-word{font-family:var(--font-wordmark);font-weight:700;font-size:var(--ll);letter-spacing:0.005em;color:var(--ink);height:var(--ll);display:flex;align-items:center;padding-left:calc(var(--ll)*0.05);}
+.ll-tag{font-family:var(--font-ui);font-weight:600;font-size:calc(var(--ll)*0.275);letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-3);margin-top:calc(var(--ll)*0.2);white-space:nowrap;align-self:stretch;text-align:center;}
+.as-lockup.on-dark .ll-word{color:var(--on-ink);}
+.as-lockup.on-dark .ll-s{background:var(--on-ink);color:var(--ink-surface);}
+.as-lockup.on-dark .ll-tag{color:var(--on-ink-muted);}
+
+/* ============================================================
+   DARK THEME  - applied via <html data-theme="dark">.
+   Warm-dark, not cold: keeps the editorial register at night.
+   Committed registers (Editorial hub, Data Terminal glossary) are
+   intentionally exempt - they own their own ground.
+   ============================================================ */
+:root[data-theme="dark"]{
+  --paper:      #1c1813;
+  --paper-2:    #232019;
+  --card:       #26221b;
+  --ink:        #eae4d8;
+  --ink-2:      #cbc4b5;
+  --ink-3:      #9d9684;
+  --ink-4:      #726b5b;
+  --hairline:   #383127;
+  --hairline-2: #494134;
+
+  --red:      #ec6a6b;  /* lifted for contrast on dark */
+  --red-deep: #f59595;
+  --red-soft: #a83a38;
+  --red-wash: #3a201e;
+  --red-fill: #BC1B1D;  /* pinned: white text must keep 6.3:1 */
+  --red-fill-deep: #a3191b;
+
+  /* On a dark page, an inset block reads as RAISED, so it sits above --paper, never below. */
+  --ink-surface:   #26211a;
+  --ink-surface-2: #302a21;
+  --on-ink:        #eae4d8;
+  --on-ink-soft:   #d3ccbd;
+  --on-ink-muted:  #a9a190;
+  --on-ink-rule:   rgba(234,228,216,0.15);
+
+  --success:#6cbf88;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-2: 0 2px 10px rgba(0,0,0,0.5);
+  --shadow-3: 0 10px 34px rgba(0,0,0,0.6);
+}
+
+
+/* Base link colour: no anchor may ever fall back to UA link blue (#0000EE). */
+a{color:var(--red,var(--accent,#BC1B1D));text-decoration:none;}
+a:hover{color:var(--red-deep,var(--accent-light,#8f1416));}

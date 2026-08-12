@@ -114,9 +114,9 @@ add_action( 'plugins_loaded', function() {
         Ascendance\Core\Mission_Control::get_instance();
     }
 
-    // 10. Stripe Billing overrides
-    if ( class_exists( 'Ascendance\Core\Stripe_Billing' ) ) {
-        Ascendance\Core\Stripe_Billing::get_instance();
+    // 10. Stripe Plugin Adapter
+    if ( class_exists( 'Ascendance\Core\Stripe_Plugin_Adapter' ) ) {
+        Ascendance\Core\Stripe_Plugin_Adapter::get_instance();
     }
 
     // 11. MailerLite Newsletter Integration
@@ -152,6 +152,11 @@ add_action( 'plugins_loaded', function() {
     // 17. AI Workflow Image Generation Studio
     if ( class_exists( 'Ascendance\Core\AI_Image_Studio' ) ) {
         Ascendance\Core\AI_Image_Studio::get_instance();
+    }
+
+    // 18. Headless REST API Controller
+    if ( class_exists( 'Ascendance\Core\Headless_API' ) ) {
+        Ascendance\Core\Headless_API::get_instance();
     }
 } );
 

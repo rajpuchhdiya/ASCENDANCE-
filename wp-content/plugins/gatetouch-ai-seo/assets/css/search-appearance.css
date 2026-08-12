@@ -1,0 +1,264 @@
+/**
+ * Settings → Search Appearance
+ */
+
+.gatetouch-sa-intro {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #6366f1;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+}
+
+.gatetouch-sa-intro h2 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.gatetouch-sa-intro p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #475569;
+    max-width: 90ch;
+}
+
+/* ── Sub navigation ──────────────────────────────────────────────────────── */
+
+.gatetouch-sa-subnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+}
+
+.gatetouch-sa-subnav__item {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    text-decoration: none;
+    background: #f1f5f9;
+    border: 1px solid transparent;
+    transition: background .15s ease, color .15s ease;
+}
+
+.gatetouch-sa-subnav__item:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.gatetouch-sa-subnav__item.is-active {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, .25);
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+
+.gatetouch-sa-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.gatetouch-sa-layout > .gatetouch-sa-main {
+    min-width: 0;
+}
+
+@media (max-width: 1100px) {
+    .gatetouch-sa-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.gatetouch-sa-side {
+    position: sticky;
+    top: 50px;
+}
+
+/* ── Cards & fields ──────────────────────────────────────────────────────── */
+
+.gatetouch-sa-card .gatetouch-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.gatetouch-sa-slug {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.gatetouch-sa-desc {
+    margin: 0 0 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #64748b;
+    max-width: 80ch;
+}
+
+.gatetouch-sa-field {
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.gatetouch-sa-field:last-child {
+    margin-bottom: 0;
+}
+
+.gatetouch-sa-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #1e293b;
+}
+
+.gatetouch-sa-field--half {
+    display: inline-block;
+    width: calc(50% - 12px);
+    vertical-align: top;
+    margin-right: 20px;
+}
+
+@media (max-width: 782px) {
+    .gatetouch-sa-field--half {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+.gatetouch-sa-hint {
+    margin: 6px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #94a3b8;
+}
+
+.gatetouch-sa-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.gatetouch-sa-counter {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.gatetouch-sa-counter.is-good { color: #16a34a; }
+.gatetouch-sa-counter.is-over { color: #dc2626; }
+
+.gatetouch-sa-robots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+}
+
+.gatetouch-sa-check {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #334155;
+    margin-bottom: 0 !important;
+    cursor: pointer;
+}
+
+.gatetouch-sa-note {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #3730a3;
+    max-width: 90ch;
+}
+
+.gatetouch-sa-note--muted {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #64748b;
+}
+
+/* ── Variable picker ─────────────────────────────────────────────────────── */
+
+.gatetouch-sa-vars .gatetouch-card__body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.gatetouch-sa-vargroup {
+    margin-bottom: 16px;
+}
+
+.gatetouch-sa-vargroup h4 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #94a3b8;
+}
+
+.gatetouch-sa-var {
+    display: inline-block;
+    margin: 0 4px 5px 0;
+    padding: 4px 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px;
+    color: #4338ca;
+    background: #eef2ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .12s ease, transform .12s ease;
+}
+
+.gatetouch-sa-var:hover {
+    background: #c7d2fe;
+    transform: translateY(-1px);
+}
+
+.gatetouch-sa-var:active {
+    transform: translateY(0);
+}
+
+.gatetouch-sa-input.is-var-target {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+}
+
+.gatetouch-form-footer {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    position: sticky;
+    bottom: 12px;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, .06);
+}

@@ -200,12 +200,18 @@ function pmpro_email_templates_save_template_data() {
 	}
 
 	$template = sanitize_text_field( $_REQUEST['template'] );
-	$subject = sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) );
+	$subject = isset( $_REQUEST['subject'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['subject'] ) ) : '';
 	$body = pmpro_kses( wp_unslash( $_REQUEST['body'] ), 'email' );	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$to = isset( $_REQUEST['to'] ) ? sanitize_text_field( trim( wp_unslash( $_REQUEST['to'] ), ", \t\n\r\0\x0B" ) ) : '';
+	$cc = isset( $_REQUEST['cc'] ) ? sanitize_text_field( trim( wp_unslash( $_REQUEST['cc'] ), ", \t\n\r\0\x0B" ) ) : '';
+	$bcc = isset( $_REQUEST['bcc'] ) ? sanitize_text_field( trim( wp_unslash( $_REQUEST['bcc'] ), ", \t\n\r\0\x0B" ) ) : '';
 
 	//update this template's settings
 	update_option( 'pmpro_email_' . $template . '_subject', $subject );
 	update_option( 'pmpro_email_' . $template . '_body', $body );
+	update_option( 'pmpro_email_' . $template . '_to', $to );
+	update_option( 'pmpro_email_' . $template . '_cc', $cc );
+	update_option( 'pmpro_email_' . $template . '_bcc', $bcc );
 	delete_transient( 'pmproet_' . $template );
 	esc_html_e( 'Template Saved', 'paid-memberships-pro' );
 
@@ -233,10 +239,16 @@ function pmpro_email_templates_reset_template_data() {
 
 	delete_option('pmpro_email_' . $template . '_subject');
 	delete_option('pmpro_email_' . $template . '_body');
+	delete_option('pmpro_email_' . $template . '_to');
+	delete_option('pmpro_email_' . $template . '_cc');
+	delete_option('pmpro_email_' . $template . '_bcc');
 	delete_transient( 'pmproet_' . $template );
 
 	$template_data['subject'] = $pmpro_email_templates_defaults[$template]['subject'];
 	$template_data['body'] = pmpro_email_templates_get_template_body($template);
+	$template_data['to'] = '';
+	$template_data['cc'] = '';
+	$template_data['bcc'] = '';
 
 	echo json_encode($template_data);
 	exit;
@@ -280,112 +292,11 @@ function pmpro_email_templates_send_test() {
 		die( esc_html__( 'You do not have permissions to perform this action.', 'paid-memberships-pro' ) );
 	}
 
-	global $current_user;
-
-	//setup test email
-	$test_email = new PMProEmail();
-	$test_email->email = sanitize_email( $_REQUEST['email'] );
-	$test_email->template = str_replace( 'email_', '', sanitize_text_field( $_REQUEST['template'] ) );
-
-	//add filter to change recipient
-	add_filter('pmpro_email_recipient', 'pmpro_email_templates_test_recipient', 10, 2);
-
-	//load test order
-	$test_order = new MemberOrder();
-	$test_order->get_test_order();
-
-	$test_user = $current_user;
-
-	// Grab the first membership level defined as a "test level" to use
-	$all_levels = pmpro_getAllLevels( true);
-	$test_user->membership_level = array_pop( $all_levels );
-
-	//add notice to email body
-	add_filter('pmpro_email_body', 'pmpro_email_templates_test_body', 10, 2);
-
-	//force the template
-	add_filter('pmpro_email_filter', 'pmpro_email_templates_test_template', 5, 1);
-
-	//figure out how to send the email
-	switch($test_email->template) {
-		case 'cancel':
-			$send_email = 'sendCancelEmail';
-			$params = array($test_user);
-			break;
-		case 'cancel_admin':
-			$send_email = 'sendCancelAdminEmail';
-			$params = array($current_user, $current_user->membership_level->id);
-			break;
-		case 'cancel_on_next_payment_date':
-		case 'cancel_on_next_payment_date_admin':
-			$send_email = 'cancel_on_next_payment_date' == $test_email->template ? 'sendCancelOnNextPaymentDateEmail' :
-				'sendCancelOnNextPaymentDateAdminEmail';
-			$levels = pmpro_getAllLevels( true );
-			global $pmpro_conpd_email_test_level;
-			$pmpro_conpd_email_test_level = current( $levels );
-			//Ensure mock level has enddate set
-			add_filter( 'pmpro_get_membership_levels_for_user', function() {
-				global $pmpro_conpd_email_test_level;
-				$pmpro_conpd_email_test_level->enddate = date( 'Y-m-d', strtotime( '+1 month' ) );
-				return array( $pmpro_conpd_email_test_level->id => $pmpro_conpd_email_test_level );
-			} );
-			$params = array( $test_user, $pmpro_conpd_email_test_level->id );
-			break;
-		case 'checkout_check':
-		case 'checkout_free':
-		case 'checkout_paid':
-			$send_email = 'sendCheckoutEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'checkout_check_admin':
-		case 'checkout_free_admin':
-		case 'checkout_paid_admin':
-			$send_email = 'sendCheckoutAdminEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'billing':
-			$send_email = 'sendBillingEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'billing_admin':
-			$send_email = 'sendBillingAdminEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'billing_failure':
-			$send_email = 'sendBillingFailureEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'billing_failure_admin':
-			$send_email = 'sendBillingFailureAdminEmail';
-			$params = array($test_user->user_email, $test_order);
-			break;
-		case 'invoice':
-			$send_email = 'sendInvoiceEmail';
-			$params = array($test_user, $test_order);
-			break;
-		case 'membership_expired';
-			$send_email = 'sendMembershipExpiredEmail';
-			$params = array($test_user);
-			break;
-		case 'membership_expiring';
-			$send_email = 'sendMembershipExpiringEmail';
-			$params = array($test_user);
-			break;
-		case 'payment_action':
-			$send_email = 'sendPaymentActionRequiredEmail';
-			$params = array($test_user, $test_order, "http://www.example-notification-url.com/not-a-real-site");
-			break;
-		case 'payment_action_admin':
-			$send_email = 'sendPaymentActionRequiredAdminEmail';
-			$params = array($test_user, $test_order, "http://www.example-notification-url.com/not-a-real-site");
-			break;
-		default:
-			$send_email = 'sendEmail';
-			$params = array();
-	}
-
-	//send the email
-	$response = call_user_func_array(array($test_email, $send_email), $params);
+	//figure out PMPro_Email_Template class from template slug
+	$pmpro_email_template = PMPro_Email_Template::get_email_template( str_replace( 'email_', '', sanitize_text_field( $_REQUEST['template'] ) ) );
+  
+	//it's a class name, not an instance and method is static. Call it directly.
+	$response = $pmpro_email_template::send_test( sanitize_email( $_REQUEST['email'] ) );
 
 	//return the response
 	echo esc_html( $response );
@@ -401,7 +312,7 @@ function pmpro_email_templates_test_recipient($email) {
 
 //for test emails
 function pmpro_email_templates_test_body($body, $email = null) {
-	$body .= '<br /><br /><b>-- ' . __('THIS IS A TEST EMAIL', 'paid-memberships-pro') . ' --</b>';
+	$body .= '<br /><br /><b>-- ' . esc_html__('THIS IS A TEST EMAIL', 'paid-memberships-pro') . ' --</b>';
 	return $body;
 }
 
@@ -440,8 +351,10 @@ function pmpro_email_templates_email_data($data, $email) {
 		$data = array();
 
 	//general data
-	$new_data['sitename'] = get_option("blogname");
-	$new_data['siteemail'] = get_option("pmpro_from_email");
+	$new_data['sitename'] = get_option( 'blogname' );
+	$new_data['siteemail'] = get_option( 'pmpro_from_email' );
+	$new_data['pmpro_from_email'] = get_option( 'pmpro_from_email' );
+	$new_data['wordpress_admin_email'] = get_bloginfo( 'admin_email' );
 	if(empty($new_data['login_link'])) {
 		$new_data['login_link'] = wp_login_url();
 		$new_data['login_url'] = wp_login_url();
@@ -457,7 +370,7 @@ function pmpro_email_templates_email_data($data, $email) {
 
 		// Membership Information.
 		$new_data['membership_expiration'] = '';
-		$new_data["membership_change"] = __("Your membership has been cancelled.", "paid-memberships-pro");
+		$new_data["membership_change"] = esc_html__("Your membership has been cancelled.", "paid-memberships-pro");
 		if ( empty( $user->membership_level ) ) {
 			$user->membership_level = pmpro_getMembershipLevelForUser($user->ID, true);
 		}
@@ -470,10 +383,10 @@ function pmpro_email_templates_email_data($data, $email) {
 			}
 			if ( ! empty($user->membership_level->enddate) ) {
 				$new_data['enddate'] = date_i18n( get_option( 'date_format' ), $user->membership_level->enddate );
-				$new_data['membership_expiration'] = "<p>" . sprintf( __("This membership will expire on %s.", "paid-memberships-pro"), date_i18n( get_option( 'date_format' ), $user->membership_level->enddate ) ) . "</p>\n";
+				$new_data['membership_expiration'] = "<p>" . sprintf( esc_html__("This membership will expire on %s.", "paid-memberships-pro"), date_i18n( get_option( 'date_format' ), $user->membership_level->enddate ) ) . "</p>\n";
 				$new_data["membership_change"] .= " " . sprintf(__("This membership will expire on %s.", "paid-memberships-pro"), date_i18n( get_option( 'date_format' ), $user->membership_level->enddate ) );
 			} else if ( ! empty( $email->expiration_changed ) ) {
-				$new_data["membership_change"] .= " " . __("This membership does not expire.", "paid-memberships-pro");
+				$new_data["membership_change"] .= " " . esc_html__("This membership does not expire.", "paid-memberships-pro");
 			}
 		}
 	}
@@ -624,7 +537,173 @@ function pmpro_sanitize_email_data( $data ) {
 			$data[$key] = str_replace( '://', ': ', $data[$key] );
 		}
 	}
-	
+
 	return $data;
 }
 add_filter( 'pmpro_email_data', 'pmpro_sanitize_email_data' );
+
+/**
+ * Detect how outbound email is being sent from this site.
+ *
+ * Runs these checks in order and returns on the first hit:
+ *   1. The PMPro SMTP Add On with a connector configured.
+ *   2. An active SMTP/transactional-email plugin we recognize.
+ *   3. wp-config.php SMTP constants (manual SMTP setup).
+ *   4. PMPro Max hosting (handles transactional email at the server level).
+ *   5. Fallback: unknown / WordPress default (PHP `mail()`).
+ *
+ * Plugin checks run first so that a plugin overriding the default on Max is
+ * reported accurately.
+ *
+ * @since 3.7.2
+ *
+ * @return array {
+ *     @type string      $method Machine key for the detected method.
+ *     @type string      $label  Human-readable label.
+ *     @type string|null $relay  Mail relay host if known, otherwise null.
+ *     @type string      $source How it was detected: 'plugin', 'constant', 'hosting', 'default'.
+ * }
+ */
+function pmpro_detect_email_method() {
+	// The PMPro SMTP Add On only handles mail when a connector is configured,
+	// so check its actual state instead of treating activation as a signal.
+	// If it is active without a connector, mail passes through untouched and
+	// the checks below describe the site more accurately.
+	if ( function_exists( 'pmpro_smtp_get_active_connector' ) ) {
+		$connector = pmpro_smtp_get_active_connector();
+		if ( null !== $connector ) {
+			return apply_filters( 'pmpro_detect_email_method', array(
+				'method' => 'pmpro-smtp',
+				// translators: %s: The name of the connector configured in the PMPro SMTP Add On.
+				'label'  => sprintf( __( 'PMPro SMTP (%s)', 'paid-memberships-pro' ), $connector->get_title() ),
+				'relay'  => 'generic' === $connector->get_name() ? $connector->get_setting( 'host' ) : null,
+				'source' => 'plugin',
+			) );
+		}
+	}
+
+	// Known SMTP/transactional-email plugins, roughly by popularity.
+	// `class`, `function`, and `constant` may each be a string or array of strings.
+	$plugin_signatures = array(
+		'wp-mail-smtp' => array(
+			'label' => 'WP Mail SMTP',
+			'class' => array( 'WPMailSMTP\\Plugin', 'WPMailSMTP\\Core' ),
+		),
+		'fluent-smtp' => array(
+			'label'    => 'FluentSMTP',
+			'function' => 'fluentmail',
+		),
+		'post-smtp' => array(
+			'label' => 'Post SMTP',
+			'class' => 'PostmanOptions',
+		),
+		'easy-wp-smtp' => array(
+			'label'    => 'Easy WP SMTP',
+			'class'    => 'EasyWPSMTP',
+			'constant' => 'EasyWPSMTP_PLUGIN_VERSION',
+		),
+		'gravitysmtp'  => array(
+			'label'    => 'Gravity SMTP',
+			'constant' => 'GF_GRAVITY_SMTP_VERSION',
+		),
+		'wp-offload-ses' => array(
+			'label' => 'WP Offload SES',
+			'class' => 'DeliciousBrains\\WP_Offload_SES\\WP_Offload_SES',
+		),
+		'gmail-smtp' => array(
+			'label' => 'Gmail SMTP',
+			'class' => 'Gmail_SMTP',
+		),
+		'postmark' => array(
+			'label' => 'Postmark',
+			'class' => 'Postmark_Mail',
+		),
+		'brevo' => array(
+			'label' => 'Brevo',
+			'class' => 'SIB_Manager',
+		),
+		'mailgun' => array(
+			'label'    => 'Mailgun',
+			'function' => 'mg_api_last_error',
+		),
+		'sendwp' => array(
+			'label'    => 'SendWP',
+			'function' => 'sendwp_forwarding_enabled',
+		),
+		'sendgrid' => array (
+			'label' => 'SendGrid',
+			'class' => 'Sendgrid_Settings',
+		),
+	);
+
+	foreach ( $plugin_signatures as $method => $signature ) {
+		$detected = false;
+
+		if ( ! empty( $signature['class'] ) ) {
+			foreach ( (array) $signature['class'] as $class ) {
+				if ( class_exists( $class ) ) {
+					$detected = true;
+					break;
+				}
+			}
+		}
+
+		if ( ! $detected && ! empty( $signature['function'] ) ) {
+			foreach ( (array) $signature['function'] as $function ) {
+				if ( function_exists( $function ) ) {
+					$detected = true;
+					break;
+				}
+			}
+		}
+
+		if ( ! $detected && ! empty( $signature['constant'] ) ) {
+			foreach ( (array) $signature['constant'] as $constant ) {
+				if ( defined( $constant ) ) {
+					$detected = true;
+					break;
+				}
+			}
+		}
+
+		if ( $detected ) {
+			return apply_filters( 'pmpro_detect_email_method', array(
+				'method' => $method,
+				'label'  => $signature['label'],
+				'relay'  => null,
+				'source' => 'plugin',
+			) );
+		}
+	}
+
+	// Manual SMTP configured via wp-config.php.
+	if ( defined( 'SMTP_HOST' ) && SMTP_HOST ) {
+		return apply_filters( 'pmpro_detect_email_method', array(
+			'method' => 'wp-config-smtp',
+			'label'  => __( 'SMTP (wp-config.php)', 'paid-memberships-pro' ),
+			'relay'  => SMTP_HOST,
+			'source' => 'constant',
+		) );
+	}
+
+	// PMPro Max handles transactional email at the server level.
+	if ( class_exists( 'PMPro_Hosting_Transactional_Emails' ) ) {
+		$emails = PMPro_Hosting_Transactional_Emails::get_instance();
+		if ( ! $emails->has_third_party_mailer() && getenv( 'PMPRO_HOSTING' ) === '1' ) {
+			return apply_filters( 'pmpro_detect_email_method', array(
+				'method' => 'pmpro-max',
+				'label'  => __( 'PMPro Max', 'paid-memberships-pro' ),
+				'relay'  => null,
+				'source' => 'hosting',
+			) );
+		}
+	}
+
+	// No known mailer detected — could be PHP mail() or something we don't recognize.
+	return apply_filters( 'pmpro_detect_email_method', array(
+		'method' => 'default',
+		'label'  => __( 'Unknown / WordPress default (PHP mail)', 'paid-memberships-pro' ),
+		'relay'  => null,
+		'source' => 'default',
+	) );
+}

@@ -101,16 +101,6 @@ function pmpro_checkForUpgrades() {
 		$pmpro_db_version = 1.71;
 	}
 
-	//schedule the credit card expiring cron
-	if($pmpro_db_version < 1.72)
-	{
-		//schedule the credit card expiring cron
-		pmpro_maybe_schedule_event(current_time('timestamp'), 'monthly', 'pmpro_cron_credit_card_expiring_warnings');
-
-		update_option("pmpro_db_version", "1.72");
-		$pmpro_db_version = 1.72;
-	}
-
 	//register capabilities required for menus now
 	if($pmpro_db_version < 1.79)
 	{
@@ -139,15 +129,8 @@ function pmpro_checkForUpgrades() {
 		$pmpro_db_version = pmpro_upgrade_1_8_6_9();
 	}
 
-	//Remove extra cron jobs inserted in version 1.8.7 and 1.8.7.1
-	if($pmpro_db_version < 1.87) {
-		require_once(PMPRO_DIR . "/includes/updates/upgrade_1_8_7.php");
-		$pmpro_db_version = pmpro_upgrade_1_8_7();
-	}
-
 	/*
 		v1.8.8
-		* Running the cron job cleanup again.
 		* Fixing old $0 Stripe orders.
 		* Fixing old Authorize.net orders with empty status.
 	*/
@@ -233,11 +216,6 @@ function pmpro_checkForUpgrades() {
 		update_option( 'pmpro_db_version', '2.1' );
 	}
 
-	if ( $pmpro_db_version < 2.3 ) {
-		pmpro_maybe_schedule_event( strtotime( '10:30:00' ) - ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ), 'daily', 'pmpro_cron_admin_activity_email' );
-		update_option( 'pmpro_db_version', '2.3' );
-	}
-
 	/**
 	 * Version 2.4
 	 * Fixing subscription_transaction_id
@@ -283,18 +261,8 @@ function pmpro_checkForUpgrades() {
 	 * Default option for Wisdom tracking.
 	 */
 	if ( $pmpro_db_version < 2.8 ) {
-		update_option('pmpro_wisdom_opt_out', 1);
+		update_option('pmpro_wisdom_opt_out', 0);
 		update_option( 'pmpro_db_version', '2.8' );
-	}
-	
-	/**
-	 * Version 2.8.1
-	 * Reload crons to get correct intervals.
-	 */
-	if ( $pmpro_db_version < 2.81 ) {
-		pmpro_clear_crons();
-		pmpro_maybe_schedule_crons();
-		update_option( 'pmpro_db_version', '2.81' );
 	}
 	
 	/**
@@ -392,6 +360,106 @@ function pmpro_checkForUpgrades() {
 		pmpro_upgrade_3_2();
 		update_option( 'pmpro_db_version', '3.2' );
 	}
+
+	/**
+	 * Version 3.3.1
+	 * Adding `one_use_per_user` column to discount codes.
+	 */
+	if ( $pmpro_db_version < 3.3 ) {
+		pmpro_db_delta();
+		update_option( 'pmpro_db_version', '3.3' );
+	}
+
+	/**
+	 * Version 3.4
+	 * Allowing subscription transaction IDs up to 64 characters.
+	 */
+	if ( $pmpro_db_version < 3.4 ) {
+		pmpro_db_delta();
+		update_option( 'pmpro_db_version', '3.4' );
+	}
+
+	/**
+	 * Version 3.4.2
+	 * Fixing broken Payflow deprecation.
+	 */
+	if ( $pmpro_db_version < 3.402 ) {
+		// Check if there are any Payflow settings.
+		if ( ! empty( get_option( 'pmpro_payflow_partner' ) ) ) {
+			// Get the current list of undeprecated gateways.
+			$undeprecated_gateways = get_option( 'pmpro_undeprecated_gateways' );
+			if ( empty( $undeprecated_gateways ) ) {
+				$undeprecated_gateways = array();
+			} elseif ( is_string( $undeprecated_gateways ) ) {
+				// pmpro_setOption turns this into a comma separated string
+				$undeprecated_gateways = explode( ',', $undeprecated_gateways );
+			}
+
+			// If Payflow isn't in the list, add it.
+			if ( ! in_array( 'payflowpro', $undeprecated_gateways ) ) {
+				$undeprecated_gateways[] = 'payflowpro';
+				update_option( 'pmpro_undeprecated_gateways', $undeprecated_gateways );
+			}
+		}
+
+		update_option( 'pmpro_db_version', '3.402' );
+	}
+
+	if ( $pmpro_db_version < 3.5 ) {
+		require_once( PMPRO_DIR . "/includes/updates/upgrade_3_5.php" );
+		pmpro_db_delta();
+		pmpro_upgrade_3_5(); // This function will update the db version.
+		update_option( 'pmpro_db_version', '3.5' );
+	}
+
+	if ( $pmpro_db_version < 3.53 ) {
+		// Clear out any scheduled recurring tasks.
+		add_action( 'action_scheduler_init', function() {
+			PMPro_Action_Scheduler::clear_recurring_tasks();
+		});
+		update_option( 'pmpro_db_version', '3.53' );
+	}
+
+	// Upgrade to 3.7 - Email logging
+	// 3.7001 for changes during RC phase.
+	if ( $pmpro_db_version < 3.7001 ) {
+		pmpro_db_delta();
+		update_option( 'pmpro_db_version', '3.7001' );
+	}
+
+	/**
+	 * Version 3.7.1
+	 * Rename the Website Payments Pro gateway slug from 'paypal' to 'paypalwpp'.
+	 * Deprecate PayPal Express and add it to undeprecated gateways for existing sites.
+	 */
+	if ( $pmpro_db_version < 3.71 ) {
+		require_once( PMPRO_DIR . "/includes/updates/upgrade_3_7_1.php" );
+		pmpro_upgrade_3_7_1();
+		update_option( 'pmpro_db_version', '3.71' );
+	}
+
+	/**
+	 * Version 3.8
+	 * Clean up membership level relationship rows orphaned by deleted levels.
+	 */
+	if ( $pmpro_db_version < 3.8 ) {
+		require_once( PMPRO_DIR . "/includes/updates/upgrade_3_8.php" );
+		pmpro_upgrade_3_8();
+		update_option( 'pmpro_db_version', '3.8' );
+	}
+
+	/**
+	 * Version 3.8.4
+	 * Recover transaction IDs for Stripe Checkout orders that were completed
+	 * without them by concurrent or out-of-order webhooks (delayed
+	 * notification payment methods like SEPA or bank transfers).
+	 */
+	require_once( PMPRO_DIR . '/includes/updates/upgrade_3_8_4.php' );
+	if ( $pmpro_db_version < 3.84 ) {
+		pmpro_upgrade_3_8_4();
+		update_option( 'pmpro_db_version', '3.84' );
+	}
+
 }
 
 function pmpro_db_delta() {
@@ -413,6 +481,7 @@ function pmpro_db_delta() {
 	$wpdb->pmpro_subscriptionmeta = $wpdb->prefix . 'pmpro_subscriptionmeta';
 	$wpdb->pmpro_groups = $wpdb->prefix . 'pmpro_groups';
 	$wpdb->pmpro_membership_levels_groups = $wpdb->prefix . 'pmpro_membership_levels_groups';
+	$wpdb->pmpro_email_log = $wpdb->prefix . 'pmpro_email_log';
 
 	$collate = '';
 	if ( $wpdb->has_cap( 'collation' ) ) {
@@ -483,7 +552,7 @@ function pmpro_db_delta() {
 		  `gateway` varchar(64) NOT NULL,
 		  `gateway_environment` varchar(64) NOT NULL,
 		  `payment_transaction_id` varchar(64) NOT NULL,
-		  `subscription_transaction_id` varchar(32) NOT NULL,
+		  `subscription_transaction_id` varchar(64) NOT NULL,
 		  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 		  `affiliate_id` varchar(32) NOT NULL,
 		  `affiliate_subid` varchar(32) NOT NULL,
@@ -567,6 +636,7 @@ function pmpro_db_delta() {
 		  `starts` date NOT NULL,
 		  `expires` date NOT NULL,
 		  `uses` int(11) NOT NULL,
+		  `one_use_per_user` tinyint(4) NOT NULL DEFAULT '0',
 		  PRIMARY KEY  (`id`),
 		  UNIQUE KEY `code` (`code`),
 		  KEY `starts` (`starts`),
@@ -632,7 +702,7 @@ function pmpro_db_delta() {
 			`membership_level_id` int(11) unsigned NOT NULL,
 			`gateway` varchar(64) NOT NULL,
 			`gateway_environment` varchar(64) NOT NULL,
-			`subscription_transaction_id` varchar(32) NOT NULL,
+			`subscription_transaction_id` varchar(64) NOT NULL,
 			`status` varchar(20) NOT NULL DEFAULT 'active',
 			`startdate` datetime DEFAULT NULL,
 			`enddate` datetime DEFAULT NULL,
@@ -705,4 +775,48 @@ function pmpro_db_delta() {
 		) $collate;
 	";
 	dbDelta($sqlQuery);
+
+	//pmpro_email_log
+	$sqlQuery = "
+		CREATE TABLE `" . $wpdb->pmpro_email_log . "` (
+		  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+		  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
+		  `email_to` varchar(255) NOT NULL,
+		  `email_to_full` text NOT NULL,
+		  `email_from` varchar(255) NOT NULL,
+		  `from_name` varchar(255) NOT NULL DEFAULT '',
+		  `subject` varchar(255) NOT NULL,
+		  `body` longtext NOT NULL,
+		  `template` varchar(100) NOT NULL DEFAULT '',
+		  `headers` text NOT NULL,
+		  `reply_to` varchar(255) NOT NULL DEFAULT '',
+		  `cc` text NOT NULL,
+		  `bcc` text NOT NULL,
+		  `status` varchar(20) NOT NULL DEFAULT 'sent',
+		  `error_message` text NOT NULL,
+		  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+		  PRIMARY KEY (`id`),
+		  KEY `user_id` (`user_id`),
+		  KEY `email_to` (`email_to`(" . $max_index_length . ")),
+		  KEY `subject` (`subject`(" . $max_index_length . ")),
+		  KEY `template` (`template`),
+		  KEY `status` (`status`),
+		  KEY `timestamp` (`timestamp`)
+		) $collate;
+	";
+	dbDelta($sqlQuery);
 }
+
+/**
+ * Recover missing Stripe Checkout transaction IDs via Action Scheduler.
+ *
+ * Scheduled by the v3.8.4 upgrade. The recovery logic lives in the upgrade file;
+ * this shim is registered here, outside of pmpro_checkForUpgrades(), so the
+ * callback is available on every request (including WP Cron, where
+ * pmpro_checkForUpgrades() does not run) while recovery tasks may still be queued.
+ */
+function pmpro_stripe_recover_checkout_transaction_ids_task() {
+	require_once PMPRO_DIR . '/includes/updates/upgrade_3_8_4.php';
+	pmpro_stripe_recover_checkout_transaction_ids();
+}
+add_action( 'pmpro_stripe_recover_checkout_transaction_ids', 'pmpro_stripe_recover_checkout_transaction_ids_task' );

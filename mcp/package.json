@@ -1,0 +1,13 @@
+{
+  "name": "ascendance-design-system-mcp",
+  "version": "1.0.0",
+  "description": "MCP server exposing the Ascendance Strategies design system, page map, and deployment rules.",
+  "type": "module",
+  "bin": { "ascendance-mcp": "./server.js" },
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.0.0" },
+  "license": "UNLICENSED",
+  "private": true
+}

@@ -24,8 +24,41 @@ function cmplz_youtube_script( $tags ) {
  * @return string
  */
 
+/**
+ * Whether $src is a YouTube URL that is safe to fetch server-side.
+ *
+ * The YouTube placeholder detection upstream is intentionally permissive
+ * (substring match + greedy regex), so the actual server-side fetch must verify
+ * that the parsed host is a real YouTube domain over http(s) before any request
+ * is made. Prevents SSRF via a crafted iframe src pointing at an arbitrary host.
+ *
+ * @param string $src URL to validate.
+ * @return bool True when $src targets an allowed YouTube host over http(s).
+ */
+function cmplz_youtube_is_fetchable_url( $src ) {
+	$parts  = wp_parse_url( $src );
+	$scheme = strtolower( (string) ( $parts['scheme'] ?? '' ) );
+	$host   = strtolower( rtrim( (string) ( $parts['host'] ?? '' ), '.' ) );
+	if ( ! in_array( $scheme, array( 'http', 'https' ), true ) || '' === $host ) {
+		return false;
+	}
+	$allowed_hosts = array( 'youtube.com', 'youtube-nocookie.com', 'youtu.be' );
+	foreach ( $allowed_hosts as $allowed_host ) {
+		if ( $host === $allowed_host || substr( $host, - ( strlen( $allowed_host ) + 1 ) ) === '.' . $allowed_host ) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function cmplz_youtube_get_video_id_from_series($src){
-	$output = wp_remote_get($src);
+	// SSRF guard: only fetch real YouTube hosts, and use wp_safe_remote_get() so
+	// WordPress re-validates every redirect hop and rejects private/reserved IPs.
+	if ( ! cmplz_youtube_is_fetchable_url( $src ) ) {
+		return false;
+	}
+
+	$output     = wp_safe_remote_get( $src, array( 'redirection' => 2 ) );
 	$youtube_id = false;
 	if (isset($output['body'])) {
 		$body = $output['body'];
